@@ -1,0 +1,214 @@
+
+#include "user_interface.h"
+
+UserInterface::UserInterface() {
+    fov = 45.0f;
+    lightPosition[0] = 0.5f; 
+    lightPosition[1] = 0.5f; 
+    lightPosition[2] = 0.0f;
+    lightDirection[0] = 0.0f;
+    lightDirection[1] = 0.0f;
+    lightDirection[2] = -1.0f;
+    depthBufferEnabled = true;
+    polyModeEnabled = false;
+    cullFaceEnabled = true;
+    gameWindowNoMove = true;
+    gammaCorrection = false;
+    titleBarUI = new TitleBar();
+}
+
+UserInterface::~UserInterface() {
+
+}
+
+void UserInterface::Init() {
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    io = &ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    io->ConfigViewportsNoAutoMerge = true;
+    io->ConfigViewportsNoTaskBarIcon = true;
+
+    //ImGui::StyleColorsClassic();
+    //ImGui::StyleColorsLight();
+    ImGui::StyleColorsDark();
+
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+}
+
+void UserInterface::SetupGLFW(GLFWwindow* window)
+{
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    
+    ui_handler = new UserInterfaceInputHandler(window, cam);
+
+    titleBarUI->SetupGLFW(window);
+
+    depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+    polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
+
+}
+
+void UserInterface::SetupOpenGL(const char* glslVersion)
+{
+    ImGui_ImplOpenGL3_Init(glslVersion);
+}
+
+void UserInterface::SetCamera(Camera* cam)
+{
+    this->cam = cam;
+}
+
+void UserInterface::Update(GLuint imageOutput)
+{
+    if (cam == nullptr) {
+        std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
+        exit(1);
+    }
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    UpdateTitleWindow();
+
+    UpdateGameWindow(imageOutput);
+
+    UpdatePropertiesWindow();
+
+    UpdateLogWindow();
+}
+
+void UserInterface::UpdateTitleWindow() {
+    titleBarUI->CreateTitleBar();
+    titleBarUI->Update();
+}
+
+void UserInterface::UpdateGameWindow(GLuint imageOutput) {
+    ImGuiWindowFlags windowFlagsGame = 0;
+    windowFlagsGame |= ImGuiWindowFlags_NoCollapse;
+    windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+    if (gameWindowNoMove) windowFlagsGame |= ImGuiWindowFlags_NoMove;
+
+    ImGui::Begin("Game Window", NULL, windowFlagsGame);
+    ui_handler->EngineInputHandler();
+    ImVec2 size = ImGui::GetWindowSize();
+    SCREEN_WIDTH = size.x - 100;
+    SCREEN_HEIGHT = size.y - 100;
+
+    cam->FramebufferSizeCallback(window, size.x - 100, size.y - 100);
+    ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::End();
+}
+
+void UserInterface::UpdatePropertiesWindow() {
+    ImGuiWindowFlags windowFlagsProperties = 0;
+    windowFlagsProperties |= ImGuiWindowFlags_NoCollapse;
+
+    ImGui::Begin("Properties", NULL, windowFlagsProperties);                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+    ImGui::SliderFloat("Field Of View", &fov, 10.0f, 60.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    cam->SetFieldOfView(fov);
+
+    ImGui::ColorEdit3("clear color", (float*)&clearColour); // Edit 3 floats representing a color
+
+    ImGui::Text("Light");
+    ImGui::SliderFloat3("Light Position", lightPosition, -20.0f, 20.0f);
+    ImGui::SliderFloat3("Light Direction", lightDirection, -1.0f, 1.0f);
+    ImGui::ColorEdit3("Ambient", (float*)&lightAmbient);
+    ImGui::ColorEdit3("Diffuse", (float*)&lightDiffuse);
+    ImGui::ColorEdit3("Specular", (float*)&lightSpecular);
+    ImGui::SliderFloat("Constant", &lightConstant, 0.1f, 1.0f);
+    ImGui::SliderFloat("Linear", &lightLinear, 0.0001f, 2.0f);
+    ImGui::SliderFloat("Quadratic", &lightQuadratic, 0.000007f, 2.0f);
+    ImGui::SliderFloat("Inner CutOff", &lightInnerCutOff, 10.0f, 40.0f);
+    ImGui::SliderFloat("Outer CutOff", &lightOuterCutOff, 10.0f, 40.0f);
+
+    ImGui::Text("Material Colors");
+    ImGui::ColorEdit3("material ambient", (float*)&materialAmbient);
+    ImGui::ColorEdit3("material diffuse", (float*)&materialDiffuse);
+    ImGui::ColorEdit3("material specular", (float*)&materialSpecular);
+    ImGui::SliderFloat("Shininess: ", &materialShininess, 0.0f, 50.0f);
+
+    if (ImGui::Button("Toggle Depth Test")) {
+        ToggleDeptTest();
+        depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Toggle Polygon Mode")) {
+        polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
+        TogglePolyMode();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Toggle Cull Face")) {
+        cullFaceEnabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+        ToggleCullFace();
+    }
+    if (ImGui::Button("Game Window No Move")) {
+        gameWindowNoMove = !gameWindowNoMove;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Gamma Correction")) {
+        gammaCorrection ? glEnable(GL_FRAMEBUFFER_SRGB) : glDisable(GL_FRAMEBUFFER_SRGB);
+        ToggleGammaCorrection();
+    }
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
+}
+
+void UserInterface::UpdateLogWindow() {
+    ImGuiWindowFlags windowFlagsLog = 0;
+    bool demo = true;
+    ImGui::ShowDemoWindow(&demo);
+    ImGui::Begin("Log", NULL, windowFlagsLog);
+    ImGui::End();
+}
+
+
+void UserInterface::Render() {
+    
+    if (cam == nullptr) {
+        std::cout << "USER_INTERFACE::RENDERER: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
+        exit(1);
+    }
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+}
+
+void UserInterface::ToggleDeptTest() {
+    depthBufferEnabled = !depthBufferEnabled;
+}
+
+void UserInterface::TogglePolyMode() {
+    polyModeEnabled = !polyModeEnabled; 
+}
+
+void UserInterface::ToggleCullFace() {
+    cullFaceEnabled = !cullFaceEnabled;
+}
+
+void UserInterface::ToggleGammaCorrection()
+{
+    gammaCorrection = !gammaCorrection;
+}
