@@ -153,12 +153,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="input_handler.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="rectangle.cpp" />
     <ClCompile Include="renderable.cpp" />
     <ClCompile Include="render_manager.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -177,12 +177,12 @@
     <ClCompile Include="ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="input_handler.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="rectangle.h" />
     <ClInclude Include="renderable.h" />
     <ClInclude Include="render_manager.h" />
     <ClInclude Include="resource.h" />
@@ -213,6 +213,8 @@
     <None Include="packages.config" />
     <None Include="Shaders\axis_fragment.glsl" />
     <None Include="Shaders\axis_vertex.glsl" />
+    <None Include="Shaders\basic_shader_fragment.glsl" />
+    <None Include="Shaders\basic_shader_vertex.glsl" />
     <None Include="Shaders\fragment.glsl" />
     <None Include="imgui.ini" />
     <None Include="Shaders\light_fragment.glsl" />

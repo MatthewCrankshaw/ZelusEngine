@@ -1,10 +1,11 @@
 
 #include "user_interface.h"
 
-UserInterface::UserInterface() {
+void UserInterfaceManager::StartUp() {
+
     fov = 45.0f;
-    lightPosition[0] = 0.5f; 
-    lightPosition[1] = 0.5f; 
+    lightPosition[0] = 0.5f;
+    lightPosition[1] = 0.5f;
     lightPosition[2] = 0.0f;
     lightDirection[0] = 0.0f;
     lightDirection[1] = 0.0f;
@@ -15,13 +16,7 @@ UserInterface::UserInterface() {
     gameWindowNoMove = true;
     gammaCorrection = false;
     titleBarUI = new TitleBar();
-}
 
-UserInterface::~UserInterface() {
-
-}
-
-void UserInterface::Init() {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -47,7 +42,12 @@ void UserInterface::Init() {
     }
 }
 
-void UserInterface::SetupGLFW(GLFWwindow* window)
+void UserInterfaceManager::ShutDown()
+{
+
+}
+
+void UserInterfaceManager::SetupGLFW(GLFWwindow* window)
 {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     
@@ -60,17 +60,17 @@ void UserInterface::SetupGLFW(GLFWwindow* window)
 
 }
 
-void UserInterface::SetupOpenGL(const char* glslVersion)
+void UserInterfaceManager::SetupOpenGL(const char* glslVersion)
 {
     ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
-void UserInterface::SetCamera(Camera* cam)
+void UserInterfaceManager::SetCamera(Camera* cam)
 {
     this->cam = cam;
 }
 
-void UserInterface::Update(GLuint imageOutput)
+void UserInterfaceManager::Update(GLuint imageOutput)
 {
     if (cam == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -90,12 +90,12 @@ void UserInterface::Update(GLuint imageOutput)
     UpdateLogWindow();
 }
 
-void UserInterface::UpdateTitleWindow() {
+void UserInterfaceManager::UpdateTitleWindow() {
     titleBarUI->CreateTitleBar();
     titleBarUI->Update();
 }
 
-void UserInterface::UpdateGameWindow(GLuint imageOutput) {
+void UserInterfaceManager::UpdateGameWindow(GLuint imageOutput) {
     ImGuiWindowFlags windowFlagsGame = 0;
     windowFlagsGame |= ImGuiWindowFlags_NoCollapse;
     windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
@@ -104,15 +104,15 @@ void UserInterface::UpdateGameWindow(GLuint imageOutput) {
     ImGui::Begin("Game Window", NULL, windowFlagsGame);
     ui_handler->EngineInputHandler();
     ImVec2 size = ImGui::GetWindowSize();
-    SCREEN_WIDTH = size.x - 100;
-    SCREEN_HEIGHT = size.y - 100;
+    SCREEN_WIDTH = (int)size.x - 100;
+    SCREEN_HEIGHT = (int)size.y - 100;
 
-    cam->FramebufferSizeCallback(window, size.x - 100, size.y - 100);
+    cam->FramebufferSizeCallback(window, (int)size.x - 100, (int)size.y - 100);
     ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
 }
 
-void UserInterface::UpdatePropertiesWindow() {
+void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGuiWindowFlags windowFlagsProperties = 0;
     windowFlagsProperties |= ImGuiWindowFlags_NoCollapse;
 
@@ -168,7 +168,7 @@ void UserInterface::UpdatePropertiesWindow() {
     ImGui::End();
 }
 
-void UserInterface::UpdateLogWindow() {
+void UserInterfaceManager::UpdateLogWindow() {
     ImGuiWindowFlags windowFlagsLog = 0;
     bool demo = true;
     ImGui::ShowDemoWindow(&demo);
@@ -177,7 +177,7 @@ void UserInterface::UpdateLogWindow() {
 }
 
 
-void UserInterface::Render() {
+void UserInterfaceManager::Render() {
     
     if (cam == nullptr) {
         std::cout << "USER_INTERFACE::RENDERER: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -196,19 +196,19 @@ void UserInterface::Render() {
     }
 }
 
-void UserInterface::ToggleDeptTest() {
+void UserInterfaceManager::ToggleDeptTest() {
     depthBufferEnabled = !depthBufferEnabled;
 }
 
-void UserInterface::TogglePolyMode() {
+void UserInterfaceManager::TogglePolyMode() {
     polyModeEnabled = !polyModeEnabled; 
 }
 
-void UserInterface::ToggleCullFace() {
+void UserInterfaceManager::ToggleCullFace() {
     cullFaceEnabled = !cullFaceEnabled;
 }
 
-void UserInterface::ToggleGammaCorrection()
+void UserInterfaceManager::ToggleGammaCorrection()
 {
     gammaCorrection = !gammaCorrection;
 }

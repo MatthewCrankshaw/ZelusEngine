@@ -1,6 +1,6 @@
 #include "sky_box.h"
 
-SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames, UserInterface* ui) : Renderable{ui}
+SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -10,8 +10,10 @@ SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames, UserInterface* ui
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
+	mShader = new Shader("Shaders/skybox_vertex.glsl", "Shaders/skybox_fragment.glsl");
+
 	Texture texture;
-	texture.LoadCubeMapTexture("res/skybox/", textureFacesFilenames, false);
+	texture.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 	textureID = texture.GetHandle();
 
 	mShader->SetInt("skybox", 0);

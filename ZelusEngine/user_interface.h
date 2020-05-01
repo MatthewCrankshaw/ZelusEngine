@@ -3,13 +3,12 @@
 #include <ImGui\imgui_impl_glfw.h>
 #include <ImGui\imgui_impl_opengl3.h>
 
-#include <glad/glad.h>
-
+#include "glad/glad.h"
 #include "camera.h"
 #include "title_bar.h"
 #include "ui_input_handler.h"
 
-class UserInterface
+class UserInterfaceManager
 {
 protected:
 	GLFWwindow* window;
@@ -62,11 +61,10 @@ protected:
 
 	std::string logStr;
 
-public: 
-	UserInterface();
-	~UserInterface();
+public:
 
-	void Init();
+	void StartUp();
+	void ShutDown();
 	void SetupGLFW(GLFWwindow* window);
 	void SetupOpenGL(const char* glslVersion);
 	void SetCamera(Camera* cam);

@@ -2,19 +2,58 @@
 
 #include <vector>
 
-#include "renderable.h"
+#include "rectangle.h"
+#include "sky_box.h"
 #include "model.h"
 
-class RenderManager
+extern UserInterfaceManager* gUserInterface;
+
+class RenderManager : public InputHandler
 {
 public: 
-	RenderManager(Camera* camera);
+
+	void StartUp();
 
 	void Render();
 
-	void Add(Renderable* rend);
+	void ShutDown();
+
+	Shader* skyBoxShader;
+	Shader* axisShader;
+	Shader* multiLightShader;
+	Shader* basicShader;
+
+	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)override;
+	void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)override;
+	void CursorPositionCallback(GLFWwindow* window, double x, double y)override;
+	void FramebufferSizeCallback(GLFWwindow* window, int width, int height)override;
+
 private:
-	Camera* mCamera;
-	std::vector<Renderable*> renderList;
+
+	GLFWwindow* window;
+	Camera* cam;
+
+	const char* glsl_version = "#version 130";
+
+	Renderable* m;
+	Renderable* rect;
+	Renderable* skyBox;
+
+	GLuint axisVAO, axisVBO;
+
+	float axisVertices[72] = {
+		0.0f, 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,	0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,	 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,	0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, -1.0f,	 0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+		-1.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f
+	};
 };
 

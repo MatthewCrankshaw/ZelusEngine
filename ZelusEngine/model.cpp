@@ -1,7 +1,9 @@
 #include "model.h"
 
-Model::Model(std::string const& path, UserInterface* ui) : Renderable{ui} {
+Model::Model(std::string const& path){
 	LoadModel(path);
+
+    mShader = new Shader("Shaders/multi_light_vertex.glsl","Shaders/multi_light_fragment.glsl");
 }
 
 
@@ -10,28 +12,28 @@ void Model::Draw(const Camera &camera) {
     camera.GetViewMatrix(viewMatrix);
     camera.GetProjectionMatrix(projectionMatrix);
 
-    glm::vec3 lightPos = mUi->GetLightPosition();
-    glm::vec3 lightDir = mUi->GetLightDirection();
-    glm::vec3 lightAmbient = mUi->GetLightAmbient();
-    glm::vec3 lightDiffuse = mUi->GetLightDiffuse();
-    glm::vec3 lightSpecular = mUi->GetLightSpecular();
+    glm::vec3 lightPos = gUserInterface->GetLightPosition();
+    glm::vec3 lightDir = gUserInterface->GetLightDirection();
+    glm::vec3 lightAmbient = gUserInterface->GetLightAmbient();
+    glm::vec3 lightDiffuse = gUserInterface->GetLightDiffuse();
+    glm::vec3 lightSpecular = gUserInterface->GetLightSpecular();
 
-    glm::vec3 materialAmbient = mUi->GetMaterialAmbient();
-    glm::vec3 materialDiffuse = mUi->GetMaterialDiffuse();
-    glm::vec3 materialSpecular = mUi->GetMaterialSpecular();
+    glm::vec3 materialAmbient = gUserInterface->GetMaterialAmbient();
+    glm::vec3 materialDiffuse = gUserInterface->GetMaterialDiffuse();
+    glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();
 
     mShader->SetVec3("light.position", lightPos);
     mShader->SetVec3("light.direction", lightDir);
     mShader->SetVec3("light.ambient", lightAmbient);
     mShader->SetVec3("light.diffuse", lightDiffuse);
     mShader->SetVec3("light.specular", lightSpecular);
-    mShader->SetFloat("light.constant", mUi->GetLightConstant());
-    mShader->SetFloat("light.linear", mUi->GetLightLinear());
-    mShader->SetFloat("light.quadratic", mUi->GetLightQuadratic());
-    mShader->SetFloat("light.cutOff", glm::cos(glm::radians(mUi->GetLightInnerCutOff())));
-    mShader->SetFloat("light.outerCutOff", glm::cos(glm::radians(mUi->GetLightOuterCutOff())));
+    mShader->SetFloat("light.constant", gUserInterface->GetLightConstant());
+    mShader->SetFloat("light.linear", gUserInterface->GetLightLinear());
+    mShader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
+    mShader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
+    mShader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
 
-    mShader->SetFloat("material.shininess", mUi->GetMaterialShininess());
+    mShader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
 
     mModelMat = mRotation * mTranslation * mScale;
 
@@ -41,7 +43,7 @@ void Model::Draw(const Camera &camera) {
     mShader->SetMat4("projection", projectionMatrix);
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw(*mShader);
+		meshes[i].Draw(mShader);
 	}
 
     mShader->UnUse();

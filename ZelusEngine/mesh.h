@@ -1,5 +1,4 @@
 #pragma once
-#include <glad/glad.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,7 +41,7 @@ public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
     // render the mesh
-    void Draw(Shader shader);
+    void Draw(Shader* shader);
 
     void Update();
 

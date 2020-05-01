@@ -24,9 +24,6 @@
     <ClCompile Include="input_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
     <ClCompile Include="sky_box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rectangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -90,9 +90,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\ImGui\imconfig.h">
@@ -155,6 +152,9 @@
     <ClInclude Include="sky_box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ZelusEngine.rc">
@@ -185,5 +185,7 @@
     <None Include="Shaders\window_vertex.glsl" />
     <None Include="Shaders\skybox_fragment.glsl" />
     <None Include="Shaders\skybox_vertex.glsl" />
+    <None Include="Shaders\basic_shader_fragment.glsl" />
+    <None Include="Shaders\basic_shader_vertex.glsl" />
   </ItemGroup>
 </Project>

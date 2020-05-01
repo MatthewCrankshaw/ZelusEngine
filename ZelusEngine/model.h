@@ -1,15 +1,13 @@
 #pragma once
 
-#include <glad/glad.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "user_interface.h"
 #include "texture.h"
-//#include "shader.h"
 #include "mesh.h"
 #include "renderable.h"
 
@@ -19,6 +17,8 @@
 #include <map>
 #include <vector>
 
+extern UserInterfaceManager* gUserInterface;
+
 class Model : public Renderable
 {
 public:
@@ -27,7 +27,7 @@ public:
 	std::string directory;
 	bool gammaCorrection;
 
-	Model(std::string const& path, UserInterface* ui);
+	Model(std::string const& path);
 
 	void Draw(const Camera &camera);
 
@@ -39,6 +39,8 @@ private:
 	std::vector<Texture> specularMaps; 
 	std::vector<Texture> normalMaps; 
 	std::vector<Texture> heightMaps; 
+
+	Shader* mShader;
 
 	void LoadModel(std::string const& path);
 
