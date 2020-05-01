@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "shader.h"
+#include "shader_manager.h"
 #include "texture.h"
 
 #include <string>
@@ -24,6 +24,8 @@ struct Vertex {
     glm::vec3 Bitangent;
 };
 
+extern ShaderManager* gShaderManager;
+
 class Mesh{
 private:
     /*  Mesh Data  */
@@ -41,7 +43,7 @@ public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
     // render the mesh
-    void Draw(Shader* shader);
+    void Draw();
 
     void Update();
 

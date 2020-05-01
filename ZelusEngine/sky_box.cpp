@@ -10,19 +10,17 @@ SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-	mShader = new Shader("Shaders/skybox_vertex.glsl", "Shaders/skybox_fragment.glsl");
-
 	Texture texture;
 	texture.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 	textureID = texture.GetHandle();
-
-	mShader->SetInt("skybox", 0);
 }
 
 void SkyBox::Draw(const Camera& camera)
 {
+	Shader* shader = gShaderManager->getSkyBoxShader(); 
+
 	glDepthFunc(GL_LEQUAL); 
-	mShader->Use();
+	shader->Use();
 
 	glm::vec3 position;
 
@@ -32,9 +30,9 @@ void SkyBox::Draw(const Camera& camera)
 
 	setPosition(position);
 	mModelMat = mTranslation * mRotation * mScale;
-	mShader->SetMat4("view", mViewMat);
-	mShader->SetMat4("projection", mProjectionMat);
-	mShader->SetMat4("model", mModelMat);
+	shader->SetMat4("view", mViewMat);
+	shader->SetMat4("projection", mProjectionMat);
+	shader->SetMat4("model", mModelMat);
 
 	glBindVertexArray(VAO); 
 	glActiveTexture(GL_TEXTURE0);
@@ -42,7 +40,7 @@ void SkyBox::Draw(const Camera& camera)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
-	mShader->UnUse();
+	shader->UnUse();
 	glDepthFunc(GL_LESS);
 }
 

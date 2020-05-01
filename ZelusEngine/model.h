@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>
 
 #include "user_interface.h"
+#include "shader_manager.h"
 #include "texture.h"
 #include "mesh.h"
 #include "renderable.h"
@@ -18,6 +19,7 @@
 #include <vector>
 
 extern UserInterfaceManager* gUserInterface;
+extern ShaderManager* gShaderManager;
 
 class Model : public Renderable
 {
@@ -39,8 +41,6 @@ private:
 	std::vector<Texture> specularMaps; 
 	std::vector<Texture> normalMaps; 
 	std::vector<Texture> heightMaps; 
-
-	Shader* mShader;
 
 	void LoadModel(std::string const& path);
 

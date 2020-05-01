@@ -1,15 +1,18 @@
 #pragma once
+
+
 #include "renderable.h"
+#include "shader_manager.h"
 #include "Texture.h"
-#include "shader.h"
+
+extern ShaderManager* gShaderManager;
+
 class SkyBox : public Renderable
 {
 private:
 
     GLuint VAO, VBO;
     GLuint textureID;
-
-    Shader* mShader;
 
     float skyboxVertices[108] = {
         // positions          

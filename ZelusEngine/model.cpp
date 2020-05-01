@@ -2,8 +2,6 @@
 
 Model::Model(std::string const& path){
 	LoadModel(path);
-
-    mShader = new Shader("Shaders/multi_light_vertex.glsl","Shaders/multi_light_fragment.glsl");
 }
 
 
@@ -22,31 +20,33 @@ void Model::Draw(const Camera &camera) {
     glm::vec3 materialDiffuse = gUserInterface->GetMaterialDiffuse();
     glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();
 
-    mShader->SetVec3("light.position", lightPos);
-    mShader->SetVec3("light.direction", lightDir);
-    mShader->SetVec3("light.ambient", lightAmbient);
-    mShader->SetVec3("light.diffuse", lightDiffuse);
-    mShader->SetVec3("light.specular", lightSpecular);
-    mShader->SetFloat("light.constant", gUserInterface->GetLightConstant());
-    mShader->SetFloat("light.linear", gUserInterface->GetLightLinear());
-    mShader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
-    mShader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
-    mShader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
+    Shader* shader = gShaderManager->getMultiLightShader();
 
-    mShader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
+    shader->SetVec3("light.position", lightPos);
+    shader->SetVec3("light.direction", lightDir);
+    shader->SetVec3("light.ambient", lightAmbient);
+    shader->SetVec3("light.diffuse", lightDiffuse);
+    shader->SetVec3("light.specular", lightSpecular);
+    shader->SetFloat("light.constant", gUserInterface->GetLightConstant());
+    shader->SetFloat("light.linear", gUserInterface->GetLightLinear());
+    shader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
+    shader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
+    shader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
+
+    shader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
 
     mModelMat = mRotation * mTranslation * mScale;
 
-    mShader->Use();
-    mShader->SetMat4("view", viewMatrix);
-    mShader->SetMat4("model", mModelMat);
-    mShader->SetMat4("projection", projectionMatrix);
+    shader->Use();
+    shader->SetMat4("view", viewMatrix);
+    shader->SetMat4("model", mModelMat);
+    shader->SetMat4("projection", projectionMatrix);
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw(mShader);
+		meshes[i].Draw();
 	}
 
-    mShader->UnUse();
+    shader->UnUse();
 }
 
 void Model::Update() {

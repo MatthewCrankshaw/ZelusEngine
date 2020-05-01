@@ -3,6 +3,9 @@
 #include "renderable.h"
 #include "shader.h"
 #include "texture.h"
+#include "shader_manager.h"
+
+extern ShaderManager* gShaderManager;
 
 class Rectangle : public Renderable
 {
@@ -15,8 +18,6 @@ private:
 	GLuint mTextureId;
 
 	glm::vec3 mColour;
-
-	Shader* mShader;
 
 	float mVertexData[20] = {
 		// positions          // colors           // texture coords

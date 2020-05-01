@@ -53,12 +53,7 @@ void RenderManager::StartUp()
     glfwSetCursorPosCallback(window, InputHandler::OnCursorPosition);
     glfwSetFramebufferSizeCallback(window, InputHandler::OnFrameBufferSizeChange);
 
-    multiLightShader = new Shader("Shaders/multi_light_vertex.glsl", "Shaders/multi_light_fragment.glsl");
-    axisShader = new Shader("Shaders/axis_vertex.glsl", "Shaders/axis_fragment.glsl");
-    skyBoxShader = new Shader("Shaders/skybox_vertex.glsl", "Shaders/skybox_fragment.glsl");
-    basicShader = new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
-
-    m = new Model("res/crysis_nano_suit/nanosuit.obj");
+    //m = new Model("res/crysis_nano_suit/nanosuit.obj");
     //m = new Model("res/skull/Skull.obj", ui);
     //m = new Model("res/SM_Fern_01.obj");
     //m = new Model("res/CarsN/LowPolyCars.obj", ui);
@@ -69,6 +64,7 @@ void RenderManager::StartUp()
     //m = new Model("res/Valentine_balloon/W.obj", ui);
 
     rect = new Rectangle("flowers.png");
+    axis = new AxisModel();
 
     std::vector<std::string> faces{
         "skybox/right.jpg",
@@ -80,16 +76,6 @@ void RenderManager::StartUp()
     };
 
     skyBox = new SkyBox(faces);
-
-    glGenVertexArrays(1, &axisVAO);
-    glGenBuffers(1, &axisVBO);
-    glBindVertexArray(axisVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(axisVertices), &axisVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -152,45 +138,10 @@ void RenderManager::Render() {
         glClearColor(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 modelMatrix(1.0f);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
-
         //=========================================================================================
         //=========================================================================================
 
-        axisShader->Use();
-
-        glm::mat4 axisModel = glm::mat4(1.0);
-        glm::mat4 axisTranslate = glm::mat4(1.0);
-        glm::mat4 axisScale = glm::mat4(1.0);
-        glm::mat4 axisOrthProj = glm::mat4(1.0);
-
-        glm::vec3 axisPos;
-        glm::vec3 axisForward;
-
-        cam->GetPosition(axisPos);
-        cam->GetForward(axisForward);
-        cam->GetOrthoProjectionMatrix(axisOrthProj);
-
-        axisTranslate = glm::translate(glm::mat4(1.0), axisPos + axisForward);
-        axisScale = glm::scale(axisScale, glm::vec3(0.2f, 0.2f, 0.2f));
-
-        axisModel = axisTranslate * axisScale;
-
-        axisShader->SetMat4("view", viewMatrix);
-        axisShader->SetMat4("model", axisModel);
-        axisShader->SetMat4("projection", axisOrthProj);
-
-        glLineWidth(5.0f);
-        glPointSize(10.0f);
-        glBindVertexArray(axisVAO);
-        glDrawArrays(GL_LINES, 0, 14);
-        glDrawArrays(GL_POINTS, 0, 14);
-        glBindVertexArray(0);
-        glPointSize(1.0f);
-        glLineWidth(1.0f);
-
-        axisShader->UnUse();
+        axis->Draw(*cam);
 
         //=========================================================================================
 
@@ -209,7 +160,6 @@ void RenderManager::Render() {
         glBindTexture(GL_TEXTURE_2D, 0);
 
         gUserInterface->Update(renderBuffTex);
-
         gUserInterface->Render();
 
         /* Swap front and back buffers */

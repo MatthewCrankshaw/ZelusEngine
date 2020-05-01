@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="axis_model.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="input_handler.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="renderable.cpp" />
     <ClCompile Include="render_manager.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="sky_box.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="title_bar.cpp" />
@@ -177,6 +179,7 @@
     <ClCompile Include="ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="axis_model.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="input_handler.h" />
@@ -187,6 +190,7 @@
     <ClInclude Include="render_manager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="shader_manager.h" />
     <ClInclude Include="sky_box.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="title_bar.h" />

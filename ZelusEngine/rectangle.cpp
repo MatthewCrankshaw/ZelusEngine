@@ -15,8 +15,6 @@ Rectangle::Rectangle()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-	mShader = new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
-
 	mTextureId = 0;
 
 	mColour = glm::vec3(0.3f, 0.3f, 0.3f);
@@ -38,8 +36,6 @@ Rectangle::Rectangle(glm::vec3 colour)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
-	mShader = new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
 
 	mTextureId = 0;
 
@@ -63,8 +59,6 @@ Rectangle::Rectangle(std::string textureFilename)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-	mShader = new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
-
 	mTextureId = 0;
 
 	mColour = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -79,33 +73,34 @@ Rectangle::Rectangle(std::string textureFilename)
 
 void Rectangle::Draw(const Camera& camera)
 {
-	mShader->Use();
+	Shader* shader = gShaderManager->getBasicShader();
+	shader->Use();
 
 	camera.GetViewMatrix(mViewMat);
 	camera.GetProjectionMatrix(mProjectionMat);
 
 	mModelMat = mTranslation * mRotation * mScale;
 
-	mShader->SetMat4("view", mViewMat);
-	mShader->SetMat4("projection", mProjectionMat);
-	mShader->SetMat4("model", mModelMat);
+	shader->SetMat4("view", mViewMat);
+	shader->SetMat4("projection", mProjectionMat);
+	shader->SetMat4("model", mModelMat);
 
 	glBindVertexArray(mVAO);
 	if (mTexturedRect) {
-		mShader->SetBool("textured", 1);
-		mShader->SetVec3("colour", mColour);
+		shader->SetBool("textured", 1);
+		shader->SetVec3("colour", mColour);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mTextureId);
 	}
 	else {
 	
-		mShader->SetBool("textured", 0);
-		mShader->SetVec3("colour", mColour);
+		shader->SetBool("textured", 0);
+		shader->SetVec3("colour", mColour);
 	}
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	mShader->UnUse();
+	shader->UnUse();
 }
 
 void Rectangle::Update()

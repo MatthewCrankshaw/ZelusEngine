@@ -8,11 +8,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	SetupMesh();
 }
 
-void Mesh::Draw(Shader* shader) {
+void Mesh::Draw() {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
+
+	Shader* shader = gShaderManager->getMultiLightShader();
 
 	if (textures.size() >= 1) {
 		shader->SetBool("textureProvided", true);

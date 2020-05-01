@@ -15,6 +15,7 @@ protected:
 	glm::mat4 mTranslation;
 	glm::mat4 mRotation;
 	glm::mat4 mScale;
+
 public:
 	Renderable();
 
