@@ -13,7 +13,7 @@ uniform bool textured;
 void main(){
     vec4 fragC;
     if(!textured){
-        //fragC = vec4(colour, 1.0);
+        fragC = vec4(colour, 1.0);
     }else{
         fragC = texture(texture1, TexCoord);
     }

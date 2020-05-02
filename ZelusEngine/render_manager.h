@@ -32,10 +32,17 @@ private:
 	const char* glsl_version = "#version 130";
 
 	Renderable* m;
-	Renderable* rect;
 	Renderable* skyBox;
 	Renderable* axis;
 
-	
+	// Geometric buffer for differed shading
+	GLuint mGeometricBuffer;
+	// Texture IDs for goemetric data for differed shading
+	GLuint mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
+	// Depth Buffer
+	GLuint mRBODepth;
+
+	//void RenderQuad();
+	void RenderCube();
 };
 

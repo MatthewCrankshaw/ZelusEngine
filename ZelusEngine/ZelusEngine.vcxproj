@@ -221,6 +221,10 @@
     <None Include="Shaders\basic_shader_vertex.glsl" />
     <None Include="Shaders\fragment.glsl" />
     <None Include="imgui.ini" />
+    <None Include="Shaders\geometric_pass_fragment.glsl" />
+    <None Include="Shaders\geometric_pass_vertex.glsl" />
+    <None Include="Shaders\lighting_pass_fragment.glsl" />
+    <None Include="Shaders\lighting_pass_vertex.glsl" />
     <None Include="Shaders\light_fragment.glsl" />
     <None Include="Shaders\light_vertex.glsl" />
     <None Include="Shaders\multi_light_fragment.glsl" />

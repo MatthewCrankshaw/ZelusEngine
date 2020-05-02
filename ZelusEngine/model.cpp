@@ -20,20 +20,21 @@ void Model::Draw(const Camera &camera) {
     glm::vec3 materialDiffuse = gUserInterface->GetMaterialDiffuse();
     glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();
 
-    Shader* shader = gShaderManager->getMultiLightShader();
+    //Shader* shader = gShaderManager->getMultiLightShader();
+    Shader* shader = gShaderManager->getGeometryPassShader();
 
-    shader->SetVec3("light.position", lightPos);
-    shader->SetVec3("light.direction", lightDir);
-    shader->SetVec3("light.ambient", lightAmbient);
-    shader->SetVec3("light.diffuse", lightDiffuse);
-    shader->SetVec3("light.specular", lightSpecular);
-    shader->SetFloat("light.constant", gUserInterface->GetLightConstant());
-    shader->SetFloat("light.linear", gUserInterface->GetLightLinear());
-    shader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
-    shader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
-    shader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
+    //shader->SetVec3("light.position", lightPos);
+    //shader->SetVec3("light.direction", lightDir);
+    //shader->SetVec3("light.ambient", lightAmbient);
+    //shader->SetVec3("light.diffuse", lightDiffuse);
+    //shader->SetVec3("light.specular", lightSpecular);
+    //shader->SetFloat("light.constant", gUserInterface->GetLightConstant());
+    //shader->SetFloat("light.linear", gUserInterface->GetLightLinear());
+    //shader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
+    //shader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
+    //shader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
 
-    shader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
+    //shader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
 
     mModelMat = mRotation * mTranslation * mScale;
 

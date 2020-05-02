@@ -14,14 +14,14 @@ void Mesh::Draw() {
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
 
-	Shader* shader = gShaderManager->getMultiLightShader();
+	Shader* shader = gShaderManager->getGeometryPassShader();
 
-	if (textures.size() >= 1) {
-		shader->SetBool("textureProvided", true);
-	}
-	else {
-		shader->SetBool("textureProvided", false);
-	}
+	//if (textures.size() >= 1) {
+		//shader->SetBool("textureProvided", true);
+	//}
+	//else {
+		//shader->SetBool("textureProvided", false);
+	//}
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);

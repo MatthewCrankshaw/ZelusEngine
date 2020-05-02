@@ -8,6 +8,8 @@ private:
 	Shader* multiLightShader;
 	Shader* skyBoxShader;
 	Shader* axisShader;
+	Shader* geometricPassShader;
+	Shader* lightingPassShader;
 public:
 
 	void StartUp();
@@ -28,6 +30,14 @@ public:
 
 	Shader* getAxisShader() {
 		return axisShader;
+	}
+
+	Shader* getGeometryPassShader() {
+		return geometricPassShader;
+	}
+
+	Shader* getLighthingPassShader() {
+		return lightingPassShader;
 	}
 };
 

@@ -24,6 +24,7 @@ public:
 	virtual void Update() = 0;
 
 	void setPosition(const glm::vec3 position);
+	void setScale(const glm::vec3 scale);
 	void translate(const glm::vec3 translate);
 };
 

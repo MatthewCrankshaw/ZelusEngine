@@ -19,6 +19,8 @@ Rectangle::Rectangle()
 
 	mColour = glm::vec3(0.3f, 0.3f, 0.3f);
 
+	mShaderMode = ShaderModes::REGULAR;
+
 	mTexturedRect = false;
 }
 
@@ -40,6 +42,8 @@ Rectangle::Rectangle(glm::vec3 colour)
 	mTextureId = 0;
 
 	mColour = colour;
+
+	mShaderMode = ShaderModes::REGULAR;
 
 	mTexturedRect = false;
 }
@@ -63,6 +67,8 @@ Rectangle::Rectangle(std::string textureFilename)
 
 	mColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
+	mShaderMode = ShaderModes::REGULAR;
+
 	Texture texture;
 	texture.LoadRegularTexture("res/", textureFilename, true);
 	mTextureId = texture.GetHandle();
@@ -73,7 +79,21 @@ Rectangle::Rectangle(std::string textureFilename)
 
 void Rectangle::Draw(const Camera& camera)
 {
-	Shader* shader = gShaderManager->getBasicShader();
+
+	Shader* shader;
+	switch (mShaderMode) {
+	case ShaderModes::GEOMETRIC_PASS:
+		shader = gShaderManager->getGeometryPassShader();
+		break;
+	case ShaderModes::LIGHTING_PASS:
+		shader = gShaderManager->getLighthingPassShader();
+		break;
+	case ShaderModes::REGULAR:
+		shader = gShaderManager->getBasicShader();
+		break;
+	default: 
+		shader = gShaderManager->getBasicShader();
+	}
 	shader->Use();
 
 	camera.GetViewMatrix(mViewMat);
