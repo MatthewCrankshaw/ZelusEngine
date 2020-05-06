@@ -54,14 +54,14 @@ void RenderManager::StartUp()
     glfwSetFramebufferSizeCallback(window, InputHandler::OnFrameBufferSizeChange);
 
     m = new Model("res/crysis_nano_suit/nanosuit.obj");
-    //m = new Model("res/skull/Skull.obj", ui);
+    //m = new Model("res/skull/Skull.obj");
     //m = new Model("res/SM_Fern_01.obj");
-    //m = new Model("res/CarsN/LowPolyCars.obj", ui);
-    //m = new Model("res/bugatti/bugatti.obj", ui);
-    //m = new Model("res/buildings/Residential\ Buildings\ 003.obj", ui);
+    //m = new Model("res/CarsN/LowPolyCars.obj");
+    //m = new Model("res/bugatti/bugatti.obj");
+    //m = new Model("res/buildings/Residential\ Buildings\ 003.obj");
     //m = new Model("res/FireHydrant_Model/sm_FireHydrant.obj");
-    //m = new Model("res/Sample_Ship/Sample_Ship.obj", ui);
-    //m = new Model("res/Valentine_balloon/W.obj", ui);
+    //m = new Model("res/Sample_Ship/Sample_Ship.obj");
+    //m = new Model("res/Valentine_balloon/W.obj");
 
     axis = new AxisModel();
 
@@ -85,24 +85,52 @@ void RenderManager::Render() {
 
     int frames = 0;
 
-    //Create the framebuffer which will replace the default frame buffer
-    GLuint frameBuff, renderBuffTex, rboId;
+    GLuint finalFBO, finalTex, finalRBO;
 
-    glGenTextures(1, &renderBuffTex);
-    glBindTexture(GL_TEXTURE_2D, renderBuffTex);
+    glGenTextures(1, &finalTex);
+    glBindTexture(GL_TEXTURE_2D, finalTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glGenRenderbuffers(1, &rboId);
-    glBindRenderbuffer(GL_RENDERBUFFER, rboId);
+    glGenRenderbuffers(1, &finalRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, finalRBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-    glGenFramebuffers(1, &frameBuff);
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuff);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderBuffTex, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboId);
+    glGenFramebuffers(1, &finalFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, finalRBO);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "Framebuffer is not complete!" << std::endl;
+        exit(1);
+    }
 
+    //Create the framebuffer which will replace the default frame buffer
+    GLuint hdrFBO, hdrBuffer, hdrRBO;
+
+    glGenTextures(1, &hdrBuffer);
+    glBindTexture(GL_TEXTURE_2D, hdrBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glGenRenderbuffers(1, &hdrRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, hdrRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    glGenFramebuffers(1, &hdrFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrBuffer, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, hdrRBO);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "Framebuffer is not complete!" << std::endl;
+        exit(1);
+    }
 
     glGenFramebuffers(1, &mGeometricBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
@@ -142,7 +170,7 @@ void RenderManager::Render() {
         std::cout << "Framebuffer is not complete!" << std::endl;
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuff);
+    glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
     std::vector<glm::vec3> objectPositions;
     objectPositions.push_back(glm::vec3(-3.0, -3.0, -3.0));
@@ -163,7 +191,7 @@ void RenderManager::Render() {
     {
         // calculate slightly random offsets
         float xPos = ((rand() % 100) / 100.0) * 6.0 - 3.0;
-        float yPos = ((rand() % 100) / 100.0) * 6.0 - 4.0;
+        float yPos = ((rand() % 100) / 100.0) * 6.0 - 6.0;
         float zPos = ((rand() % 100) / 100.0) * 6.0 - 3.0;
         lightPositions.push_back(glm::vec3(xPos, yPos, zPos));
         // also calculate random color
@@ -185,6 +213,7 @@ void RenderManager::Render() {
     m->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 
     Rectangle* quad = new Rectangle();
+    Rectangle* quadHdr = new Rectangle();
     Rectangle* rect = new Rectangle("flowers.png");
 
     /* Loop until the user closes the window */
@@ -217,92 +246,107 @@ void RenderManager::Render() {
 
         //Geometric Pass
         glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+             //for(int i = 0; i < objectPositions.size(); i++) {
+                m->setPosition(objectPositions[0]);
+                m->setScale(glm::vec3(0.25f));
+                m->Draw(*cam);
+             //}
 
-        for (int i = 0; i < objectPositions.size(); i++) {
-            m->setPosition(objectPositions[i]);
-            m->setScale(glm::vec3(0.25f));
-            m->Draw(*cam);
-        }
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBuff);
+            //Lighting pass
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Lighting pass
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            lightShader->Use();
 
-        lightShader->Use();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, mGeometricNormal);
+            glActiveTexture(GL_TEXTURE2); 
+            glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, mGeometricNormal);
-        glActiveTexture(GL_TEXTURE2); 
-        glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular);
+            for (unsigned int i = 0; i < lightPositions.size(); i++) {
+                lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
+                lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-        for (unsigned int i = 0; i < lightPositions.size(); i++) {
-            lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
-            lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
+                const float linear = 0.002; 
+                const float quadratic = 0.0002; 
 
-            const float linear = 0.2; 
-            const float quadratic = 0.03; 
+                lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
+                lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
+            }
 
-            lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
-            lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
-        }
-
-        //glm::vec3 camPos;
-        //cam->GetPosition(camPos);
-        //lightShader->SetVec3("viewPos", camPos);
-
-        //RenderQuad();
-        quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
-        quad->Draw(*cam);
+            //RenderQuad();
+            quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
+            quad->Draw(*cam);
 
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuff); // write to default framebuffer
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, hdrFBO); // write to default framebuffer
 
         // blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
         // the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
         // depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
         glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBuff);
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
-        //Start the regular shading for things that require blending or special lighting effects
-        //Enable blending
-        glEnable(GL_BLEND);
+            //Start the regular shading for things that require blending or special lighting effects
+            //Enable blending
+            glEnable(GL_BLEND);
 
-        //Skybox should be the first thing to render now
-        skyBox->Draw(*cam);
+            //Skybox should be the first thing to render now
+            skyBox->Draw(*cam);
 
-        Shader* basic = gShaderManager->getBasicShader();
+            Shader* basic = gShaderManager->getBasicShader();
 
-        basic->Use();
-        basic->SetMat4("projection", projectionMatrix);
-        basic->SetMat4("view", viewMatrix);
-        for (int i = 0; i < lightPositions.size(); i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, lightPositions[i]);
-            model = glm::scale(model, glm::vec3(0.125f));
-            basic->SetMat4("model", model);
-            basic->SetBool("textured", false);
-            basic->SetVec3("colour", lightColors[i]);
-            RenderCube();
-        }
-        basic->UnUse();
+            basic->Use();
+            basic->SetMat4("projection", projectionMatrix);
+            basic->SetMat4("view", viewMatrix);
+            for (int i = 0; i < lightPositions.size(); i++) {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, lightPositions[i]);
+                model = glm::scale(model, glm::vec3(0.125f));
+                basic->SetMat4("model", model);
+                basic->SetBool("textured", false);
+                basic->SetVec3("colour", lightColors[i]);
+                RenderCube();
+            }
+            basic->UnUse();
 
-        rect->setPosition(glm::vec3(0.0f, 1.5f, 0.0f));
-        rect->Draw(*cam);
+            rect->setPosition(glm::vec3(0.0f, 1.5f, 0.0f));
+            rect->Draw(*cam);
         
-        //Disable blending as we are now done
-        glDisable(GL_BLEND);
+            //Disable blending as we are now done
+            glDisable(GL_BLEND);
 
-        //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, renderBuffTex, 0);
-        glBindTexture(GL_TEXTURE_2D, renderBuffTex);
-        glGenerateTextureMipmap(renderBuffTex);
+            axis->Draw(*cam);
+
+        glBindTexture(GL_TEXTURE_2D, hdrBuffer);
+        glGenerateTextureMipmap(hdrBuffer);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(renderBuffTex);
+        glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            Shader* hdrShader = gShaderManager->getHDRShader();
+            hdrShader->Use();
+            hdrShader->SetInt("hdrBuffer", 0);
+            hdrShader->SetFloat("exposure", gUserInterface->GetExposure());
+            hdrShader->SetFloat("gamma", gUserInterface->GetGamma());
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, hdrBuffer); 
+            quadHdr->SetShaderMode(Rectangle::ShaderModes::HDR_PASS);
+            quadHdr->Draw(*cam);
+            hdrShader->UnUse();
+
+        
+        glBindTexture(GL_TEXTURE_2D, finalTex);
+        glGenerateTextureMipmap(finalTex);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
+
         gUserInterface->Render();
 
         /* Swap front and back buffers */
@@ -333,37 +377,6 @@ void RenderManager::FramebufferSizeCallback(GLFWwindow* window, int width, int h
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
-
-// renderQuad() renders a 1x1 XY quad in NDC
-// -----------------------------------------
-//unsigned int quadVAO = 0;
-//unsigned int quadVBO;
-//void RenderManager::RenderQuad()
-//{
-//    if (quadVAO == 0)
-//    {
-//        float quadVertices[] = {
-//            // positions        // texture Coords
-//            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-//            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-//             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-//             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-//        };
-//        // setup plane VAO
-//        glGenVertexArrays(1, &quadVAO);
-//        glGenBuffers(1, &quadVBO);
-//        glBindVertexArray(quadVAO);
-//        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-//        glEnableVertexAttribArray(0);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-//        glEnableVertexAttribArray(1);
-//        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-//    }
-//    glBindVertexArray(quadVAO);
-//    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//    glBindVertexArray(0);
-//}
 
 // renderCube() renders a 1x1 3D cube in NDC.
 // -------------------------------------------------

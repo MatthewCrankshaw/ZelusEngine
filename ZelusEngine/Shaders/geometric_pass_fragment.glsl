@@ -10,15 +10,22 @@ in vec3 Normal;
 
 uniform sampler2D texture_diffuse1; 
 uniform sampler2D texture_specular1; 
+uniform sampler2D texture_normal1;
+
+uniform bool textureProvided;
 
 void main()
 {
 	gPosition = FragPos;
 
 	gNormal = normalize(Normal);
+	//gNormal = normalize(texture(texture_normal1, TexCoords).rgb * 2.0 - 1.0);
 
-	gAlbedoSpecular.rgb = texture(texture_diffuse1, TexCoords).rgb; 
-
-	gAlbedoSpecular.a = texture(texture_specular1, TexCoords).r;
-
+	if(textureProvided){
+		gAlbedoSpecular.rgb = texture(texture_diffuse1, TexCoords).rgb;
+		gAlbedoSpecular.a = texture(texture_specular1, TexCoords).r;
+	}else{
+		gAlbedoSpecular.rgb = vec3(0.2, 0.2, 0.2);
+		gAlbedoSpecular.a = 0.2;
+	}
 }

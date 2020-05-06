@@ -29,9 +29,9 @@ extern ShaderManager* gShaderManager;
 class Mesh{
 private:
     /*  Mesh Data  */
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Vertex>* vertices;
+    std::vector<unsigned int>* indices;
+    std::vector<Texture>* textures;
 
     GLuint VAO; 
     GLuint VBO; 
@@ -40,7 +40,7 @@ private:
 public:
     /*  Functions  */
     // constructor
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex>* vertices, std::vector<unsigned int>* indices, std::vector<Texture>* textures);
 
     // render the mesh
     void Draw();

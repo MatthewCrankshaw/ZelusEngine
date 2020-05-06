@@ -203,5 +203,7 @@
     <None Include="Shaders\geometric_pass_fragment.glsl" />
     <None Include="Shaders\lighting_pass_vertex.glsl" />
     <None Include="Shaders\lighting_pass_fragment.glsl" />
+    <None Include="Shaders\hdr_vertex.glsl" />
+    <None Include="Shaders\hdr_fragment.glsl" />
   </ItemGroup>
 </Project>

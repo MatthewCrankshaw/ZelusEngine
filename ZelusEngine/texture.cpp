@@ -10,17 +10,10 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
 {
     this->filename = filename;
     this->path = directory + filename;
-    glGenTextures(1, &handle);
-    glBindTexture(GL_TEXTURE_2D, handle);
+    
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nChannels;
     stbi_set_flip_vertically_on_load(flip);
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &nChannels, 0);
+    data = stbi_load(path.c_str(), &width, &height, &nChannels, 0);
 
     if (data == nullptr) {
         std::cout << "ERROR::TEXTURE::LOADER Could not load texture (" << path << ")" << std::endl;
@@ -28,7 +21,6 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
     }
 
     if (data) {
-        GLenum format;
         if (nChannels == 1) {
             format = GL_RED;
         }
@@ -42,24 +34,26 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
             std::cerr << "TEXTURE::READIMAGE: Unknown image format" << std::endl;
             exit(1);
         }
-
-        glad_glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
     }
-    else {
-        std::cerr << "Failed to load texture: " << std::endl;
-        exit(1);
-    }
-
-#ifndef DEBUG
-    std::cout << "TEXTURE::LOAD_REGULAR_TEXTURE: loaded texture:  " << path << std::endl;
-#endif // !DEBUG
 
     isLoaded = true;
 
-    stbi_image_free(data);
+}
 
+void Texture::InitialiseTexture(){
+    glGenTextures(1, &handle);
+    glBindTexture(GL_TEXTURE_2D, handle);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glad_glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    isInitialised = true;
 }
 
 void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip) {
@@ -122,13 +116,22 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     isLoaded = true;
+    isInitialised = true;
 
 }
 
 GLuint Texture::GetHandle()
 {
+    //std::cout << "Init: " << isInitialised << " loaded: " << isLoaded << std::endl;
     if (isLoaded) {
-        return handle;
+        if (isInitialised) {
+            return handle;
+        }
+        else {
+            InitialiseTexture();
+            return handle;
+        }
+        
     }
     else {
         std::cout << "TEXTURE::GET_HANDLE: Error getting texture handle: Texture object created but texture not loaded. Load texture first" << path << std::endl;

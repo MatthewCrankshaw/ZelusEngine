@@ -15,6 +15,10 @@ void UserInterfaceManager::StartUp() {
     cullFaceEnabled = true;
     gameWindowNoMove = true;
     gammaCorrection = false;
+    mGeometricAlbedoOutput = true;
+    mGeometricNormalOutput = true;
+    mGeometricPositionOutput = true;
+    mHDROutput = true;
     titleBarUI = new TitleBar();
 
     // Setup Dear ImGui context
@@ -70,7 +74,7 @@ void UserInterfaceManager::SetCamera(Camera* cam)
     this->cam = cam;
 }
 
-void UserInterfaceManager::Update(GLuint imageOutput)
+void UserInterfaceManager::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
 {
     if (cam == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -84,6 +88,10 @@ void UserInterfaceManager::Update(GLuint imageOutput)
     UpdateTitleWindow();
 
     UpdateGameWindow(imageOutput);
+    UpdateHDRWindow(hdrOutput);
+    UpdateAlbedoWindow(gAlbedoOutput);
+    UpdateNormalWindow(gNormalOutput);
+    UpdatePositionWindow(gPositionOutput);
 
     UpdatePropertiesWindow();
 
@@ -104,10 +112,62 @@ void UserInterfaceManager::UpdateGameWindow(GLuint imageOutput) {
     ImGui::Begin("Game Window", NULL, windowFlagsGame);
     ui_handler->EngineInputHandler();
     ImVec2 size = ImGui::GetWindowSize();
-    SCREEN_WIDTH = (int)size.x - 100;
-    SCREEN_HEIGHT = (int)size.y - 100;
+    //SCREEN_WIDTH = (int)size.x - 100;
+    //SCREEN_HEIGHT = (int)size.y - 100;
 
     cam->FramebufferSizeCallback(window, (int)size.x - 100, (int)size.y - 100);
+    ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::End();
+}
+
+void UserInterfaceManager::UpdateHDRWindow(GLuint imageOutput)
+{
+    if (!mHDROutput) return;
+    ImGuiWindowFlags windowFlagsGame = 0;
+    windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+    ImGui::Begin("HDR Window", NULL, windowFlagsGame);
+    ImVec2 size = ImGui::GetWindowSize();
+
+    ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::End();
+}
+
+void UserInterfaceManager::UpdatePositionWindow(GLuint imageOutput)
+{
+    if (!mGeometricPositionOutput) return;
+    ImGuiWindowFlags windowFlagsGame = 0;
+    windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+    ImGui::Begin("Position Window", NULL, windowFlagsGame);
+    ImVec2 size = ImGui::GetWindowSize();
+
+    ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::End();
+}
+
+void UserInterfaceManager::UpdateAlbedoWindow(GLuint imageOutput)
+{
+    if (!mGeometricAlbedoOutput) return;
+    ImGuiWindowFlags windowFlagsGame = 0;
+    windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+    ImGui::Begin("Albedo Window", NULL, windowFlagsGame);
+    ImVec2 size = ImGui::GetWindowSize();
+
+    ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::End();
+}
+
+void UserInterfaceManager::UpdateNormalWindow(GLuint imageOutput)
+{
+    if (!mGeometricNormalOutput) return;
+    ImGuiWindowFlags windowFlagsGame = 0;
+    windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+    ImGui::Begin("Normal Window", NULL, windowFlagsGame);
+    ImVec2 size = ImGui::GetWindowSize();
+
     ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
 }
@@ -121,10 +181,25 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SliderFloat("Field Of View", &fov, 10.0f, 60.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
     cam->SetFieldOfView(fov);
 
+    if (ImGui::Button("Toggle Albedo Output")) {
+        ToggleBool(mGeometricAlbedoOutput);
+    }
+    if (ImGui::Button("Toggle HDR Output")) {
+        ToggleBool(mHDROutput);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Toggle Normal Output")) {
+        ToggleBool(mGeometricNormalOutput);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Toggle Position Output")) {
+        ToggleBool(mGeometricPositionOutput);
+    }
+
     ImGui::ColorEdit3("clear color", (float*)&clearColour); // Edit 3 floats representing a color
 
     ImGui::Text("Light");
-    ImGui::SliderFloat3("Light Position", lightPosition, -20.0f, 20.0f);
+    /*ImGui::SliderFloat3("Light Position", lightPosition, -20.0f, 20.0f);
     ImGui::SliderFloat3("Light Direction", lightDirection, -1.0f, 1.0f);
     ImGui::ColorEdit3("Ambient", (float*)&lightAmbient);
     ImGui::ColorEdit3("Diffuse", (float*)&lightDiffuse);
@@ -132,14 +207,16 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SliderFloat("Constant", &lightConstant, 0.1f, 1.0f);
     ImGui::SliderFloat("Linear", &lightLinear, 0.0001f, 2.0f);
     ImGui::SliderFloat("Quadratic", &lightQuadratic, 0.000007f, 2.0f);
-    ImGui::SliderFloat("Inner CutOff", &lightInnerCutOff, 10.0f, 40.0f);
-    ImGui::SliderFloat("Outer CutOff", &lightOuterCutOff, 10.0f, 40.0f);
+    ImGui::SliderFloat("Inner CutOff", &lightInnerCutOff, 10.0f,40.0f);
+    ImGui::SliderFloat("Outer CutOff", &lightOuterCutOff, 10.0f, 40.0f);*/
+    ImGui::SliderFloat("Exposure", &exposure, 0.01f, 5.0f);
+    ImGui::SliderFloat("Gamma", &gamma, 0.5f, 4.0f);
 
-    ImGui::Text("Material Colors");
+    /*ImGui::Text("Material Colors");
     ImGui::ColorEdit3("material ambient", (float*)&materialAmbient);
     ImGui::ColorEdit3("material diffuse", (float*)&materialDiffuse);
     ImGui::ColorEdit3("material specular", (float*)&materialSpecular);
-    ImGui::SliderFloat("Shininess: ", &materialShininess, 0.0f, 50.0f);
+    ImGui::SliderFloat("Shininess: ", &materialShininess, 0.0f, 50.0f);*/
 
     if (ImGui::Button("Toggle Depth Test")) {
         ToggleDeptTest();
@@ -148,7 +225,7 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SameLine();
     if (ImGui::Button("Toggle Polygon Mode")) {
         polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
-        TogglePolyMode();
+        ToggleBool(polyModeEnabled);
     }
     ImGui::SameLine();
     if (ImGui::Button("Toggle Cull Face")) {
@@ -194,6 +271,10 @@ void UserInterfaceManager::Render() {
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
     }
+}
+
+void UserInterfaceManager::ToggleBool(bool& value) {
+    value = !value;
 }
 
 void UserInterfaceManager::ToggleDeptTest() {

@@ -23,11 +23,11 @@ void AxisModel::Draw(const Camera& camera)
 
     camera.GetPosition(pos);
     camera.GetForward(forward);
-    camera.GetOrthoProjectionMatrix(mProjectionMat);
+    camera.GetProjectionMatrix(mProjectionMat);
     camera.GetViewMatrix(mViewMat);
 
-    mTranslation = glm::translate(glm::mat4(1.0), pos + forward);
-    mScale = glm::scale(mScale, glm::vec3(0.2f, 0.2f, 0.2f));
+    mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));
+    mScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
 
     mModelMat = mTranslation * mScale;
 
@@ -35,6 +35,7 @@ void AxisModel::Draw(const Camera& camera)
     shader->SetMat4("model", mModelMat);
     shader->SetMat4("projection", mProjectionMat);
 
+    glDisable(GL_DEPTH_TEST);
     glLineWidth(5.0f);
     glPointSize(10.0f);
     glBindVertexArray(mVAO);
@@ -43,6 +44,7 @@ void AxisModel::Draw(const Camera& camera)
     glBindVertexArray(0);
     glPointSize(1.0f);
     glLineWidth(1.0f);
+    glEnable(GL_DEPTH_TEST);
 
     shader->UnUse();
 }

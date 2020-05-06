@@ -71,6 +71,7 @@ Rectangle::Rectangle(std::string textureFilename)
 
 	Texture texture;
 	texture.LoadRegularTexture("res/", textureFilename, true);
+	texture.InitialiseTexture();
 	mTextureId = texture.GetHandle();
 
 	mTexturedRect = true;
@@ -87,6 +88,9 @@ void Rectangle::Draw(const Camera& camera)
 		break;
 	case ShaderModes::LIGHTING_PASS:
 		shader = gShaderManager->getLighthingPassShader();
+		break;
+	case ShaderModes::HDR_PASS:
+		shader = gShaderManager->getHDRShader();
 		break;
 	case ShaderModes::REGULAR:
 		shader = gShaderManager->getBasicShader();

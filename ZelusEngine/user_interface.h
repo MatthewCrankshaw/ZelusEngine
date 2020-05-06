@@ -24,6 +24,8 @@ protected:
 	float lightQuadratic = 0.01f;
 	float lightInnerCutOff = 25;
 	float lightOuterCutOff = 35;
+	float exposure = 0.5;
+	float gamma = 1.5;
 
 
 	ImVec4 materialAmbient = ImVec4(1.0f, 0.5f, 0.31f, 1.0f);
@@ -48,6 +50,12 @@ protected:
 	bool gameWindowNoMove;
 	bool gammaCorrection;
 
+	bool mHDROutput;
+	bool mGeometricAlbedoOutput;
+	bool mGeometricNormalOutput;
+	bool mGeometricPositionOutput;
+
+	void ToggleBool(bool& value);
 	void ToggleDeptTest();
 	void TogglePolyMode();
 	void ToggleCullFace();
@@ -56,6 +64,10 @@ protected:
 
 	void UpdateTitleWindow();
 	void UpdateGameWindow(GLuint imageOutput);
+	void UpdateHDRWindow(GLuint imageOutput);
+	void UpdatePositionWindow(GLuint imageOutput);
+	void UpdateAlbedoWindow(GLuint imageOutput);
+	void UpdateNormalWindow(GLuint imageOutput);
 	void UpdatePropertiesWindow();
 	void UpdateLogWindow();
 
@@ -69,7 +81,8 @@ public:
 	void SetupOpenGL(const char* glslVersion);
 	void SetCamera(Camera* cam);
 
-	void Update(GLuint output);
+	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput);
+
 	void Render();
 
 	ImVec4 GetScreenClearColour() {
@@ -114,6 +127,14 @@ public:
 
 	float GetLightOuterCutOff() {
 		return lightOuterCutOff;
+	}
+
+	float GetExposure() {
+		return exposure;
+	}
+
+	float GetGamma() {
+		return gamma;
 	}
 
 	glm::vec4 GetMaterialAmbient() {

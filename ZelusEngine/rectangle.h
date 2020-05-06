@@ -11,7 +11,7 @@ class Rectangle : public Renderable
 {
 public:
 
-	enum class ShaderModes { GEOMETRIC_PASS, LIGHTING_PASS, REGULAR };
+	enum class ShaderModes { GEOMETRIC_PASS, LIGHTING_PASS, HDR_PASS, REGULAR };
 
 	Rectangle();
 	Rectangle(glm::vec3 colour);

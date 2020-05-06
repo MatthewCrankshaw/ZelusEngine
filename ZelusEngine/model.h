@@ -17,6 +17,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <future>
 
 extern UserInterfaceManager* gUserInterface;
 extern ShaderManager* gShaderManager;
@@ -37,10 +38,10 @@ public:
 
 private:
 
-	std::vector<Texture> diffuseMaps; 
-	std::vector<Texture> specularMaps; 
-	std::vector<Texture> normalMaps; 
-	std::vector<Texture> heightMaps; 
+	//std::vector<Texture>* diffuseMaps; 
+	//std::vector<Texture>* specularMaps; 
+	//std::vector<Texture>* normalMaps; 
+	//std::vector<Texture>* heightMaps; 
 
 	void LoadModel(std::string const& path);
 
@@ -48,6 +49,6 @@ private:
 
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	std::vector<Texture>* LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 };

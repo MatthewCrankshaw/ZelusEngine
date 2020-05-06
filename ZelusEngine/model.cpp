@@ -81,9 +81,15 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 }
 
 Mesh Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Vertex>* vertices = new std::vector<Vertex>();
+    std::vector<unsigned int>* indices = new std::vector<unsigned int>();
+    std::vector<Texture>* textures = new std::vector<Texture>();
+
+    vertices->reserve(aimesh->mNumVertices);
+    indices->reserve(aimesh->mNumFaces);
+
+    std::cout << "Vertices: " << aimesh->mNumVertices << std::endl;
+    std::cout << "Faces: " << aimesh->mNumFaces << std::endl;
 
     for (unsigned int i = 0; i < aimesh->mNumVertices; i++) {
         Vertex vertex;
@@ -147,36 +153,36 @@ Mesh Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
             vector.z = 0;
             vertex.Bitangent = vector;
         }
-        vertices.push_back(vertex);
+        vertices->push_back(vertex);
     }
 
     for (unsigned int i = 0; i < aimesh->mNumFaces; i++) {
         aiFace face = aimesh->mFaces[i];
 
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
-            indices.push_back(face.mIndices[j]);
+            indices->push_back(face.mIndices[j]);
         }
     }
 
     aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 
-    std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    std::vector<Texture>* diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures->insert(textures->end(), diffuseMaps->begin(), diffuseMaps->end());
 
-    std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular"); 
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    std::vector<Texture>* specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    textures->insert(textures->end(), specularMaps->begin(), specularMaps->end());
 
-    std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture>* normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    textures->insert(textures->end(), normalMaps->begin(), normalMaps->end());
 
-    std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    std::vector<Texture>* heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    textures->insert(textures->end(), heightMaps->begin(), heightMaps->end());
 
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
-    std::vector<Texture> textures; 
+std::vector<Texture>* Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
+    std::vector<Texture>* textures = new std::vector<Texture>();
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
@@ -187,16 +193,17 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
 
         for (unsigned int j = 0; j < texturesLoaded.size(); j++) {
             if (std::strcmp(texturesLoaded[j].GetFilename().data(), str.C_Str()) == 0) {
-                textures.push_back(texturesLoaded[j]);
+                textures->push_back(texturesLoaded[j]);
                 skip = true;
                 break;
             }
         }
+
         if (!skip) {
             Texture texture;
             texture.LoadRegularTexture(directory + "/", str.C_Str(), false);
             texture.SetTextureType(typeName);
-            textures.push_back(texture);
+            textures->push_back(texture);
             texturesLoaded.push_back(texture);
         }
     }

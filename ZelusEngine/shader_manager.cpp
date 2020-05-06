@@ -8,6 +8,7 @@ void ShaderManager::StartUp()
 	axisShader = new Shader("Shaders/axis_vertex.glsl", "Shaders/axis_fragment.glsl");
 	geometricPassShader = new Shader("Shaders/geometric_pass_vertex.glsl", "Shaders/geometric_pass_fragment.glsl");
 	lightingPassShader = new Shader("Shaders/lighting_pass_vertex.glsl", "Shaders/lighting_pass_fragment.glsl");
+	hdrShader = new Shader("Shaders/hdr_vertex.glsl", "Shaders/hdr_fragment.glsl");
 }
 
 void ShaderManager::ShutDown()
@@ -18,4 +19,5 @@ void ShaderManager::ShutDown()
 	delete axisShader;
 	delete geometricPassShader;
 	delete lightingPassShader;
+	delete hdrShader;
 }

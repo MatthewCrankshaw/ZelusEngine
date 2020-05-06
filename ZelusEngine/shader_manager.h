@@ -10,6 +10,7 @@ private:
 	Shader* axisShader;
 	Shader* geometricPassShader;
 	Shader* lightingPassShader;
+	Shader* hdrShader;
 public:
 
 	void StartUp();
@@ -38,6 +39,10 @@ public:
 
 	Shader* getLighthingPassShader() {
 		return lightingPassShader;
+	}
+
+	Shader* getHDRShader() {
+		return hdrShader;
 	}
 };
 

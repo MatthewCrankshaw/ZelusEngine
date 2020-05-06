@@ -13,6 +13,7 @@ public:
 
 	Texture();
 
+	void InitialiseTexture();
 	void LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip);
 	void LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip);
 
@@ -39,7 +40,12 @@ private:
 	GLuint handle;
 	std::string textureType;
 
+	int width, height, nChannels;
+	unsigned char* data;
+	GLenum format;
+
 	//Check for if the texture is actually loaded or the texture object has just been created
 	bool isLoaded; 
+	bool isInitialised;
 };
 

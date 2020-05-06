@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+Mesh::Mesh(std::vector<Vertex>* vertices, std::vector<unsigned int>* indices, std::vector<Texture>* textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;
@@ -16,18 +16,18 @@ void Mesh::Draw() {
 
 	Shader* shader = gShaderManager->getGeometryPassShader();
 
-	//if (textures.size() >= 1) {
-		//shader->SetBool("textureProvided", true);
-	//}
-	//else {
-		//shader->SetBool("textureProvided", false);
-	//}
+	if (textures->size() >= 1) {
+		shader->SetBool("textureProvided", true);
+	}
+	else {
+		shader->SetBool("textureProvided", false);
+	}
 
-	for (unsigned int i = 0; i < textures.size(); i++) {
+	for (unsigned int i = 0; i < textures->size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
 
 		std::string number;
-		std::string name = textures[i].GetTextureType();
+		std::string name = textures->at(i).GetTextureType();
 
 		if (name == "texture_diffuse") {
 			number = std::to_string(diffuseNr++);
@@ -44,11 +44,11 @@ void Mesh::Draw() {
 
 		shader->SetInt((name + number).c_str(), i);
 
-		glBindTexture(GL_TEXTURE_2D, textures[i].GetHandle());
+		glBindTexture(GL_TEXTURE_2D, textures->at(i).GetHandle());
 	}
 
 	glBindVertexArray(VAO); 
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0); 
+	glDrawElements(GL_TRIANGLES, indices->size(), GL_UNSIGNED_INT, 0); 
 	glBindVertexArray(0);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -67,10 +67,10 @@ void Mesh::SetupMesh() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO); 
 
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER, vertices->size() * sizeof(Vertex), &vertices->at(0), GL_STATIC_DRAW); 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), &indices->at(0), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -87,6 +87,7 @@ void Mesh::SetupMesh() {
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
+	delete vertices;
 
 	glBindVertexArray(0);
 }
