@@ -25,6 +25,7 @@ public:
 
 	void setPosition(const glm::vec3 position);
 	void setScale(const glm::vec3 scale);
+	void setRotation(float angle, glm::vec3 rot);
 	void translate(const glm::vec3 translate);
 };
 

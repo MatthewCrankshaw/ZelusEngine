@@ -5,7 +5,6 @@
 
 #include "glad/glad.h"
 #include "camera.h"
-#include "title_bar.h"
 #include "ui_input_handler.h"
 
 class UserInterfaceManager
@@ -40,26 +39,22 @@ protected:
 
 	Camera* cam;
 
-	TitleBar* titleBarUI;
-
 	float fov;
 
+	bool exitPressed;
 	bool depthBufferEnabled;
 	bool polyModeEnabled;
 	bool cullFaceEnabled;
 	bool gameWindowNoMove;
 	bool gammaCorrection;
 
+	bool logEnabled;
 	bool mHDROutput;
 	bool mGeometricAlbedoOutput;
 	bool mGeometricNormalOutput;
 	bool mGeometricPositionOutput;
 
 	void ToggleBool(bool& value);
-	void ToggleDeptTest();
-	void TogglePolyMode();
-	void ToggleCullFace();
-	void ToggleGammaCorrection();
 
 
 	void UpdateTitleWindow();

@@ -15,15 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ZelusEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="input_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,62 +33,71 @@
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
+    <ClCompile Include="src\axis_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="user_interface.cpp">
+    <ClCompile Include="src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="title_bar.cpp">
+    <ClCompile Include="src\globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ui_input_handler.cpp">
+    <ClCompile Include="src\input_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
+    <ClCompile Include="src\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
+    <ClCompile Include="src\model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="globals.cpp">
+    <ClCompile Include="src\rectangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_manager.cpp">
+    <ClCompile Include="src\render_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderable.cpp">
+    <ClCompile Include="src\renderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sky_box.cpp">
+    <ClCompile Include="src\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rectangle.cpp">
+    <ClCompile Include="src\shader_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shader_manager.cpp">
+    <ClCompile Include="src\sky_box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="axis_model.cpp">
+    <ClCompile Include="src\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_input_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\user_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ZelusEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\renderer_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\opengl_renderer_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\render_commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="input_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\ImGui\imconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -125,46 +125,64 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="texture.h">
+    <ClInclude Include="src\axis_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="src\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="user_interface.h">
+    <ClInclude Include="src\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="title_bar.h">
+    <ClInclude Include="src\input_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ui_input_handler.h">
+    <ClInclude Include="src\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
+    <ClInclude Include="src\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
+    <ClInclude Include="src\rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="globals.h">
+    <ClInclude Include="src\render_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_manager.h">
+    <ClInclude Include="src\renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderable.h">
+    <ClInclude Include="src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sky_box.h">
+    <ClInclude Include="src\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rectangle.h">
+    <ClInclude Include="src\shader_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shader_manager.h">
+    <ClInclude Include="src\sky_box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="axis_model.h">
+    <ClInclude Include="src\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui_input_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\renderer_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\opengl_renderer_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\render_commands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -182,7 +200,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgui.ini" />
     <None Include="ZelusEngine.aps" />
     <None Include="Shaders\vertex.glsl" />
     <None Include="Shaders\fragment.glsl" />
@@ -190,7 +207,6 @@
     <None Include="Shaders\light_vertex.glsl" />
     <None Include="Shaders\multi_light_fragment.glsl" />
     <None Include="Shaders\multi_light_vertex.glsl" />
-    <None Include="packages.config" />
     <None Include="Shaders\axis_fragment.glsl" />
     <None Include="Shaders\axis_vertex.glsl" />
     <None Include="Shaders\window_fragment.glsl" />
@@ -205,5 +221,7 @@
     <None Include="Shaders\lighting_pass_fragment.glsl" />
     <None Include="Shaders\hdr_vertex.glsl" />
     <None Include="Shaders\hdr_fragment.glsl" />
+    <None Include="src\imgui.ini" />
+    <None Include="src\packages.config" />
   </ItemGroup>
 </Project>

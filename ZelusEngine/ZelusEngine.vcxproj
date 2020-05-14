@@ -153,22 +153,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="axis_model.cpp" />
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="globals.cpp" />
-    <ClCompile Include="input_handler.cpp" />
-    <ClCompile Include="mesh.cpp" />
-    <ClCompile Include="model.cpp" />
-    <ClCompile Include="rectangle.cpp" />
-    <ClCompile Include="renderable.cpp" />
-    <ClCompile Include="render_manager.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="shader_manager.cpp" />
-    <ClCompile Include="sky_box.cpp" />
-    <ClCompile Include="texture.cpp" />
-    <ClCompile Include="title_bar.cpp" />
-    <ClCompile Include="ui_input_handler.cpp" />
-    <ClCompile Include="user_interface.cpp" />
+    <ClCompile Include="src\Renderer\render_commands.cpp" />
+    <ClCompile Include="src\Renderer\renderer.cpp" />
+    <ClCompile Include="src\Renderer\opengl_renderer_api.cpp" />
+    <ClCompile Include="src\Renderer\renderer_api.cpp" />
+    <ClCompile Include="src\axis_model.cpp" />
+    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\globals.cpp" />
+    <ClCompile Include="src\input_handler.cpp" />
+    <ClCompile Include="src\mesh.cpp" />
+    <ClCompile Include="src\model.cpp" />
+    <ClCompile Include="src\rectangle.cpp" />
+    <ClCompile Include="src\renderable.cpp" />
+    <ClCompile Include="src\render_manager.cpp" />
+    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\shader_manager.cpp" />
+    <ClCompile Include="src\sky_box.cpp" />
+    <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\ui_input_handler.cpp" />
+    <ClCompile Include="src\user_interface.cpp" />
     <ClCompile Include="vendor\glad.c" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
@@ -176,26 +179,29 @@
     <ClCompile Include="vendor\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="ZelusEngine.cpp" />
+    <ClCompile Include="src\ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="axis_model.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="input_handler.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="model.h" />
-    <ClInclude Include="rectangle.h" />
-    <ClInclude Include="renderable.h" />
-    <ClInclude Include="render_manager.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="shader_manager.h" />
-    <ClInclude Include="sky_box.h" />
-    <ClInclude Include="texture.h" />
-    <ClInclude Include="title_bar.h" />
-    <ClInclude Include="ui_input_handler.h" />
-    <ClInclude Include="user_interface.h" />
+    <ClInclude Include="src\Renderer\renderer.h" />
+    <ClInclude Include="src\Renderer\opengl_renderer_api.h" />
+    <ClInclude Include="src\Renderer\render_commands.h" />
+    <ClInclude Include="src\Renderer\renderer_api.h" />
+    <ClInclude Include="src\axis_model.h" />
+    <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\globals.h" />
+    <ClInclude Include="src\input_handler.h" />
+    <ClInclude Include="src\mesh.h" />
+    <ClInclude Include="src\model.h" />
+    <ClInclude Include="src\rectangle.h" />
+    <ClInclude Include="src\renderable.h" />
+    <ClInclude Include="src\render_manager.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\shader_manager.h" />
+    <ClInclude Include="src\sky_box.h" />
+    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\ui_input_handler.h" />
+    <ClInclude Include="src\user_interface.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\imgui.h" />
     <ClInclude Include="vendor\ImGui\imgui_impl_glfw.h" />
@@ -214,13 +220,13 @@
     <Image Include="res\stone.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="src\packages.config" />
     <None Include="Shaders\axis_fragment.glsl" />
     <None Include="Shaders\axis_vertex.glsl" />
     <None Include="Shaders\basic_shader_fragment.glsl" />
     <None Include="Shaders\basic_shader_vertex.glsl" />
     <None Include="Shaders\fragment.glsl" />
-    <None Include="imgui.ini" />
+    <None Include="src\imgui.ini" />
     <None Include="Shaders\geometric_pass_fragment.glsl" />
     <None Include="Shaders\geometric_pass_vertex.glsl" />
     <None Include="Shaders\hdr_fragment.glsl" />

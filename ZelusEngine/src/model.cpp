@@ -10,7 +10,7 @@ void Model::Draw(const Camera &camera) {
     camera.GetViewMatrix(viewMatrix);
     camera.GetProjectionMatrix(projectionMatrix);
 
-    glm::vec3 lightPos = gUserInterface->GetLightPosition();
+    /*glm::vec3 lightPos = gUserInterface->GetLightPosition();
     glm::vec3 lightDir = gUserInterface->GetLightDirection();
     glm::vec3 lightAmbient = gUserInterface->GetLightAmbient();
     glm::vec3 lightDiffuse = gUserInterface->GetLightDiffuse();
@@ -18,7 +18,7 @@ void Model::Draw(const Camera &camera) {
 
     glm::vec3 materialAmbient = gUserInterface->GetMaterialAmbient();
     glm::vec3 materialDiffuse = gUserInterface->GetMaterialDiffuse();
-    glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();
+    glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();*/
 
     //Shader* shader = gShaderManager->getMultiLightShader();
     Shader* shader = gShaderManager->getGeometryPassShader();

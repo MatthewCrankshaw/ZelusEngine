@@ -10,16 +10,17 @@ void UserInterfaceManager::StartUp() {
     lightDirection[0] = 0.0f;
     lightDirection[1] = 0.0f;
     lightDirection[2] = -1.0f;
+    exitPressed - false;
     depthBufferEnabled = true;
     polyModeEnabled = false;
     cullFaceEnabled = true;
     gameWindowNoMove = true;
     gammaCorrection = false;
+    logEnabled = true;
     mGeometricAlbedoOutput = true;
     mGeometricNormalOutput = true;
     mGeometricPositionOutput = true;
     mHDROutput = true;
-    titleBarUI = new TitleBar();
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -57,10 +58,14 @@ void UserInterfaceManager::SetupGLFW(GLFWwindow* window)
     
     ui_handler = new UserInterfaceInputHandler(window, cam);
 
-    titleBarUI->SetupGLFW(window);
-
     depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
     polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
+
+    glfwSetErrorCallback(InputHandler::OnWindowError);
+    glfwSetKeyCallback(window, InputHandler::OnKey);
+    glfwSetMouseButtonCallback(window, InputHandler::OnMouseButton);
+    glfwSetCursorPosCallback(window, InputHandler::OnCursorPosition);
+    glfwSetFramebufferSizeCallback(window, InputHandler::OnFrameBufferSizeChange);
 
 }
 
@@ -99,8 +104,56 @@ void UserInterfaceManager::Update(GLuint imageOutput, GLuint hdrOutput, GLuint g
 }
 
 void UserInterfaceManager::UpdateTitleWindow() {
-    titleBarUI->CreateTitleBar();
-    titleBarUI->Update();
+    ImGuiWindowFlags window_flags = 0;
+
+    window_flags |= ImGuiWindowFlags_MenuBar;
+    window_flags |= ImGuiWindowFlags_NoResize;
+
+    if (!ImGui::Begin("Zelus Engine", NULL, window_flags))
+    {
+        // Early out if the window is collapsed, as an optimization.
+        ImGui::End();
+        return;
+    }
+
+    // Most "big" widgets share a common width settings by default.
+    //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // Use 2/3 of the space for widgets and 1/3 for labels (default)
+    ImGui::PushItemWidth(ImGui::GetFontSize() * -12);           // Use fixed width for labels (by passing a negative value), the rest goes to widgets. We choose a width proportional to our font size.
+
+    // Menu Bar
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Menu"))
+        {
+            ImGui::MenuItem("Exit Program", NULL, &exitPressed);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("View"))
+        {
+            ImGui::MenuItem("Log", NULL, &logEnabled);
+            ImGui::MenuItem("Albedo View", NULL, &mGeometricAlbedoOutput);
+            ImGui::MenuItem("Normal View", NULL, &mGeometricNormalOutput);
+            ImGui::MenuItem("Position View", NULL, &mGeometricPositionOutput);
+            ImGui::MenuItem("HDR View", NULL, &mHDROutput);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Tools"))
+        {
+            ImGui::MenuItem("Metrics", NULL, nullptr);
+            ImGui::MenuItem("Style Editor", NULL, nullptr);
+            ImGui::MenuItem("About Dear ImGui", NULL, nullptr);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+
+    ImGui::End();
+
+    //Check if the exit button has been pressed
+    if (exitPressed) {
+        std::cout << "TITLE_BAR::UPDATE: User exited program" << std::endl;
+        exit(1);
+    }
 }
 
 void UserInterfaceManager::UpdateGameWindow(GLuint imageOutput) {
@@ -219,7 +272,7 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SliderFloat("Shininess: ", &materialShininess, 0.0f, 50.0f);*/
 
     if (ImGui::Button("Toggle Depth Test")) {
-        ToggleDeptTest();
+        ToggleBool(depthBufferEnabled);
         depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
     }
     ImGui::SameLine();
@@ -230,7 +283,7 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SameLine();
     if (ImGui::Button("Toggle Cull Face")) {
         cullFaceEnabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-        ToggleCullFace();
+        ToggleBool(cullFaceEnabled);
     }
     if (ImGui::Button("Game Window No Move")) {
         gameWindowNoMove = !gameWindowNoMove;
@@ -238,7 +291,7 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::SameLine();
     if (ImGui::Button("Gamma Correction")) {
         gammaCorrection ? glEnable(GL_FRAMEBUFFER_SRGB) : glDisable(GL_FRAMEBUFFER_SRGB);
-        ToggleGammaCorrection();
+        ToggleBool(gammaCorrection);
     }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -248,6 +301,8 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
 void UserInterfaceManager::UpdateLogWindow() {
     ImGuiWindowFlags windowFlagsLog = 0;
     bool demo = true;
+
+    if (!logEnabled) return;
     ImGui::ShowDemoWindow(&demo);
     ImGui::Begin("Log", NULL, windowFlagsLog);
     ImGui::End();
@@ -275,21 +330,4 @@ void UserInterfaceManager::Render() {
 
 void UserInterfaceManager::ToggleBool(bool& value) {
     value = !value;
-}
-
-void UserInterfaceManager::ToggleDeptTest() {
-    depthBufferEnabled = !depthBufferEnabled;
-}
-
-void UserInterfaceManager::TogglePolyMode() {
-    polyModeEnabled = !polyModeEnabled; 
-}
-
-void UserInterfaceManager::ToggleCullFace() {
-    cullFaceEnabled = !cullFaceEnabled;
-}
-
-void UserInterfaceManager::ToggleGammaCorrection()
-{
-    gammaCorrection = !gammaCorrection;
 }

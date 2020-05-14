@@ -26,12 +26,17 @@ public:
 
 private:
 
+
 	GLFWwindow* window;
 	Camera* cam;
 
+	GLuint finalFBO, finalTex, finalRBO;
+	GLuint hdrFBO, hdrBuffer, hdrRBO;
+
 	const char* glsl_version = "#version 130";
 
-	Renderable* m;
+	Rectangle* m;
+	Renderable* crysis;
 	Renderable* skyBox;
 	Renderable* axis;
 

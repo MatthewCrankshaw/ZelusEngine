@@ -37,12 +37,12 @@ private:
 
 	ShaderModes mShaderMode;
 
-	float mVertexData[20] = {
-		// positions          // colors           // texture coords
-		 1.0f,  1.0f, 0.0f,  1.0f, 1.0f, // top right
-		 1.0f, -1.0f, 0.0f,  1.0f, 0.0f, // bottom right
-		-1.0f, -1.0f, 0.0f,  0.0f, 0.0f, // bottom left
-		-1.0f,  1.0f, 0.0f,  0.0f, 1.0f  // top left 
+	float mVertexData[32] = {
+		// positions			// texture coords	// normal		
+		 1.0f,  1.0f, 0.0f,		1.0f, 1.0f,			0.0f, 1.0f, 0.0f,// top right
+		 1.0f, -1.0f, 0.0f,		1.0f, 0.0f,			0.0f, 1.0f, 0.0f,// bottom right
+		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,			0.0f, 1.0f, 0.0f,// bottom left
+		-1.0f,  1.0f, 0.0f,		0.0f, 1.0f,			0.0f, 1.0f, 0.0f,// top left 
 	};
 	unsigned int mIndices[6] = {
 		0, 1, 3, // first triangle

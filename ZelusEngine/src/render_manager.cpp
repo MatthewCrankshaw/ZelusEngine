@@ -23,37 +23,36 @@ void RenderManager::StartUp()
         exit(1);
     }
 
+
+    // Create our default camera
     cam = new Camera();
 
+    // Set the current camera for the user interface
     gUserInterface->SetCamera(cam);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); //Enable vsync
 
+    
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(1);
     }
 
+    //Setup GLFW and OpenGL for our user interface (IMGUI)
     gUserInterface->SetupGLFW(window);
     gUserInterface->SetupOpenGL(glsl_version);
 
 
-    //glEnable(GL_MULTISAMPLE);
 
     glCullFace(GL_BACK);
-
     //glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glfwSetErrorCallback(InputHandler::OnWindowError);
-    glfwSetKeyCallback(window, InputHandler::OnKey);
-    glfwSetMouseButtonCallback(window, InputHandler::OnMouseButton);
-    glfwSetCursorPosCallback(window, InputHandler::OnCursorPosition);
-    glfwSetFramebufferSizeCallback(window, InputHandler::OnFrameBufferSizeChange);
-
-    m = new Model("res/crysis_nano_suit/nanosuit.obj");
+    crysis = new Model("res/crysis_nano_suit/nanosuit.obj");
+    m = new Rectangle("2.png");
+    //m = new Model("res/Minecraft_Grass_Block_OBJ/Grass_Block.obj");
     //m = new Model("res/skull/Skull.obj");
     //m = new Model("res/SM_Fern_01.obj");
     //m = new Model("res/CarsN/LowPolyCars.obj");
@@ -77,15 +76,6 @@ void RenderManager::StartUp()
     skyBox = new SkyBox(faces);
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-void RenderManager::Render() {
-    double startTime = glfwGetTime();
-    double totalTime = 0.0;
-
-    int frames = 0;
-
-    GLuint finalFBO, finalTex, finalRBO;
 
     glGenTextures(1, &finalTex);
     glBindTexture(GL_TEXTURE_2D, finalTex);
@@ -109,7 +99,6 @@ void RenderManager::Render() {
     }
 
     //Create the framebuffer which will replace the default frame buffer
-    GLuint hdrFBO, hdrBuffer, hdrRBO;
 
     glGenTextures(1, &hdrBuffer);
     glBindTexture(GL_TEXTURE_2D, hdrBuffer);
@@ -169,19 +158,26 @@ void RenderManager::Render() {
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
     }
+}
+
+void RenderManager::Render() {
+    double startTime = glfwGetTime();
+    double totalTime = 0.0;
+
+    int frames = 0;
 
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
-    std::vector<glm::vec3> objectPositions;
-    objectPositions.push_back(glm::vec3(-3.0, -3.0, -3.0));
-    objectPositions.push_back(glm::vec3(0.0, -3.0, -3.0));
-    objectPositions.push_back(glm::vec3(3.0, -3.0, -3.0));
-    objectPositions.push_back(glm::vec3(-3.0, -3.0, 0.0));
-    objectPositions.push_back(glm::vec3(0.0, -3.0, 0.0));
-    objectPositions.push_back(glm::vec3(3.0, -3.0, 0.0));
-    objectPositions.push_back(glm::vec3(-3.0, -3.0, 3.0));
-    objectPositions.push_back(glm::vec3(0.0, -3.0, 3.0));
-    objectPositions.push_back(glm::vec3(3.0, -3.0, 3.0));
+    //std::vector<glm::vec3> objectPositions;
+    //objectPositions.push_back(glm::vec3(-3.0, -3.0, -3.0));
+    //objectPositions.push_back(glm::vec3(0.0, -3.0, -3.0));
+    //objectPositions.push_back(glm::vec3(3.0, -3.0, -3.0));
+    //objectPositions.push_back(glm::vec3(-3.0, -3.0, 0.0));
+    //objectPositions.push_back(glm::vec3(0.0, -3.0, 0.0));
+    //objectPositions.push_back(glm::vec3(3.0, -3.0, 0.0));
+    //objectPositions.push_back(glm::vec3(-3.0, -3.0, 3.0));
+    //objectPositions.push_back(glm::vec3(0.0, -3.0, 3.0));
+    //objectPositions.push_back(glm::vec3(3.0, -3.0, 3.0));
 
     const unsigned int NR_LIGHTS = 5;
     std::vector<glm::vec3> lightPositions;
@@ -245,14 +241,23 @@ void RenderManager::Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Geometric Pass
+        
         glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //m->setPosition(glm::vec3(0.0f, -3.0f, 0.0f));
+            //m->setScale(glm::vec3(1.0f));
+            m->SetShaderMode(Rectangle::ShaderModes::GEOMETRIC_PASS);
+            m->setRotation(90, glm::vec3(1.0f, 0.0f, 0.0f));
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    m->setPosition(glm::vec3(i*2.0f - 5, j * 2.0f, +5.0f));
+                    m->Draw(*cam);
+                }
+            }
 
-             //for(int i = 0; i < objectPositions.size(); i++) {
-                m->setPosition(objectPositions[0]);
-                m->setScale(glm::vec3(0.25f));
-                m->Draw(*cam);
-             //}
+            //crysis->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
+            //crysis->setScale(glm::vec3(0.3f, 0.3f, 0.3f));
+            //crysis->Draw(*cam);
 
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 

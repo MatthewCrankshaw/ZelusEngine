@@ -16,6 +16,11 @@ void Renderable::setScale(const glm::vec3 scale)
 	mScale = glm::scale(glm::mat4(1.0), scale);
 }
 
+void Renderable::setRotation(float angle, const glm::vec3 rot) {
+	glm::fquat rotation = glm::angleAxis(glm::radians(angle), rot);
+	mRotation = glm::toMat4(rotation);
+}
+
 void Renderable::translate(const glm::vec3 translate) {
 	mTranslation = glm::translate(mTranslation, translate);
 }
