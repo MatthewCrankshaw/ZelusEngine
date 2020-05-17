@@ -16,8 +16,7 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
     data = stbi_load(path.c_str(), &width, &height, &nChannels, 0);
 
     if (data == nullptr) {
-        std::cout << "ERROR::TEXTURE::LOADER Could not load texture (" << path << ")" << std::endl;
-        exit(1);
+        gLog->AddLog("[error] Texture::LoaderRegularTexture() : Could not load texture! %s", path.c_str());
     }
 
     if (data) {
@@ -31,8 +30,7 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
             format = GL_RGBA;
         }
         else {
-            std::cerr << "TEXTURE::READIMAGE: Unknown image format" << std::endl;
-            exit(1);
+            gLog->AddLog("[error] Texture::LoaderRegularTexture() : Unknown image format!");
         }
     }
 
@@ -60,8 +58,7 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
     this->path = textureDirectory + faceTextureFilenames[0];
 
     if (faceTextureFilenames.size() != 6) {
-        std::cerr << "TEXTURE::LOAD_CUBE_MAP_TEXTURE: Cube map must have 6 texture faces, found: " << faceTextureFilenames.size() << " faces!" << std::endl;
-        exit(1);
+        gLog->AddLog("[error] Texture::LoadCubeMapTexture : Cube map must have 6 texture faces. %d were found.", faceTextureFilenames.size());
     }
 
     glGenTextures(1, &handle);

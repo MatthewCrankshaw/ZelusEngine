@@ -1,7 +1,7 @@
 #pragma once
 #include<glm/glm.hpp>
 
-#include "camera.h"
+#include "../camera.h"
 
 class Renderable
 {

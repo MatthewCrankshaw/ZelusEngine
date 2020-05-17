@@ -3,77 +3,10 @@
 
 void RenderManager::StartUp()
 {
-    /* Initialize the library */
-    if (!glfwInit()) {
-        exit(1);
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-
-    //glfwWindowHint(GLFW_SAMPLES, 4);
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        exit(1);
-    }
-
-
-    // Create our default camera
-    cam = new Camera();
-
-    // Set the current camera for the user interface
-    gUserInterface->SetCamera(cam);
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); //Enable vsync
-
-    
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        exit(1);
-    }
-
-    //Setup GLFW and OpenGL for our user interface (IMGUI)
-    gUserInterface->SetupGLFW(window);
-    gUserInterface->SetupOpenGL(glsl_version);
-
-
+    cam = gUserInterface->GetCamera();
 
     glCullFace(GL_BACK);
-    //glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    crysis = new Model("res/crysis_nano_suit/nanosuit.obj");
-    m = new Rectangle("2.png");
-    //m = new Model("res/Minecraft_Grass_Block_OBJ/Grass_Block.obj");
-    //m = new Model("res/skull/Skull.obj");
-    //m = new Model("res/SM_Fern_01.obj");
-    //m = new Model("res/CarsN/LowPolyCars.obj");
-    //m = new Model("res/bugatti/bugatti.obj");
-    //m = new Model("res/buildings/Residential\ Buildings\ 003.obj");
-    //m = new Model("res/FireHydrant_Model/sm_FireHydrant.obj");
-    //m = new Model("res/Sample_Ship/Sample_Ship.obj");
-    //m = new Model("res/Valentine_balloon/W.obj");
-
-    axis = new AxisModel();
-
-    std::vector<std::string> faces{
-        "skybox/right.jpg",
-        "skybox/left.jpg",
-        "skybox/top.jpg",
-        "skybox/bottom.jpg",
-        "skybox/front.jpg",
-        "skybox/back.jpg",
-    };
-
-    skyBox = new SkyBox(faces);
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -158,6 +91,7 @@ void RenderManager::StartUp()
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
     }
+
 }
 
 void RenderManager::Render() {
@@ -167,17 +101,6 @@ void RenderManager::Render() {
     int frames = 0;
 
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-
-    //std::vector<glm::vec3> objectPositions;
-    //objectPositions.push_back(glm::vec3(-3.0, -3.0, -3.0));
-    //objectPositions.push_back(glm::vec3(0.0, -3.0, -3.0));
-    //objectPositions.push_back(glm::vec3(3.0, -3.0, -3.0));
-    //objectPositions.push_back(glm::vec3(-3.0, -3.0, 0.0));
-    //objectPositions.push_back(glm::vec3(0.0, -3.0, 0.0));
-    //objectPositions.push_back(glm::vec3(3.0, -3.0, 0.0));
-    //objectPositions.push_back(glm::vec3(-3.0, -3.0, 3.0));
-    //objectPositions.push_back(glm::vec3(0.0, -3.0, 3.0));
-    //objectPositions.push_back(glm::vec3(3.0, -3.0, 3.0));
 
     const unsigned int NR_LIGHTS = 5;
     std::vector<glm::vec3> lightPositions;
@@ -206,14 +129,19 @@ void RenderManager::Render() {
 
     lightShader->UnUse();
 
-    m->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
+    //model->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 
     Rectangle* quad = new Rectangle();
     Rectangle* quadHdr = new Rectangle();
-    Rectangle* rect = new Rectangle("flowers.png");
+    //Rectangle* rect = new Rectangle("flowers.png");
+
+    //Renderable* m = new Model("res/CarsN/LowPolyCars.obj");
+    Renderable* m = new Model("res/crysis_nano_suit/nanosuit.obj");
+
+    AxisModel* ax = new AxisModel();
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
     {
         /* Poll for and process events */
         glfwPollEvents();
@@ -240,28 +168,27 @@ void RenderManager::Render() {
         glClearColor(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Geometric Pass
-        
+        //=======================================================================
+        // Geometric Pass
+        //=======================================================================
         glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
+        {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //m->setPosition(glm::vec3(0.0f, -3.0f, 0.0f));
-            //m->setScale(glm::vec3(1.0f));
-            m->SetShaderMode(Rectangle::ShaderModes::GEOMETRIC_PASS);
-            m->setRotation(90, glm::vec3(1.0f, 0.0f, 0.0f));
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    m->setPosition(glm::vec3(i*2.0f - 5, j * 2.0f, +5.0f));
-                    m->Draw(*cam);
-                }
-            }
 
-            //crysis->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
-            //crysis->setScale(glm::vec3(0.3f, 0.3f, 0.3f));
-            //crysis->Draw(*cam);
+            Renderer::BeginScene();
 
+            Renderer::Submit(ax, cam);
+
+            Renderer::Submit(m, cam);
+
+            Renderer::EndScene();
+        }
+            
+        //=======================================================================
+        // Lighting pass
+        //=======================================================================
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-
-            //Lighting pass
+        {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             lightShader->Use();
@@ -270,15 +197,15 @@ void RenderManager::Render() {
             glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, mGeometricNormal);
-            glActiveTexture(GL_TEXTURE2); 
+            glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular);
 
             for (unsigned int i = 0; i < lightPositions.size(); i++) {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-                const float linear = 0.002; 
-                const float quadratic = 0.0002; 
+                const float linear = 0.002;
+                const float quadratic = 0.0002;
 
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
@@ -287,7 +214,8 @@ void RenderManager::Render() {
             //RenderQuad();
             quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
             quad->Draw(*cam);
-
+        }
+            
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, hdrFBO); // write to default framebuffer
 
@@ -295,14 +223,18 @@ void RenderManager::Render() {
         // the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
         // depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
         glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
+        //=======================================================================
+        // Regular Blended Shading
+        //=======================================================================
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        {
             //Start the regular shading for things that require blending or special lighting effects
             //Enable blending
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            skyBox->Draw(*cam);
+            //skyBox->Draw(*cam);
 
             Shader* basic = gShaderManager->getBasicShader();
 
@@ -320,13 +252,12 @@ void RenderManager::Render() {
             }
             basic->UnUse();
 
-            rect->setPosition(glm::vec3(0.0f, 1.5f, 0.0f));
-            rect->Draw(*cam);
-        
+            //rect->setPosition(glm::vec3(0.0f, 1.5f, 0.0f));
+            //rect->Draw(*cam);
+
             //Disable blending as we are now done
             glDisable(GL_BLEND);
-
-            axis->Draw(*cam);
+        }
 
         glBindTexture(GL_TEXTURE_2D, hdrBuffer);
         glGenerateTextureMipmap(hdrBuffer);
@@ -355,32 +286,14 @@ void RenderManager::Render() {
         gUserInterface->Render();
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(gUserInterface->GetWindow());
 
     }
 }
 
 void RenderManager::ShutDown()
 {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
-
-void RenderManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
-}
-
-void RenderManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-
-}
-void RenderManager::CursorPositionCallback(GLFWwindow* window, double x, double y) {
-
-}
-void RenderManager::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-    SCREEN_WIDTH = width;
-    SCREEN_HEIGHT = height;
-
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
 }
 
 // renderCube() renders a 1x1 3D cube in NDC.

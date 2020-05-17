@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "shader_manager.h"
-#include "texture.h"
+#include "../shader_manager.h"
+#include "../texture.h"
 
 #include <string>
 #include <fstream>

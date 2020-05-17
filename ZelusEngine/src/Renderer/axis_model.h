@@ -2,7 +2,7 @@
 
 #include "renderable.h"
 #include "glad/glad.h"
-#include "shader_manager.h"
+#include "../shader_manager.h"
 
 
 extern ShaderManager* gShaderManager;

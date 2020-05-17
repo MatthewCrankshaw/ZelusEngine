@@ -23,7 +23,7 @@ void AxisModel::Draw(const Camera& camera)
 
     camera.GetPosition(pos);
     camera.GetForward(forward);
-    camera.GetProjectionMatrix(mProjectionMat);
+    camera.GetOrthoProjectionMatrix(mProjectionMat);
     camera.GetViewMatrix(mViewMat);
 
     mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));

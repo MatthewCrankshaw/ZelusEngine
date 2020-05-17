@@ -1,7 +1,9 @@
 
 #include "user_interface.h"
 
-void UserInterfaceManager::StartUp() {
+
+
+void UserInterface::StartUp() {
 
     fov = 45.0f;
     lightPosition[0] = 0.5f;
@@ -45,14 +47,49 @@ void UserInterfaceManager::StartUp() {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
+
+    /* Initialize the library */
+    if (!glfwInit()) {
+        exit(1);
+    }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        exit(1);
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); //Enable vsync
+
+    
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        exit(1);
+    }
+
+    cam = new Camera();
+
+    SetupGLFW();
+    SetupOpenGL();
 }
 
-void UserInterfaceManager::ShutDown()
+void UserInterface::ShutDown()
 {
-
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
-void UserInterfaceManager::SetupGLFW(GLFWwindow* window)
+void UserInterface::SetupGLFW()
 {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     
@@ -69,17 +106,12 @@ void UserInterfaceManager::SetupGLFW(GLFWwindow* window)
 
 }
 
-void UserInterfaceManager::SetupOpenGL(const char* glslVersion)
+void UserInterface::SetupOpenGL()
 {
     ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
-void UserInterfaceManager::SetCamera(Camera* cam)
-{
-    this->cam = cam;
-}
-
-void UserInterfaceManager::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
+void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
 {
     if (cam == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -103,7 +135,7 @@ void UserInterfaceManager::Update(GLuint imageOutput, GLuint hdrOutput, GLuint g
     UpdateLogWindow();
 }
 
-void UserInterfaceManager::UpdateTitleWindow() {
+void UserInterface::UpdateTitleWindow() {
     ImGuiWindowFlags window_flags = 0;
 
     window_flags |= ImGuiWindowFlags_MenuBar;
@@ -156,7 +188,7 @@ void UserInterfaceManager::UpdateTitleWindow() {
     }
 }
 
-void UserInterfaceManager::UpdateGameWindow(GLuint imageOutput) {
+void UserInterface::UpdateGameWindow(GLuint imageOutput) {
     ImGuiWindowFlags windowFlagsGame = 0;
     windowFlagsGame |= ImGuiWindowFlags_NoCollapse;
     windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
@@ -173,7 +205,7 @@ void UserInterfaceManager::UpdateGameWindow(GLuint imageOutput) {
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdateHDRWindow(GLuint imageOutput)
+void UserInterface::UpdateHDRWindow(GLuint imageOutput)
 {
     if (!mHDROutput) return;
     ImGuiWindowFlags windowFlagsGame = 0;
@@ -186,7 +218,7 @@ void UserInterfaceManager::UpdateHDRWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdatePositionWindow(GLuint imageOutput)
+void UserInterface::UpdatePositionWindow(GLuint imageOutput)
 {
     if (!mGeometricPositionOutput) return;
     ImGuiWindowFlags windowFlagsGame = 0;
@@ -199,7 +231,7 @@ void UserInterfaceManager::UpdatePositionWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdateAlbedoWindow(GLuint imageOutput)
+void UserInterface::UpdateAlbedoWindow(GLuint imageOutput)
 {
     if (!mGeometricAlbedoOutput) return;
     ImGuiWindowFlags windowFlagsGame = 0;
@@ -212,7 +244,7 @@ void UserInterfaceManager::UpdateAlbedoWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdateNormalWindow(GLuint imageOutput)
+void UserInterface::UpdateNormalWindow(GLuint imageOutput)
 {
     if (!mGeometricNormalOutput) return;
     ImGuiWindowFlags windowFlagsGame = 0;
@@ -225,7 +257,7 @@ void UserInterfaceManager::UpdateNormalWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdatePropertiesWindow() {
+void UserInterface::UpdatePropertiesWindow() {
     ImGuiWindowFlags windowFlagsProperties = 0;
     windowFlagsProperties |= ImGuiWindowFlags_NoCollapse;
 
@@ -298,18 +330,17 @@ void UserInterfaceManager::UpdatePropertiesWindow() {
     ImGui::End();
 }
 
-void UserInterfaceManager::UpdateLogWindow() {
+void UserInterface::UpdateLogWindow() {
     ImGuiWindowFlags windowFlagsLog = 0;
     bool demo = true;
 
     if (!logEnabled) return;
     ImGui::ShowDemoWindow(&demo);
-    ImGui::Begin("Log", NULL, windowFlagsLog);
-    ImGui::End();
+    gLog->Draw("Log", &demo);
 }
 
 
-void UserInterfaceManager::Render() {
+void UserInterface::Render() {
     
     if (cam == nullptr) {
         std::cout << "USER_INTERFACE::RENDERER: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -328,6 +359,6 @@ void UserInterfaceManager::Render() {
     }
 }
 
-void UserInterfaceManager::ToggleBool(bool& value) {
+void UserInterface::ToggleBool(bool& value) {
     value = !value;
 }

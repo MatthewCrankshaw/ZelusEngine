@@ -6,9 +6,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "user_interface.h"
-#include "shader_manager.h"
-#include "texture.h"
+#include "../user_interface.h"
+#include "../shader_manager.h"
+#include "../texture.h"
 #include "mesh.h"
 #include "renderable.h"
 
@@ -19,7 +19,8 @@
 #include <vector>
 #include <future>
 
-extern UserInterfaceManager* gUserInterface;
+extern UserInterface* gUserInterface;
+extern Log* gLog;
 extern ShaderManager* gShaderManager;
 
 class Model : public Renderable
@@ -37,11 +38,6 @@ public:
 	void Update();
 
 private:
-
-	//std::vector<Texture>* diffuseMaps; 
-	//std::vector<Texture>* specularMaps; 
-	//std::vector<Texture>* normalMaps; 
-	//std::vector<Texture>* heightMaps; 
 
 	void LoadModel(std::string const& path);
 

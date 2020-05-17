@@ -4,13 +4,19 @@
 #include <ImGui\imgui_impl_opengl3.h>
 
 #include "glad/glad.h"
+#include "log.h"
 #include "camera.h"
 #include "ui_input_handler.h"
 
-class UserInterfaceManager
+
+extern Log* gLog;
+
+class UserInterface
 {
 protected:
 	GLFWwindow* window;
+	const char* glslVersion = "#version 130";
+
 	ImVec4 clearColour = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
 	float lightPosition[3];
@@ -66,19 +72,25 @@ protected:
 	void UpdatePropertiesWindow();
 	void UpdateLogWindow();
 
-	std::string logStr;
 
 public:
 
 	void StartUp();
 	void ShutDown();
-	void SetupGLFW(GLFWwindow* window);
-	void SetupOpenGL(const char* glslVersion);
-	void SetCamera(Camera* cam);
+	void SetupGLFW();
+	void SetupOpenGL();
 
 	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput);
 
 	void Render();
+
+	inline GLFWwindow* GetWindow() {
+		return window;
+	}
+
+	inline Camera* GetCamera() {
+		return cam;
+	}
 
 	ImVec4 GetScreenClearColour() {
 		return clearColour;

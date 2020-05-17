@@ -88,8 +88,8 @@ Mesh Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
     vertices->reserve(aimesh->mNumVertices);
     indices->reserve(aimesh->mNumFaces);
 
-    std::cout << "Vertices: " << aimesh->mNumVertices << std::endl;
-    std::cout << "Faces: " << aimesh->mNumFaces << std::endl;
+    gLog->AddLog("Vertices: %d", aimesh->mNumVertices);
+    gLog->AddLog("Faces: %d", aimesh->mNumFaces);
 
     for (unsigned int i = 0; i < aimesh->mNumVertices; i++) {
         Vertex vertex;

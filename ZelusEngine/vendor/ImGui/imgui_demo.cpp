@@ -3806,6 +3806,7 @@ struct ExampleAppConsole
 
         if (ImGui::SmallButton("Add Dummy Text"))  { AddLog("%d some text", Items.Size); AddLog("some more text"); AddLog("display very important message here!"); } ImGui::SameLine();
         if (ImGui::SmallButton("Add Dummy Error")) { AddLog("[error] something went wrong"); } ImGui::SameLine();
+        if (ImGui::SmallButton("Add Dummy Warning")) { AddLog("[warning] you should check this out"); } ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
         //static float t = 0.0f; if (ImGui::GetTime() - t > 0.02f) { t = ImGui::GetTime(); AddLog("Spam %f", t); }
@@ -3858,6 +3859,7 @@ struct ExampleAppConsole
             bool pop_color = false;
             if (strstr(item, "[error]"))            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
             else if (strncmp(item, "# ", 2) == 0)   { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.6f, 1.0f)); pop_color = true; }
+            else if (strstr(item, "[warning]"))     { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.0f, 1.0f)); pop_color = true; }
             ImGui::TextUnformatted(item);
             if (pop_color)
                 ImGui::PopStyleColor();
@@ -4045,6 +4047,7 @@ static void ShowExampleAppConsole(bool* p_open)
 {
     static ExampleAppConsole console;
     console.Draw("Example: Console", p_open);
+    //console.AddLog("")
 }
 
 //-----------------------------------------------------------------------------

@@ -7,24 +7,28 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "render_manager.h"
+#include "Renderer/render_manager.h"
+#include "log.h"
 #include "shader_manager.h"
 
 // Global Singletons 
 // Should be started up in the order they are declared and then shut down in the reverse order
-UserInterfaceManager* gUserInterface = new UserInterfaceManager;
+UserInterface* gUserInterface = new UserInterface;
+Log* gLog = new Log;
 RenderManager* gRenderManager = new RenderManager;
 ShaderManager* gShaderManager = new ShaderManager;
 
 int main()
 {
-    gUserInterface->StartUp();
-    gRenderManager->StartUp();
-    gShaderManager->StartUp();
+    gUserInterface  ->StartUp();
+    gLog            ->StartUp();
+    gRenderManager  ->StartUp();
+    gShaderManager  ->StartUp();
 
-    gRenderManager->Render();
+    gRenderManager  ->Render();
 
-    gShaderManager->ShutDown();
-    gRenderManager->ShutDown();
-    gUserInterface->ShutDown();
+    gShaderManager  ->ShutDown();
+    gRenderManager  ->ShutDown();
+    gLog            ->ShutDown();
+    gUserInterface  ->ShutDown();
 }

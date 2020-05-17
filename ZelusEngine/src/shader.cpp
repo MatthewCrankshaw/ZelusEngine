@@ -6,6 +6,9 @@
  */
 
 Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader) {
+    vertexPath = vertexShader;
+    fragmentPath = fragmentShader;
+
     char* vertexShaderString;
     char* fragmentShaderString;
 
@@ -68,8 +71,7 @@ Shader::Shader(const std::string& vertexShader, const std::string& fragmentShade
     free(vertexShaderString);
     free(fragmentShaderString);
 
-    std::cout << "Loaded shader: " << vertexShader << " and " << fragmentShader << std::endl;
-
+    gLog->AddLog("[info] Shaders Loaded: %s and %s", vertexPath.c_str(), fragmentPath.c_str());
 }
 
 /*!
@@ -78,6 +80,7 @@ Shader::Shader(const std::string& vertexShader, const std::string& fragmentShade
  */
 Shader::~Shader() {
     glDeleteShader(handle);
+    gLog->AddLog("[info] Shaders Deleted: %s and %s", vertexPath.c_str(), fragmentPath.c_str());
 }
 
 /*!
@@ -90,8 +93,7 @@ char* Shader::ReadShaderFiles(const std::string& filename) {
     std::ifstream file(filename); 
 
     if (!file.good()) {
-        std::cout << "ERROR::SHADER::READ_SHADER_FILES: Could not read shader: " << filename << std::endl;
-        exit(1);
+        gLog->AddLog("[error] Shader::ReadShaderFiles : Could not read shader: %s", filename.c_str());
     }
 
     std::stringstream buffer;

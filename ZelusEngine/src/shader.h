@@ -9,6 +9,9 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "log.h"
+
+extern Log* gLog;
 
 class Shader
 {
@@ -36,6 +39,7 @@ public:
 private:
     enum ProgramType {VERTEX, FRAGMENT, PROGRAM};
 
+    std::string vertexPath, fragmentPath;
 	GLuint handle;
 
     static char* ReadShaderFiles(const std::string& filename);

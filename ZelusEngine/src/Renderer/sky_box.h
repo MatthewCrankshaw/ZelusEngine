@@ -2,8 +2,8 @@
 
 
 #include "renderable.h"
-#include "shader_manager.h"
-#include "Texture.h"
+#include "../shader_manager.h"
+#include "../texture.h"
 
 extern ShaderManager* gShaderManager;
 
