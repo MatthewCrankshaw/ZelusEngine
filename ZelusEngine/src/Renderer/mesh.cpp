@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-Mesh::Mesh(std::vector<Vertex>* vertices, std::vector<unsigned int>* indices, std::vector<Texture>* textures) {
+Mesh::Mesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;
@@ -86,8 +86,6 @@ void Mesh::SetupMesh() {
 
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-
-	delete vertices;
 
 	glBindVertexArray(0);
 }

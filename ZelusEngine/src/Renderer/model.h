@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "../ref.h"
 #include "../user_interface.h"
 #include "../shader_manager.h"
 #include "../texture.h"
@@ -27,7 +28,7 @@ class Model : public Renderable
 {
 public:
 	std::vector<Texture> texturesLoaded;
-	std::vector<Mesh> meshes;
+	std::vector<Ref<Mesh>> meshes;
 	std::string directory;
 	bool gammaCorrection;
 
@@ -43,8 +44,8 @@ private:
 
 	void ProcessNode(aiNode* node, const aiScene* scene);
 
-	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+	void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	std::vector<Texture>* LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	Ref<std::vector<Texture>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 };

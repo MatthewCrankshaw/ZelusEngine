@@ -5,6 +5,7 @@
 
 #include "../shader_manager.h"
 #include "../texture.h"
+#include "../ref.h"
 
 #include <string>
 #include <fstream>
@@ -29,9 +30,9 @@ extern ShaderManager* gShaderManager;
 class Mesh{
 private:
     /*  Mesh Data  */
-    std::vector<Vertex>* vertices;
-    std::vector<unsigned int>* indices;
-    std::vector<Texture>* textures;
+    Ref<std::vector<Vertex>> vertices;
+    Ref<std::vector<unsigned int>> indices;
+    Ref<std::vector<Texture>> textures;
 
     GLuint VAO; 
     GLuint VBO; 
@@ -40,7 +41,7 @@ private:
 public:
     /*  Functions  */
     // constructor
-    Mesh(std::vector<Vertex>* vertices, std::vector<unsigned int>* indices, std::vector<Texture>* textures);
+    Mesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures);
 
     // render the mesh
     void Draw();

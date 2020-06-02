@@ -6,16 +6,7 @@
 void UserInterface::StartUp() {
 
     fov = 45.0f;
-    lightPosition[0] = 0.5f;
-    lightPosition[1] = 0.5f;
-    lightPosition[2] = 0.0f;
-    lightDirection[0] = 0.0f;
-    lightDirection[1] = 0.0f;
-    lightDirection[2] = -1.0f;
     exitPressed - false;
-    depthBufferEnabled = true;
-    polyModeEnabled = false;
-    cullFaceEnabled = true;
     gameWindowNoMove = true;
     gammaCorrection = false;
     logEnabled = true;
@@ -77,7 +68,7 @@ void UserInterface::StartUp() {
         exit(1);
     }
 
-    cam = new Camera();
+    camera = Ref<Camera>(new Camera());
 
     SetupGLFW();
     SetupOpenGL();
@@ -93,10 +84,7 @@ void UserInterface::SetupGLFW()
 {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     
-    ui_handler = new UserInterfaceInputHandler(window, cam);
-
-    depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-    polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
+    ui_handler = new UserInterfaceInputHandler(window, camera);
 
     glfwSetErrorCallback(InputHandler::OnWindowError);
     glfwSetKeyCallback(window, InputHandler::OnKey);
@@ -113,7 +101,7 @@ void UserInterface::SetupOpenGL()
 
 void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
 {
-    if (cam == nullptr) {
+    if (camera == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
         exit(1);
     }
@@ -200,7 +188,7 @@ void UserInterface::UpdateGameWindow(GLuint imageOutput) {
     //SCREEN_WIDTH = (int)size.x - 100;
     //SCREEN_HEIGHT = (int)size.y - 100;
 
-    cam->FramebufferSizeCallback(window, (int)size.x - 100, (int)size.y - 100);
+    camera->FramebufferSizeCallback(window, (int)size.x - 100, (int)size.y - 100);
     ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
 }
@@ -263,71 +251,22 @@ void UserInterface::UpdatePropertiesWindow() {
 
     ImGui::Begin("Properties", NULL, windowFlagsProperties);                          // Create a window called "Hello, world!" and append into it.
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-    ImGui::SliderFloat("Field Of View", &fov, 10.0f, 60.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    cam->SetFieldOfView(fov);
-
-    if (ImGui::Button("Toggle Albedo Output")) {
-        ToggleBool(mGeometricAlbedoOutput);
-    }
-    if (ImGui::Button("Toggle HDR Output")) {
-        ToggleBool(mHDROutput);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Toggle Normal Output")) {
-        ToggleBool(mGeometricNormalOutput);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Toggle Position Output")) {
-        ToggleBool(mGeometricPositionOutput);
-    }
+    ImGui::SliderFloat("Field Of View", &fov, 5.0f, 180.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    camera->SetFieldOfView(fov);
 
     ImGui::ColorEdit3("clear color", (float*)&clearColour); // Edit 3 floats representing a color
 
-    ImGui::Text("Light");
-    /*ImGui::SliderFloat3("Light Position", lightPosition, -20.0f, 20.0f);
-    ImGui::SliderFloat3("Light Direction", lightDirection, -1.0f, 1.0f);
-    ImGui::ColorEdit3("Ambient", (float*)&lightAmbient);
-    ImGui::ColorEdit3("Diffuse", (float*)&lightDiffuse);
-    ImGui::ColorEdit3("Specular", (float*)&lightSpecular);
-    ImGui::SliderFloat("Constant", &lightConstant, 0.1f, 1.0f);
-    ImGui::SliderFloat("Linear", &lightLinear, 0.0001f, 2.0f);
-    ImGui::SliderFloat("Quadratic", &lightQuadratic, 0.000007f, 2.0f);
-    ImGui::SliderFloat("Inner CutOff", &lightInnerCutOff, 10.0f,40.0f);
-    ImGui::SliderFloat("Outer CutOff", &lightOuterCutOff, 10.0f, 40.0f);*/
     ImGui::SliderFloat("Exposure", &exposure, 0.01f, 5.0f);
     ImGui::SliderFloat("Gamma", &gamma, 0.5f, 4.0f);
 
-    /*ImGui::Text("Material Colors");
-    ImGui::ColorEdit3("material ambient", (float*)&materialAmbient);
-    ImGui::ColorEdit3("material diffuse", (float*)&materialDiffuse);
-    ImGui::ColorEdit3("material specular", (float*)&materialSpecular);
-    ImGui::SliderFloat("Shininess: ", &materialShininess, 0.0f, 50.0f);*/
-
-    if (ImGui::Button("Toggle Depth Test")) {
-        ToggleBool(depthBufferEnabled);
-        depthBufferEnabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Toggle Polygon Mode")) {
-        polyModeEnabled ? glPolygonMode(GL_FRONT, GL_LINE) : glPolygonMode(GL_FRONT, GL_FILL);
-        ToggleBool(polyModeEnabled);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Toggle Cull Face")) {
-        cullFaceEnabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-        ToggleBool(cullFaceEnabled);
-    }
     if (ImGui::Button("Game Window No Move")) {
         gameWindowNoMove = !gameWindowNoMove;
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Gamma Correction")) {
-        gammaCorrection ? glEnable(GL_FRAMEBUFFER_SRGB) : glDisable(GL_FRAMEBUFFER_SRGB);
-        ToggleBool(gammaCorrection);
-    }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
     ImGui::End();
+    
 }
 
 void UserInterface::UpdateLogWindow() {
@@ -342,7 +281,7 @@ void UserInterface::UpdateLogWindow() {
 
 void UserInterface::Render() {
     
-    if (cam == nullptr) {
+    if (camera == nullptr) {
         std::cout << "USER_INTERFACE::RENDERER: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
         exit(1);
     }

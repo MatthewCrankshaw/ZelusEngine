@@ -7,8 +7,13 @@ Renderable::Renderable() {
 	mModelMat = glm::mat4(1.0f);
 }
 
-void Renderable::setPosition(const glm::vec3 position) {
-	mTranslation = glm::translate(glm::mat4(1.0f), position);
+void Renderable::SetPosition(const glm::vec3 position) {
+	mPosition = position;
+	mTranslation = glm::translate(glm::mat4(1.0f), mPosition);
+}
+
+void Renderable::PositionUpdate(){
+	mTranslation = glm::translate(glm::mat4(1.0f), mPosition);
 }
 
 void Renderable::setScale(const glm::vec3 scale)

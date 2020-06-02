@@ -1,9 +1,10 @@
 #include "render_manager.h"
+#include "entity.h"
 
 
 void RenderManager::StartUp()
 {
-    cam = gUserInterface->GetCamera();
+    camera = Ref<Camera>(gUserInterface->GetCamera());
 
     glCullFace(GL_BACK);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -109,9 +110,9 @@ void RenderManager::Render() {
     for (unsigned int i = 0; i < NR_LIGHTS; i++)
     {
         // calculate slightly random offsets
-        float xPos = ((rand() % 100) / 100.0) * 6.0 - 3.0;
-        float yPos = ((rand() % 100) / 100.0) * 6.0 - 6.0;
-        float zPos = ((rand() % 100) / 100.0) * 6.0 - 3.0;
+        float xPos = ((rand() % 100) / 100.0) * 2.0 - 3.0;
+        float yPos = ((rand() % 100) / 100.0) * 2.0 - 0.0;
+        float zPos = ((rand() % 100) / 100.0) * 2.0 - 3.0;
         lightPositions.push_back(glm::vec3(xPos, yPos, zPos));
         // also calculate random color
         float rColor = ((rand() % 100) / 200.0f) + 0.5; // between 0.5 and 1.0
@@ -135,10 +136,26 @@ void RenderManager::Render() {
     Rectangle* quadHdr = new Rectangle();
     //Rectangle* rect = new Rectangle("flowers.png");
 
-    //Renderable* m = new Model("res/CarsN/LowPolyCars.obj");
-    Renderable* m = new Model("res/crysis_nano_suit/nanosuit.obj");
+    Ref<Renderable> m(new Model("res/FireHydrant_Model/sm_FireHydrant.obj"));
 
-    AxisModel* ax = new AxisModel();
+    Ref<Renderable> m2(new Model("res/crysis_nano_suit/nanosuit.obj"));
+    //Renderable* m = new Model("res/skull/Skull.obj");
+    Ref<AxisModel> ax(new AxisModel());
+
+    std::vector<std::string> skyboxFiles{
+        "skybox/right.jpg", 
+        "skybox/left.jpg", 
+        "skybox/top.jpg", 
+        "skybox/bottom.jpg", 
+        "skybox/front.jpg", 
+        "skybox/back.jpg"
+    };
+
+    Renderable* skybox = new SkyBox(skyboxFiles);
+
+
+    Ref<Transform> trans(new Transform());
+    Entity* entity = new Entity("Nano Suit", m2, camera, trans);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -150,7 +167,7 @@ void RenderManager::Render() {
         startTime = glfwGetTime();
         totalTime += deltaTime;
 
-        cam->Update(deltaTime);
+        camera->Update(deltaTime);
         frames++;
 
         if (totalTime > 1.0) {
@@ -159,14 +176,13 @@ void RenderManager::Render() {
         }
 
         glm::mat4 viewMatrix(1.0f), projectionMatrix(1.0f);
-        cam->GetViewMatrix(viewMatrix);
-        cam->GetProjectionMatrix(projectionMatrix);
+        camera->GetViewMatrix(viewMatrix);
+        camera->GetProjectionMatrix(projectionMatrix);
 
 
         /* Render here */
-        ImVec4 clearColour = gUserInterface->GetScreenClearColour();
-        glClearColor(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RenderCommands::SetClearColour(gUserInterface->GetScreenClearColour());
+        RenderCommands::Clear();
 
         //=======================================================================
         // Geometric Pass
@@ -175,13 +191,18 @@ void RenderManager::Render() {
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Renderer::BeginScene();
+            //Renderer::BeginScene(cam);
 
-            Renderer::Submit(ax, cam);
+            
+            //Renderer::Submit(m);
 
-            Renderer::Submit(m, cam);
+            //m2->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
+            //Renderer::Submit(m2);
+            
 
-            Renderer::EndScene();
+            //Renderer::EndScene();
+
+            entity->Draw();
         }
             
         //=======================================================================
@@ -204,8 +225,8 @@ void RenderManager::Render() {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-                const float linear = 0.002;
-                const float quadratic = 0.0002;
+                const float linear = 0.8;
+                const float quadratic = 0.2;
 
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
@@ -213,7 +234,7 @@ void RenderManager::Render() {
 
             //RenderQuad();
             quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
-            quad->Draw(*cam);
+            quad->Draw(*camera);
         }
             
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
@@ -234,7 +255,8 @@ void RenderManager::Render() {
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            //skyBox->Draw(*cam);
+            skybox->Draw(*camera);
+            ax->Draw(*camera);
 
             Shader* basic = gShaderManager->getBasicShader();
 
@@ -251,9 +273,6 @@ void RenderManager::Render() {
                 RenderCube();
             }
             basic->UnUse();
-
-            //rect->setPosition(glm::vec3(0.0f, 1.5f, 0.0f));
-            //rect->Draw(*cam);
 
             //Disable blending as we are now done
             glDisable(GL_BLEND);
@@ -273,7 +292,7 @@ void RenderManager::Render() {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, hdrBuffer); 
             quadHdr->SetShaderMode(Rectangle::ShaderModes::HDR_PASS);
-            quadHdr->Draw(*cam);
+            quadHdr->Draw(*camera);
             hdrShader->UnUse();
 
         

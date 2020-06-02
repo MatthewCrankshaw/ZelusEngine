@@ -8,6 +8,7 @@ class Renderable
 private:
 	
 protected:
+
 	glm::mat4 mModelMat;
 	glm::mat4 mViewMat;
 	glm::mat4 mProjectionMat;
@@ -17,13 +18,17 @@ protected:
 	glm::mat4 mScale;
 
 public:
+	glm::vec3 mPosition;
+
+public:
 	Renderable();
 
 	virtual void Draw(const Camera &camera) = 0;
 
 	virtual void Update() = 0;
 
-	void setPosition(const glm::vec3 position);
+	void SetPosition(const glm::vec3 position);
+	void PositionUpdate();
 	void setScale(const glm::vec3 scale);
 	void setRotation(float angle, glm::vec3 rot);
 	void translate(const glm::vec3 translate);

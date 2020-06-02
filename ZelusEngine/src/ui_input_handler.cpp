@@ -1,6 +1,6 @@
 #include "ui_input_handler.h"
 
-UserInterfaceInputHandler::UserInterfaceInputHandler(GLFWwindow* window, Camera* cam) {
+UserInterfaceInputHandler::UserInterfaceInputHandler(GLFWwindow* window, Ref<Camera> cam) {
 	this->window = window; 
 	this->cam = cam;
 }

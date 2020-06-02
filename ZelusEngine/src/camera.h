@@ -40,23 +40,37 @@ public:
 		view = glm::lookAt(mCameraPosition, mCameraPosition + forward, up);
 	}
 
-	void GetProjectionMatrix(glm::mat4& projection) const {
+	glm::mat4 GetViewMatrix() const { 
+		glm::mat4 view;
+
+		glm::vec3 forward = glm::vec3(mCameraRotation * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+		glm::vec3 up = glm::vec3(mCameraRotation * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+		view = glm::lookAt(mCameraPosition, mCameraPosition + forward, up);
+
+		return view;
+	}
+
+	inline void GetProjectionMatrix(glm::mat4& projection) const {
 		projection = glm::perspective(glm::radians(fieldOfView), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 	}
 
-	void GetOrthoProjectionMatrix(glm::mat4& projection) const {
+	inline glm::mat4 GetProjectionMatrix() const { 
+		return glm::perspective(glm::radians(fieldOfView), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.0f, 1000.0f);
+	}
+
+	inline void GetOrthoProjectionMatrix(glm::mat4& projection) const {
 		projection = glm::ortho(-1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 1000.0f);
 	}
 
-	void GetPosition(glm::vec3& pos) const{
+	inline void GetPosition(glm::vec3& pos) const{
 		pos = mCameraPosition;
 	}
 
-	void GetForward(glm::vec3& forward) const {
+	inline void GetForward(glm::vec3& forward) const {
 		forward = mCameraRotation * glm::vec3(0.0f, 0.0f, -1.0f);
 	}
 
-	void GetRotation(glm::fquat& rot)const {
+	inline void GetRotation(glm::fquat& rot)const {
 		rot = mCameraRotation;
 	}
 

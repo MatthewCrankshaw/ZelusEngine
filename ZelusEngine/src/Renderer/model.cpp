@@ -10,31 +10,7 @@ void Model::Draw(const Camera &camera) {
     camera.GetViewMatrix(viewMatrix);
     camera.GetProjectionMatrix(projectionMatrix);
 
-    /*glm::vec3 lightPos = gUserInterface->GetLightPosition();
-    glm::vec3 lightDir = gUserInterface->GetLightDirection();
-    glm::vec3 lightAmbient = gUserInterface->GetLightAmbient();
-    glm::vec3 lightDiffuse = gUserInterface->GetLightDiffuse();
-    glm::vec3 lightSpecular = gUserInterface->GetLightSpecular();
-
-    glm::vec3 materialAmbient = gUserInterface->GetMaterialAmbient();
-    glm::vec3 materialDiffuse = gUserInterface->GetMaterialDiffuse();
-    glm::vec3 materialSpecular = gUserInterface->GetMaterialSpecular();*/
-
-    //Shader* shader = gShaderManager->getMultiLightShader();
     Shader* shader = gShaderManager->getGeometryPassShader();
-
-    //shader->SetVec3("light.position", lightPos);
-    //shader->SetVec3("light.direction", lightDir);
-    //shader->SetVec3("light.ambient", lightAmbient);
-    //shader->SetVec3("light.diffuse", lightDiffuse);
-    //shader->SetVec3("light.specular", lightSpecular);
-    //shader->SetFloat("light.constant", gUserInterface->GetLightConstant());
-    //shader->SetFloat("light.linear", gUserInterface->GetLightLinear());
-    //shader->SetFloat("light.quadratic", gUserInterface->GetLightQuadratic());
-    //shader->SetFloat("light.cutOff", glm::cos(glm::radians(gUserInterface->GetLightInnerCutOff())));
-    //shader->SetFloat("light.outerCutOff", glm::cos(glm::radians(gUserInterface->GetLightOuterCutOff())));
-
-    //shader->SetFloat("material.shininess", gUserInterface->GetMaterialShininess());
 
     mModelMat = mRotation * mTranslation * mScale;
 
@@ -44,7 +20,7 @@ void Model::Draw(const Camera &camera) {
     shader->SetMat4("projection", projectionMatrix);
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw();
+		meshes[i]->Draw();
 	}
 
     shader->UnUse();
@@ -72,7 +48,7 @@ void Model::LoadModel(std::string const& path) {
 void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene));
+		ProcessMesh(mesh, scene);
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -80,10 +56,10 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 	}
 }
 
-Mesh Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
-    std::vector<Vertex>* vertices = new std::vector<Vertex>();
-    std::vector<unsigned int>* indices = new std::vector<unsigned int>();
-    std::vector<Texture>* textures = new std::vector<Texture>();
+void Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
+    Ref<std::vector<Vertex>> vertices(new std::vector<Vertex>);
+    Ref<std::vector<unsigned int>> indices(new std::vector<unsigned int>);
+    Ref<std::vector<Texture>> textures(new std::vector<Texture>);
 
     vertices->reserve(aimesh->mNumVertices);
     indices->reserve(aimesh->mNumFaces);
@@ -166,23 +142,24 @@ Mesh Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
 
     aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 
-    std::vector<Texture>* diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    Ref<std::vector<Texture>> diffuseMaps(LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse"));
     textures->insert(textures->end(), diffuseMaps->begin(), diffuseMaps->end());
 
-    std::vector<Texture>* specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    Ref<std::vector<Texture>> specularMaps(LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular"));
     textures->insert(textures->end(), specularMaps->begin(), specularMaps->end());
 
-    std::vector<Texture>* normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    Ref<std::vector<Texture>> normalMaps(LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal"));
     textures->insert(textures->end(), normalMaps->begin(), normalMaps->end());
 
-    std::vector<Texture>* heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    Ref<std::vector<Texture>> heightMaps(LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height"));
     textures->insert(textures->end(), heightMaps->begin(), heightMaps->end());
 
-    return Mesh(vertices, indices, textures);
+    Ref<Mesh> m(new Mesh(vertices, indices, textures));
+    meshes.push_back(m);
 }
 
-std::vector<Texture>* Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
-    std::vector<Texture>* textures = new std::vector<Texture>();
+Ref<std::vector<Texture>> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
+    Ref<std::vector<Texture>> textures(new std::vector<Texture>());
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;

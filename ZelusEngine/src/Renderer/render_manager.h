@@ -22,7 +22,7 @@ public:
 
 private:
 
-	Camera* cam;
+	Ref<Camera> camera;
 
 	GLuint finalFBO, finalTex, finalRBO;
 	GLuint hdrFBO, hdrBuffer, hdrRBO;

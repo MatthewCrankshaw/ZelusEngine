@@ -1,9 +1,6 @@
 #include "shader.h"
-/*!
- * Constructor for a shader with a vertex shader and a fragment shader
- * @param vertexShader - the filename for the vertex shader
- * @param fragmentShader - the filename for the fragment shader
- */
+
+
 
 Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader) {
     vertexPath = vertexShader;
