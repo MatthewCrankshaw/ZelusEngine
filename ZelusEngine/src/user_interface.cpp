@@ -6,7 +6,7 @@
 void UserInterface::StartUp() {
 
     fov = 45.0f;
-    exitPressed - false;
+    exitPressed = false;
     gameWindowNoMove = true;
     gammaCorrection = false;
     logEnabled = true;
@@ -99,7 +99,7 @@ void UserInterface::SetupOpenGL()
     ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
-void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
+void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput, std::vector<Ref<Entity>> entities)
 {
     if (camera == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -118,7 +118,7 @@ void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoO
     UpdateNormalWindow(gNormalOutput);
     UpdatePositionWindow(gPositionOutput);
 
-    UpdatePropertiesWindow();
+    UpdatePropertiesWindow(entities);
 
     UpdateLogWindow();
 }
@@ -245,7 +245,7 @@ void UserInterface::UpdateNormalWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterface::UpdatePropertiesWindow() {
+void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
     ImGuiWindowFlags windowFlagsProperties = 0;
     windowFlagsProperties |= ImGuiWindowFlags_NoCollapse;
 
@@ -264,6 +264,27 @@ void UserInterface::UpdatePropertiesWindow() {
     }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+    for(int i = 0; i < entities.size(); i++){
+
+        
+        ImGui::Text("Entity: %s", entities[i]->GetName().c_str());
+
+        char strtrans[100]; 
+        char strscale[100]; 
+        char strrot[100];
+
+        sprintf(strtrans, "Transform %d", i);
+        sprintf(strscale, "Scale %d", i);
+        sprintf(strrot, "Rotation %d", i);
+
+        ImGui::SliderFloat3(strtrans, &entities[i]->GetTransform()->GetVec3PositionPtr()->x, -50.0f, 50.0f);
+        ImGui::SliderFloat3(strscale, &entities[i]->GetTransform()->GetVec3ScalePtr()->x, -5.0f, 5.0f);
+
+        ImGui::SliderFloat3(strrot, &eulerRot[i].x, 0.0f, 6.28f);
+
+        entities[i]->GetTransform()->SetRototation(eulerRot[i]);
+    }
 
     ImGui::End();
     

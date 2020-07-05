@@ -1,4 +1,5 @@
 #include "transform.h"
+#include <iostream>
 
 Transform::Transform()
 {
@@ -20,30 +21,14 @@ Transform::~Transform(){
 
 glm::mat4 Transform::GetModelTransform()
 {
-	mTranslationMat = glm::translate(mTranslationMat, mPositionVec);
+	mTranslationMat = glm::translate(glm::mat4(1.0f), mPositionVec);
 	mRotationMat = glm::mat4_cast(mRotationQuat);
-	mScaleMat = glm::scale(mScaleMat, mScaleVec);
+	mScaleMat = glm::scale(glm::mat4(1.0f), mScaleVec);
 
-	mModel = mScaleMat * mRotationMat * mTranslationMat;
+	mModel = mTranslationMat * mRotationMat * mScaleMat;
 
 	return mModel;
 }
-
-void Transform::SetPosition(glm::vec3 position)
-{
-	mPositionVec = position;
-}
-
-void Transform::SetRototation(float angle, glm::vec3 axis)
-{
-	mRotationQuat = glm::angleAxis(angle, axis);
-}
-
-void Transform::SetScale(glm::vec3 scale)
-{
-	mScaleVec = scale;
-}
-
 
 
 

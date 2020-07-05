@@ -31,6 +31,19 @@ public:
 	void PositionUpdate();
 	void setScale(const glm::vec3 scale);
 	void setRotation(float angle, glm::vec3 rot);
+
+	inline void SetModelMat(glm::mat4 model){
+		mModelMat = model;
+	}
+
+	inline void SetViewMat(glm::mat4 view){
+		mViewMat = view;
+	}
+
+	inline void SetProjectionMat(glm::mat4 projection){
+		mProjectionMat = projection;
+	}
+
 	void translate(const glm::vec3 translate);
 };
 

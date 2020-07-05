@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "ui_input_handler.h"
 #include "Renderer/renderer.h"
+#include "Renderer/Entity.h"
 
 
 extern Log* gLog;
@@ -21,8 +22,6 @@ protected:
 
 	ImVec4 clearColour = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
-	std::vector<std::vector<float>> pos;
-
 	float exposure = 0.5;
 	float gamma = 1.5;
 
@@ -30,6 +29,8 @@ protected:
 	UserInterfaceInputHandler *ui_handler;
 
 	Ref<Camera> camera;
+
+	glm::vec3 eulerRot[3];
 
 	float fov;
 
@@ -52,7 +53,7 @@ protected:
 	void UpdatePositionWindow(GLuint imageOutput);
 	void UpdateAlbedoWindow(GLuint imageOutput);
 	void UpdateNormalWindow(GLuint imageOutput);
-	void UpdatePropertiesWindow();
+	void UpdatePropertiesWindow(std::vector<Ref<Entity>> entities);
 	void UpdateLogWindow();
 
 
@@ -63,7 +64,7 @@ public:
 	void SetupGLFW();
 	void SetupOpenGL();
 
-	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput);
+	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput, std::vector<Ref<Entity>> entities);
 
 	void Render();
 

@@ -153,9 +153,14 @@ void RenderManager::Render() {
 
     Renderable* skybox = new SkyBox(skyboxFiles);
 
+    Ref<Entity> entity(new Entity("Nano Suit", m2, camera));
+    Ref<Entity> entity2(new Entity("Fire Hydrant", m, camera));
+    Ref<Entity> entity3(new Entity("Fire Hydrant 2", m, camera));
 
-    Ref<Transform> trans(new Transform());
-    Entity* entity = new Entity("Nano Suit", m2, camera, trans);
+    std::vector<Ref<Entity> > entities;
+    entities.push_back(entity);
+    entities.push_back(entity2); 
+    entities.push_back(entity3); 
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -201,8 +206,9 @@ void RenderManager::Render() {
             
 
             //Renderer::EndScene();
-
-            entity->Draw();
+            for(int i = 0; i < entities.size(); i++){
+                entities[i]->Draw();
+            }
         }
             
         //=======================================================================
@@ -300,7 +306,7 @@ void RenderManager::Render() {
         glGenerateTextureMipmap(finalTex);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
+        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition, entities);
 
         gUserInterface->Render();
 

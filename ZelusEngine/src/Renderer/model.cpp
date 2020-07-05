@@ -12,7 +12,7 @@ void Model::Draw(const Camera &camera) {
 
     Shader* shader = gShaderManager->getGeometryPassShader();
 
-    mModelMat = mRotation * mTranslation * mScale;
+    //mModelMat = mRotation * mTranslation * mScale;
 
     shader->Use();
     shader->SetMat4("view", viewMatrix);
