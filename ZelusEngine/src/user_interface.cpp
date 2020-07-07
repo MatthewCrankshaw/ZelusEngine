@@ -266,24 +266,21 @@ void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     for(int i = 0; i < entities.size(); i++){
+        char strHeader[100];
+        sprintf(strHeader, "%s", entities[i]->GetName().c_str());
+        if(ImGui::CollapsingHeader(strHeader)){
+            char strtrans[100];
+            char strscale[100];
+            char strrot[100];
 
-        
-        ImGui::Text("Entity: %s", entities[i]->GetName().c_str());
+            sprintf(strtrans, "Transform %d", i);
+            sprintf(strscale, "Scale %d", i);
+            sprintf(strrot, "Rotation %d", i);
 
-        char strtrans[100]; 
-        char strscale[100]; 
-        char strrot[100];
-
-        sprintf(strtrans, "Transform %d", i);
-        sprintf(strscale, "Scale %d", i);
-        sprintf(strrot, "Rotation %d", i);
-
-        ImGui::SliderFloat3(strtrans, &entities[i]->GetTransform()->GetVec3PositionPtr()->x, -50.0f, 50.0f);
-        ImGui::SliderFloat3(strscale, &entities[i]->GetTransform()->GetVec3ScalePtr()->x, -5.0f, 5.0f);
-
-        ImGui::SliderFloat3(strrot, &eulerRot[i].x, 0.0f, 6.28f);
-
-        entities[i]->GetTransform()->SetRototation(eulerRot[i]);
+            ImGui::SliderFloat3(strtrans, &entities[i]->GetTransform()->GetVec3PositionPtr()->x, -50.0f, 50.0f);
+            ImGui::SliderFloat3(strscale, &entities[i]->GetTransform()->GetVec3ScalePtr()->x, 0.0f, 5.0f);
+            ImGui::SliderFloat3(strrot, &entities[i]->GetTransform()->GetVec3RotationPtr()->x, 0.0f, 6.28f);
+        }
     }
 
     ImGui::End();

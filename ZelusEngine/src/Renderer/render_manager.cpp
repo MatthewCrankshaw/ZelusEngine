@@ -136,10 +136,13 @@ void RenderManager::Render() {
     Rectangle* quadHdr = new Rectangle();
     //Rectangle* rect = new Rectangle("flowers.png");
 
-    Ref<Renderable> m(new Model("res/FireHydrant_Model/sm_FireHydrant.obj"));
+    Ref<Renderable> fireHydrant(new Model("res/FireHydrant_Model/sm_FireHydrant.obj"));
+    Ref<Renderable> skull(new Model("res/skull/Skull.obj"));
+    Ref<Renderable> nanosuit(new Model("res/crysis_nano_suit/nanosuit.obj"));
+    Ref<Renderable> bugatti(new Model("res/bugatti/bugatti.obj"));
+    Ref<Renderable> car(new Model("res/CarsN/LowPolyCars.obj"));
+    Ref<Renderable> balloon(new Model("res/Valentine_balloon/W.obj"));
 
-    Ref<Renderable> m2(new Model("res/crysis_nano_suit/nanosuit.obj"));
-    //Renderable* m = new Model("res/skull/Skull.obj");
     Ref<AxisModel> ax(new AxisModel());
 
     std::vector<std::string> skyboxFiles{
@@ -153,14 +156,17 @@ void RenderManager::Render() {
 
     Renderable* skybox = new SkyBox(skyboxFiles);
 
-    Ref<Entity> entity(new Entity("Nano Suit", m2, camera));
-    Ref<Entity> entity2(new Entity("Fire Hydrant", m, camera));
-    Ref<Entity> entity3(new Entity("Fire Hydrant 2", m, camera));
-
     std::vector<Ref<Entity> > entities;
-    entities.push_back(entity);
-    entities.push_back(entity2); 
-    entities.push_back(entity3); 
+
+    
+    entities.push_back(Ref<Entity>(new Entity("Fire Hydrant", fireHydrant, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Fire Hydrant 2", fireHydrant, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Skull", skull, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Nanosuit", nanosuit, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Bugatti", bugatti, camera)));
+    entities.push_back(Ref<Entity>(new Entity("car", car, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Balloon", balloon, camera)));
+  
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -196,19 +202,15 @@ void RenderManager::Render() {
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //Renderer::BeginScene(cam);
+            Renderer::BeginScene();
 
-            
-            //Renderer::Submit(m);
-
-            //m2->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
-            //Renderer::Submit(m2);
-            
-
-            //Renderer::EndScene();
-            for(int i = 0; i < entities.size(); i++){
-                entities[i]->Draw();
+            for (int i = 0; i < entities.size(); i++) {
+                Renderer::Submit(entities[i]);
             }
+    
+
+            Renderer::EndScene();
+            
         }
             
         //=======================================================================
@@ -231,8 +233,8 @@ void RenderManager::Render() {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-                const float linear = 0.8;
-                const float quadratic = 0.2;
+                const float linear = 0.05;
+                const float quadratic = 0.01;
 
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);

@@ -16,39 +16,36 @@ public:
 
 	Texture();
 
-	void InitialiseTexture();
 	void LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip);
 	void LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip);
 
 	GLuint GetHandle();
 
-	std::string GetPath() {
-		return path;
+	inline std::string GetPath() {
+		return mPath;
 	}
 
-	std::string GetFilename() {
-		return filename;
+	inline std::string GetFilename() {
+		return mFilename;
 	}
 
-	void SetTextureType(std::string textureType) {
-		this->textureType = textureType;
+	inline void SetTextureType(std::string textureType) {
+		mTextureType = textureType;
 	}
 
-	std::string GetTextureType() {
-		return textureType;
+	inline std::string GetTextureType() {
+		return mTextureType;
 	}
 private:
-	std::string path;
-	std::string filename;
-	GLuint handle;
-	std::string textureType;
+	std::string mPath;
+	std::string mFilename;
+	GLuint mHandle;
+	std::string mTextureType;
 
-	int width, height, nChannels;
-	unsigned char* data;
-	GLenum format;
+	int mWidth, mHeight, mNChannels;
+	unsigned char* mData;
+	GLenum mFormat;
 
-	//Check for if the texture is actually loaded or the texture object has just been created
-	bool isLoaded; 
-	bool isInitialised;
+	bool mIsLoaded; 
 };
 

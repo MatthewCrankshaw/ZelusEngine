@@ -18,6 +18,10 @@ public:
 		return &mScaleVec;
 	}
 
+	inline glm::vec3* GetVec3RotationPtr(){
+		return &mRotationVec;
+	}
+
 	inline glm::fquat* GetFquatRotationPtr(){
 		return &mRotationQuat;
 	}
@@ -32,15 +36,6 @@ public:
 		mRotationQuat = glm::angleAxis(angle, axis);
 	}
 
-	inline void SetRototation(glm::vec3 eulerAngle)
-	{
-		glm::fquat a = glm::angleAxis(eulerAngle.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::fquat b = glm::angleAxis(eulerAngle.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::fquat c = glm::angleAxis(eulerAngle.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		mRotationQuat = a * b * c;
-	}
-
 	inline void SetScale(glm::vec3 scale)
 	{
 		mScaleVec = scale;
@@ -49,14 +44,17 @@ public:
 
 
 private: 
-	glm::vec3 mPositionVec;
+	glm::vec3 mPositionVec = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	glm::fquat mRotationQuat;
+	glm::vec3 mRotationVec = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::fquat mRotationQuat = glm::fquat(1.0f, 0.0f, 0.0f, 0.0f);
 
 
-	glm::vec3 mScaleVec;
+	glm::vec3 mScaleVec = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	glm::mat4 mModel;
-	glm::mat4 mRotationMat, mTranslationMat, mScaleMat;
+	glm::mat4 mModel = glm::mat4(1.0f);
+	glm::mat4 mRotationMat = glm::mat4(1.0f); 
+	glm::mat4 mTranslationMat = glm::mat4(1.0f); 
+	glm::mat4 mScaleMat = glm::mat4(1.0f);
 };
 

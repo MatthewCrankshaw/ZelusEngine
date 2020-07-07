@@ -3,44 +3,40 @@
 #include "stb/stb_image.h"
 
 Texture::Texture(){
-    isLoaded = false;
+    mData = NULL;
+    mHandle = 0;
+    mIsLoaded = false;
 }
 
 void Texture::LoadRegularTexture(std::string directory, std::string filename, bool flip)
 {
-    this->filename = filename;
-    this->path = directory + filename;
+    mFilename = filename;
+    mPath = directory + filename;
     
+    glGenTextures(1, &mHandle);
+    glBindTexture(GL_TEXTURE_2D, mHandle);
 
     stbi_set_flip_vertically_on_load(flip);
-    data = stbi_load(path.c_str(), &width, &height, &nChannels, 0);
+    mData = stbi_load(mPath.c_str(), &mWidth, &mHeight, &mNChannels, 0);
 
-    if (data == nullptr) {
-        gLog->AddLog("[error] Texture::LoaderRegularTexture() : Could not load texture! %s", path.c_str());
+    if (mData == nullptr) {
+        gLog->AddLog("[error] Texture::LoaderRegularTexture() : Could not load texture! %s", mPath.c_str());
     }
 
-    if (data) {
-        if (nChannels == 1) {
-            format = GL_RED;
+    if (mData) {
+        if (mNChannels == 1) {
+            mFormat = GL_RED;
         }
-        else if (nChannels == 3) {
-            format = GL_RGB;
+        else if (mNChannels == 3) {
+            mFormat = GL_RGB;
         }
-        else if (nChannels == 4) {
-            format = GL_RGBA;
+        else if (mNChannels == 4) {
+            mFormat = GL_RGBA;
         }
         else {
             gLog->AddLog("[error] Texture::LoaderRegularTexture() : Unknown image format!");
         }
     }
-
-    isLoaded = true;
-
-}
-
-void Texture::InitialiseTexture(){
-    glGenTextures(1, &handle);
-    glBindTexture(GL_TEXTURE_2D, handle);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -48,21 +44,24 @@ void Texture::InitialiseTexture(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glad_glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, mFormat, mWidth, mHeight, 0, mFormat, GL_UNSIGNED_BYTE,mData);
+    stbi_image_free(mData);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    isInitialised = true;
+    gLog->AddLog("[info] Texture::LoadRegularTexture() : Texture Loaded [%s]", mPath.c_str());
+
+    mIsLoaded = true;
 }
 
 void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip) {
-    this->path = textureDirectory + faceTextureFilenames[0];
+    mPath = textureDirectory + faceTextureFilenames[0];
 
     if (faceTextureFilenames.size() != 6) {
         gLog->AddLog("[error] Texture::LoadCubeMapTexture : Cube map must have 6 texture faces. %d were found.", faceTextureFilenames.size());
     }
 
-    glGenTextures(1, &handle);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
+    glGenTextures(1, &mHandle);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mHandle);
 
     int width, height, nChannels;
     stbi_set_flip_vertically_on_load(flip);
@@ -72,7 +71,7 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
         unsigned char* data = stbi_load((textureDirectory + faceTextureFilenames[i]).c_str(), &width, &height, &nChannels, 0);
 
         if (data == nullptr) {
-            std::cout << "ERROR::TEXTURE::LOADER Could not load texture (" << path << ")" << std::endl;
+            std::cout << "ERROR::TEXTURE::LOADER Could not load texture (" << mPath << ")" << std::endl;
             exit(1);
         }
 
@@ -104,6 +103,8 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
             std::cerr << "Failed to load texture: " << std::endl;
             exit(1);
         }
+
+        gLog->AddLog("[info] Texture::LoadCubeMapTexture() : Cube Map Texture Loaded [%s]", mPath.c_str());
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -112,26 +113,16 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    isLoaded = true;
-    isInitialised = true;
+    mIsLoaded = true;
 
+    
 }
 
 GLuint Texture::GetHandle()
 {
-    //std::cout << "Init: " << isInitialised << " loaded: " << isLoaded << std::endl;
-    if (isLoaded) {
-        if (isInitialised) {
-            return handle;
-        }
-        else {
-            InitialiseTexture();
-            return handle;
-        }
-        
-    }
-    else {
-        std::cout << "TEXTURE::GET_HANDLE: Error getting texture handle: Texture object created but texture not loaded. Load texture first" << path << std::endl;
+    if (!mIsLoaded) {
+        std::cout << "TEXTURE::GET_HANDLE: Error getting texture handle: Texture object created but texture not loaded. Load texture first" << mPath << std::endl;
         exit(1);
     }
+    return mHandle;
 }

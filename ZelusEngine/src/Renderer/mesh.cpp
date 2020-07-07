@@ -1,11 +1,18 @@
 #include "mesh.h"
 
+long Mesh::memoryVertexUsed = 0;
+long Mesh::memoryIndicesUsed = 0;
+
 Mesh::Mesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;
 
+	this->verticesSize = vertices->size();
+	this->indicesSize = indices->size();
+
 	SetupMesh();
+
 }
 
 void Mesh::Draw() {
@@ -48,7 +55,7 @@ void Mesh::Draw() {
 	}
 
 	glBindVertexArray(VAO); 
-	glDrawElements(GL_TRIANGLES, indices->size(), GL_UNSIGNED_INT, 0); 
+	glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0); 
 	glBindVertexArray(0);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -59,6 +66,7 @@ void Mesh::Update() {
 }
 
 void Mesh::SetupMesh() {
+
 	glGenVertexArrays(1, &VAO); 
 	glGenBuffers(1, &VBO); 
 	glGenBuffers(1, &EBO); 
@@ -67,10 +75,10 @@ void Mesh::SetupMesh() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO); 
 
-	glBufferData(GL_ARRAY_BUFFER, vertices->size() * sizeof(Vertex), &vertices->at(0), GL_STATIC_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER, verticesSize * sizeof(Vertex), &vertices->at(0), GL_STATIC_DRAW); 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), &indices->at(0), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(unsigned int), &indices->at(0), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -88,4 +96,14 @@ void Mesh::SetupMesh() {
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
 	glBindVertexArray(0);
+
+	memoryVertexUsed += vertices->size() * sizeof(Vertex);
+	memoryIndicesUsed += vertices->size() * sizeof(int);
+
+	gLog->AddLog("[info] size of vertices: %d", memoryVertexUsed);
+	gLog->AddLog("[info] size of indices: %d", memoryIndicesUsed);
+
+	vertices.reset();
+	indices.reset();
+	
 }

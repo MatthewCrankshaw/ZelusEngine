@@ -30,8 +30,6 @@ protected:
 
 	Ref<Camera> camera;
 
-	glm::vec3 eulerRot[3];
-
 	float fov;
 
 	bool exitPressed;

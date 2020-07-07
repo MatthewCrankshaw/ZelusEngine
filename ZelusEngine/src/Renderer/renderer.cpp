@@ -1,22 +1,17 @@
 #include "renderer.h"
 
-std::vector<Renderable*> Renderer::sRenderables;
-Camera* Renderer::sCamera;
+std::vector<Ref<Entity>> Renderer::sEntities;
 
-void Renderer::BeginScene(Camera* camera) {
-	sCamera = camera;
-	sRenderables.clear();
+void Renderer::BeginScene() {
+	sEntities.clear();
 }
 
 void Renderer::EndScene() {
-	for(int i = 0; i < sRenderables.size(); i++){
-		//gLog->AddLog(("Item Position: " + glm::to_string(sRenderables[i]->GetPosition())).c_str());
-		glm::vec3 pos; 
-		sCamera->GetPosition(pos);
-		sRenderables[i]->Draw(*sCamera);
+	for(int i = 0; i < sEntities.size(); i++){
+		sEntities[i]->Draw();
 	}
 }
 
-void Renderer::Submit(Renderable* renderable) {
-	sRenderables.push_back(renderable);
+void Renderer::Submit(Ref<Entity> entity) {
+	sEntities.push_back(entity);
 }

@@ -22,6 +22,7 @@ Transform::~Transform(){
 glm::mat4 Transform::GetModelTransform()
 {
 	mTranslationMat = glm::translate(glm::mat4(1.0f), mPositionVec);
+	mRotationQuat = glm::fquat(mRotationVec);
 	mRotationMat = glm::mat4_cast(mRotationQuat);
 	mScaleMat = glm::scale(glm::mat4(1.0f), mScaleVec);
 

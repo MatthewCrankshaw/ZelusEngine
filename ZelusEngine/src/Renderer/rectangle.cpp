@@ -76,7 +76,6 @@ Rectangle::Rectangle(std::string textureFilename)
 
 	Texture texture;
 	texture.LoadRegularTexture("res/", textureFilename, true);
-	texture.InitialiseTexture();
 	mTextureId = texture.GetHandle();
 
 	mTexturedRect = true;

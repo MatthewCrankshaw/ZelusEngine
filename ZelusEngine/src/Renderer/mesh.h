@@ -34,10 +34,16 @@ private:
     Ref<std::vector<unsigned int>> indices;
     Ref<std::vector<Texture>> textures;
 
+    int indicesSize;
+    int verticesSize;
+
     GLuint VAO; 
     GLuint VBO; 
     GLuint EBO;
     
+    static long memoryVertexUsed;
+    static long memoryIndicesUsed;
+
 public:
     /*  Functions  */
     // constructor
