@@ -6,9 +6,20 @@ void Renderer::BeginScene() {
 	sEntities.clear();
 }
 
-void Renderer::EndScene() {
+void Renderer::EndDeferredScene() {
 	for(int i = 0; i < sEntities.size(); i++){
-		sEntities[i]->Draw();
+		if(sEntities[i]->IsDeferredShading()){
+			sEntities[i]->Draw();
+		}
+	}
+}
+
+void Renderer::EndScene()
+{
+	for (int i = 0; i < sEntities.size(); i++) {
+		if (!sEntities[i]->IsDeferredShading()) {
+			sEntities[i]->Draw();
+		}
 	}
 }
 

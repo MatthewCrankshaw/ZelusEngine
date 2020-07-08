@@ -17,26 +17,26 @@ extern Log* gLog;
 class UserInterface
 {
 protected:
-	GLFWwindow* window;
-	const char* glslVersion = "#version 130";
+	GLFWwindow* mWindow;
+	const char* mGlslVersion = "#version 130";
 
-	ImVec4 clearColour = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+	ImVec4 mClearColour = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
-	float exposure = 0.5;
-	float gamma = 1.5;
+	float mExposure = 0.5;
+	float mGamma = 1.5;
 
-	ImGuiIO *io;
-	UserInterfaceInputHandler *ui_handler;
+	ImGuiIO *mIo;
+	UserInterfaceInputHandler *mUiHandler;
 
-	Ref<Camera> camera;
+	Ref<Camera> mCamera;
 
-	float fov;
+	float mFov;
 
-	bool exitPressed;
-	bool gameWindowNoMove;
-	bool gammaCorrection;
+	bool mOpen;
+	bool mGameWindowNoMove;
+	bool mGammaCorrection;
 
-	bool logEnabled;
+	bool mLogEnabled;
 	bool mHDROutput;
 	bool mGeometricAlbedoOutput;
 	bool mGeometricNormalOutput;
@@ -67,22 +67,22 @@ public:
 	void Render();
 
 	inline GLFWwindow* GetWindow() {
-		return window;
+		return mWindow;
 	}
 
 	inline Ref<Camera> GetCamera() {
-		return camera;
+		return mCamera;
 	}
 
 	inline glm::vec4 GetScreenClearColour() {
-		return glm::vec4(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
+		return glm::vec4(mClearColour.x, mClearColour.y, mClearColour.z, mClearColour.w);
 	}
 
 	inline float GetExposure() {
-		return exposure;
+		return mExposure;
 	}
 
 	inline float GetGamma() {
-		return gamma;
+		return mGamma;
 	}
 };

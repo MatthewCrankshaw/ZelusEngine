@@ -106,13 +106,12 @@ void Rectangle::Draw(const Camera& camera)
 
 	shader->SetBool("textureProvided", true);
 
-	camera.GetViewMatrix(mViewMat);
-	camera.GetProjectionMatrix(mProjectionMat);
+	glm::mat4 viewMat, projectionMat;
+	camera.GetViewMatrix(viewMat);
+	camera.GetProjectionMatrix(projectionMat);
 
-	mModelMat = mRotation * mTranslation * mScale;
-
-	shader->SetMat4("view", mViewMat);
-	shader->SetMat4("projection", mProjectionMat);
+	shader->SetMat4("view", viewMat);
+	shader->SetMat4("projection", projectionMat);
 	shader->SetMat4("model", mModelMat);
 
 	glBindVertexArray(mVAO);

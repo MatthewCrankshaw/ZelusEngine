@@ -38,15 +38,16 @@ void SkyBox::Draw(const Camera& camera)
 	shader->Use();
 
 	glm::vec3 position;
+	glm::mat4 viewMat, projectionMat;
 
-	camera.GetViewMatrix(mViewMat);
-	camera.GetProjectionMatrix(mProjectionMat);
+	camera.GetViewMatrix(viewMat);
+	camera.GetProjectionMatrix(projectionMat);
 	camera.GetPosition(position);
 
 	SetPosition(position);
 	mModelMat = mTranslation * mRotation * mScale;
-	shader->SetMat4("view", mViewMat);
-	shader->SetMat4("projection", mProjectionMat);
+	shader->SetMat4("view", viewMat);
+	shader->SetMat4("projection", projectionMat);
 	shader->SetMat4("model", mModelMat);
 
 	glBindVertexArray(VAO); 

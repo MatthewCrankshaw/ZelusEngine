@@ -12,6 +12,8 @@ class Renderer
 public: 
 	static void BeginScene(); 
 
+	static void EndDeferredScene();
+
 	static void EndScene();
 
 	static void Submit(Ref<Entity> entity);

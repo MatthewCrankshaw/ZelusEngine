@@ -5,11 +5,11 @@
 
 void UserInterface::StartUp() {
 
-    fov = 45.0f;
-    exitPressed = false;
-    gameWindowNoMove = true;
-    gammaCorrection = false;
-    logEnabled = true;
+    mFov = 45.0f;
+    mOpen = true;
+    mGameWindowNoMove = true;
+    mGammaCorrection = false;
+    mLogEnabled = true;
     mGeometricAlbedoOutput = true;
     mGeometricNormalOutput = true;
     mGeometricPositionOutput = true;
@@ -18,14 +18,14 @@ void UserInterface::StartUp() {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    io = &ImGui::GetIO(); (void)io;
+    mIo = &ImGui::GetIO(); (void)mIo;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    mIo->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    mIo->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    io->ConfigViewportsNoAutoMerge = true;
-    io->ConfigViewportsNoTaskBarIcon = true;
+    mIo->ConfigViewportsNoAutoMerge = true;
+    mIo->ConfigViewportsNoTaskBarIcon = true;
 
     //ImGui::StyleColorsClassic();
     //ImGui::StyleColorsLight();
@@ -33,7 +33,7 @@ void UserInterface::StartUp() {
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
-    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (mIo->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -50,15 +50,15 @@ void UserInterface::StartUp() {
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
-    if (!window)
+    mWindow = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
+    if (!mWindow)
     {
         glfwTerminate();
         exit(1);
     }
 
     /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(mWindow);
     glfwSwapInterval(1); //Enable vsync
 
     
@@ -68,7 +68,7 @@ void UserInterface::StartUp() {
         exit(1);
     }
 
-    camera = Ref<Camera>(new Camera());
+    mCamera = Ref<Camera>(new Camera());
 
     SetupGLFW();
     SetupOpenGL();
@@ -76,32 +76,32 @@ void UserInterface::StartUp() {
 
 void UserInterface::ShutDown()
 {
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(mWindow);
     glfwTerminate();
 }
 
 void UserInterface::SetupGLFW()
 {
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(mWindow, true);
     
-    ui_handler = new UserInterfaceInputHandler(window, camera);
+    mUiHandler = new UserInterfaceInputHandler(mWindow, mCamera);
 
     glfwSetErrorCallback(InputHandler::OnWindowError);
-    glfwSetKeyCallback(window, InputHandler::OnKey);
-    glfwSetMouseButtonCallback(window, InputHandler::OnMouseButton);
-    glfwSetCursorPosCallback(window, InputHandler::OnCursorPosition);
-    glfwSetFramebufferSizeCallback(window, InputHandler::OnFrameBufferSizeChange);
+    glfwSetKeyCallback(mWindow, InputHandler::OnKey);
+    glfwSetMouseButtonCallback(mWindow, InputHandler::OnMouseButton);
+    glfwSetCursorPosCallback(mWindow, InputHandler::OnCursorPosition);
+    glfwSetFramebufferSizeCallback(mWindow, InputHandler::OnFrameBufferSizeChange);
 
 }
 
 void UserInterface::SetupOpenGL()
 {
-    ImGui_ImplOpenGL3_Init(glslVersion);
+    ImGui_ImplOpenGL3_Init(mGlslVersion);
 }
 
 void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput, std::vector<Ref<Entity>> entities)
 {
-    if (camera == nullptr) {
+    if (mCamera == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
         exit(1);
     }
@@ -129,7 +129,7 @@ void UserInterface::UpdateTitleWindow() {
     window_flags |= ImGuiWindowFlags_MenuBar;
     window_flags |= ImGuiWindowFlags_NoResize;
 
-    if (!ImGui::Begin("Zelus Engine", NULL, window_flags))
+    if (!ImGui::Begin("Zelus Engine", &mOpen, window_flags))
     {
         // Early out if the window is collapsed, as an optimization.
         ImGui::End();
@@ -145,12 +145,11 @@ void UserInterface::UpdateTitleWindow() {
     {
         if (ImGui::BeginMenu("Menu"))
         {
-            ImGui::MenuItem("Exit Program", NULL, &exitPressed);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("View"))
         {
-            ImGui::MenuItem("Log", NULL, &logEnabled);
+            ImGui::MenuItem("Log", NULL, &mLogEnabled);
             ImGui::MenuItem("Albedo View", NULL, &mGeometricAlbedoOutput);
             ImGui::MenuItem("Normal View", NULL, &mGeometricNormalOutput);
             ImGui::MenuItem("Position View", NULL, &mGeometricPositionOutput);
@@ -170,7 +169,7 @@ void UserInterface::UpdateTitleWindow() {
     ImGui::End();
 
     //Check if the exit button has been pressed
-    if (exitPressed) {
+    if (!mOpen) {
         std::cout << "TITLE_BAR::UPDATE: User exited program" << std::endl;
         exit(1);
     }
@@ -180,15 +179,13 @@ void UserInterface::UpdateGameWindow(GLuint imageOutput) {
     ImGuiWindowFlags windowFlagsGame = 0;
     windowFlagsGame |= ImGuiWindowFlags_NoCollapse;
     windowFlagsGame |= ImGuiWindowFlags_NoBringToFrontOnFocus;
-    if (gameWindowNoMove) windowFlagsGame |= ImGuiWindowFlags_NoMove;
+    if (mGameWindowNoMove) windowFlagsGame |= ImGuiWindowFlags_NoMove;
 
     ImGui::Begin("Game Window", NULL, windowFlagsGame);
-    ui_handler->EngineInputHandler();
+    mUiHandler->EngineInputHandler();
     ImVec2 size = ImGui::GetWindowSize();
-    //SCREEN_WIDTH = (int)size.x - 100;
-    //SCREEN_HEIGHT = (int)size.y - 100;
 
-    camera->FramebufferSizeCallback(window, (int)size.x - 100, (int)size.y - 100);
+    mCamera->FramebufferSizeCallback(mWindow, (int)size.x - 100, (int)size.y - 100);
     ImGui::Image((void*)imageOutput, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
 }
@@ -251,16 +248,16 @@ void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
 
     ImGui::Begin("Properties", NULL, windowFlagsProperties);                          // Create a window called "Hello, world!" and append into it.
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-    ImGui::SliderFloat("Field Of View", &fov, 5.0f, 180.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    camera->SetFieldOfView(fov);
+    ImGui::SliderFloat("Field Of View", &mFov, 5.0f, 180.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    mCamera->SetFieldOfView(mFov);
 
-    ImGui::ColorEdit3("clear color", (float*)&clearColour); // Edit 3 floats representing a color
+    ImGui::ColorEdit3("clear color", (float*)&mClearColour); // Edit 3 floats representing a color
 
-    ImGui::SliderFloat("Exposure", &exposure, 0.01f, 5.0f);
-    ImGui::SliderFloat("Gamma", &gamma, 0.5f, 4.0f);
+    ImGui::SliderFloat("Exposure", &mExposure, 0.01f, 5.0f);
+    ImGui::SliderFloat("Gamma", &mGamma, 0.5f, 4.0f);
 
     if (ImGui::Button("Game Window No Move")) {
-        gameWindowNoMove = !gameWindowNoMove;
+        mGameWindowNoMove = !mGameWindowNoMove;
     }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -291,7 +288,7 @@ void UserInterface::UpdateLogWindow() {
     ImGuiWindowFlags windowFlagsLog = 0;
     bool demo = true;
 
-    if (!logEnabled) return;
+    if (!mLogEnabled) return;
     ImGui::ShowDemoWindow(&demo);
     gLog->Draw("Log", &demo);
 }
@@ -299,7 +296,7 @@ void UserInterface::UpdateLogWindow() {
 
 void UserInterface::Render() {
     
-    if (camera == nullptr) {
+    if (mCamera == nullptr) {
         std::cout << "USER_INTERFACE::RENDERER: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
         exit(1);
     }
@@ -307,7 +304,7 @@ void UserInterface::Render() {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (mIo->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         GLFWwindow* backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();

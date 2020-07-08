@@ -110,14 +110,14 @@ void RenderManager::Render() {
     for (unsigned int i = 0; i < NR_LIGHTS; i++)
     {
         // calculate slightly random offsets
-        float xPos = ((rand() % 100) / 100.0) * 2.0 - 3.0;
-        float yPos = ((rand() % 100) / 100.0) * 2.0 - 0.0;
-        float zPos = ((rand() % 100) / 100.0) * 2.0 - 3.0;
+        float xPos = ((rand() % 100) / 100.0) * 15.0;
+        float yPos = ((rand() % 100) / 100.0) * 15.0;
+        float zPos = ((rand() % 100) / 100.0) * 15.0;
         lightPositions.push_back(glm::vec3(xPos, yPos, zPos));
         // also calculate random color
-        float rColor = ((rand() % 100) / 200.0f) + 0.5; // between 0.5 and 1.0
-        float gColor = ((rand() % 100) / 200.0f) + 0.5; // between 0.5 and 1.0
-        float bColor = ((rand() % 100) / 200.0f) + 0.5; // between 0.5 and 1.0
+        float rColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
+        float gColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
+        float bColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
 
@@ -134,14 +134,15 @@ void RenderManager::Render() {
 
     Rectangle* quad = new Rectangle();
     Rectangle* quadHdr = new Rectangle();
-    //Rectangle* rect = new Rectangle("flowers.png");
 
     Ref<Renderable> fireHydrant(new Model("res/FireHydrant_Model/sm_FireHydrant.obj"));
-    Ref<Renderable> skull(new Model("res/skull/Skull.obj"));
-    Ref<Renderable> nanosuit(new Model("res/crysis_nano_suit/nanosuit.obj"));
-    Ref<Renderable> bugatti(new Model("res/bugatti/bugatti.obj"));
-    Ref<Renderable> car(new Model("res/CarsN/LowPolyCars.obj"));
-    Ref<Renderable> balloon(new Model("res/Valentine_balloon/W.obj"));
+    Ref<Renderable> flower(new Rectangle("flowers.png"));
+    Ref<Renderable> grass(new Rectangle("transparent_grass.png"));
+    //Ref<Renderable> skull(new Model("res/skull/Skull.obj"));
+    //Ref<Renderable> nanosuit(new Model("res/crysis_nano_suit/nanosuit.obj"));
+    //Ref<Renderable> bugatti(new Model("res/bugatti/bugatti.obj"));
+    //Ref<Renderable> car(new Model("res/CarsN/LowPolyCars.obj"));
+    //Ref<Renderable> balloon(new Model("res/Valentine_balloon/W.obj"));
 
     Ref<AxisModel> ax(new AxisModel());
 
@@ -160,12 +161,14 @@ void RenderManager::Render() {
 
     
     entities.push_back(Ref<Entity>(new Entity("Fire Hydrant", fireHydrant, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Fire Hydrant 2", fireHydrant, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Skull", skull, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Nanosuit", nanosuit, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Bugatti", bugatti, camera)));
-    entities.push_back(Ref<Entity>(new Entity("car", car, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Balloon", balloon, camera)));
+    entities.push_back(Ref<Entity>(new Entity("Flower", flower, camera, false)));
+    entities.push_back(Ref<Entity>(new Entity("Grass", grass, camera, false)));
+    //entities.push_back(Ref<Entity>(new Entity("Fire Hydrant 2", fireHydrant, camera)));
+    //entities.push_back(Ref<Entity>(new Entity("Skull", skull, camera)));
+    //entities.push_back(Ref<Entity>(new Entity("Nanosuit", nanosuit, camera)));
+    //entities.push_back(Ref<Entity>(new Entity("Bugatti", bugatti, camera)));
+    //entities.push_back(Ref<Entity>(new Entity("car", car, camera)));
+    //entities.push_back(Ref<Entity>(new Entity("Balloon", balloon, camera)));
   
 
     /* Loop until the user closes the window */
@@ -209,7 +212,7 @@ void RenderManager::Render() {
             }
     
 
-            Renderer::EndScene();
+            Renderer::EndDeferredScene();
             
         }
             
@@ -233,8 +236,8 @@ void RenderManager::Render() {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-                const float linear = 0.05;
-                const float quadratic = 0.01;
+                const float linear = 0.005;
+                const float quadratic = 0.001;
 
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
@@ -265,6 +268,8 @@ void RenderManager::Render() {
             //Skybox should be the first thing to render now
             skybox->Draw(*camera);
             ax->Draw(*camera);
+
+            Renderer::EndScene();
 
             Shader* basic = gShaderManager->getBasicShader();
 

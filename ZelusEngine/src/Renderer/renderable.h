@@ -10,8 +10,6 @@ private:
 protected:
 
 	glm::mat4 mModelMat;
-	glm::mat4 mViewMat;
-	glm::mat4 mProjectionMat;
 
 	glm::mat4 mTranslation;
 	glm::mat4 mRotation;
@@ -34,14 +32,6 @@ public:
 
 	inline void SetModelMat(glm::mat4 model){
 		mModelMat = model;
-	}
-
-	inline void SetViewMat(glm::mat4 view){
-		mViewMat = view;
-	}
-
-	inline void SetProjectionMat(glm::mat4 projection){
-		mProjectionMat = projection;
 	}
 
 	void translate(const glm::vec3 translate);

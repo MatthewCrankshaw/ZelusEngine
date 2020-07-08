@@ -21,19 +21,21 @@ void AxisModel::Draw(const Camera& camera)
     glm::vec3 pos;
     glm::vec3 forward;
 
+    glm::mat4 projectionMat, viewMat;
+
     camera.GetPosition(pos);
     camera.GetForward(forward);
-    camera.GetOrthoProjectionMatrix(mProjectionMat);
-    camera.GetViewMatrix(mViewMat);
+    camera.GetOrthoProjectionMatrix(projectionMat);
+    camera.GetViewMatrix(viewMat);
 
     mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));
     mScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
 
     mModelMat = mTranslation * mScale;
 
-    shader->SetMat4("view", mViewMat);
+    shader->SetMat4("view", viewMat);
     shader->SetMat4("model", mModelMat);
-    shader->SetMat4("projection", mProjectionMat);
+    shader->SetMat4("projection", projectionMat);
 
     glDisable(GL_DEPTH_TEST);
     glLineWidth(5.0f);
