@@ -13,6 +13,10 @@ public:
 		sAPI->Clear();
 	}
 
+	inline static void CullBackFaces() {
+		sAPI->CullBackFaces();
+	}
+
 	inline static void DrawIndexed(Renderable* renderable, Camera* camera) {
 		sAPI->DrawIndexed(renderable, camera);
 	}

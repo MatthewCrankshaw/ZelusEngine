@@ -8,6 +8,8 @@ public:
 
 	virtual void Clear() override;
 
+	virtual void CullBackFaces() override;
+
 	virtual void DrawIndexed(Renderable* renderable, Camera* cam) override;
 
 };

@@ -6,7 +6,7 @@ void RenderManager::StartUp()
 {
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
-    glCullFace(GL_BACK);
+    RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
