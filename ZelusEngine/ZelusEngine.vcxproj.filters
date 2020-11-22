@@ -245,5 +245,6 @@
     <None Include="src\imgui.ini" />
     <None Include="src\packages.config" />
     <None Include="Shaders\combined_shader.glsl" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
