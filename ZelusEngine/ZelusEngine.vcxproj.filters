@@ -212,6 +212,9 @@
     <ClInclude Include="src\renderer\gl_api\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\entt\entt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ZelusEngine.rc">
