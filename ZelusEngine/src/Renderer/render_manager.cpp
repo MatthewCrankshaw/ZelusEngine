@@ -130,46 +130,23 @@ void RenderManager::Render() {
 
     lightShader->UnUse();
 
-    //model->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
-
     Rectangle* quad = new Rectangle();
     Rectangle* quadHdr = new Rectangle();
-
-    Ref<Renderable> fireHydrant(new Model("res/FireHydrant_Model/sm_FireHydrant.obj"));
-    Ref<Renderable> flower(new Rectangle("flowers.png"));
-    Ref<Renderable> grass(new Rectangle("transparent_grass.png"));
-    //Ref<Renderable> skull(new Model("res/skull/Skull.obj"));
-    //Ref<Renderable> nanosuit(new Model("res/crysis_nano_suit/nanosuit.obj"));
-    //Ref<Renderable> bugatti(new Model("res/bugatti/bugatti.obj"));
-    //Ref<Renderable> car(new Model("res/CarsN/LowPolyCars.obj"));
-    //Ref<Renderable> balloon(new Model("res/Valentine_balloon/W.obj"));
 
     Ref<AxisModel> ax(new AxisModel());
 
     std::vector<std::string> skyboxFiles{
-        "skybox/right.jpg", 
-        "skybox/left.jpg", 
-        "skybox/top.jpg", 
-        "skybox/bottom.jpg", 
-        "skybox/front.jpg", 
-        "skybox/back.jpg"
+        "skybox2/right.png", 
+        "skybox2/left.png", 
+        "skybox2/top.png", 
+        "skybox2/bottom.png", 
+        "skybox2/front.png", 
+        "skybox2/back.png"
     };
 
     Renderable* skybox = new SkyBox(skyboxFiles);
 
     std::vector<Ref<Entity> > entities;
-
-    
-    entities.push_back(Ref<Entity>(new Entity("Fire Hydrant", fireHydrant, camera)));
-    entities.push_back(Ref<Entity>(new Entity("Flower", flower, camera, false)));
-    entities.push_back(Ref<Entity>(new Entity("Grass", grass, camera, false)));
-    //entities.push_back(Ref<Entity>(new Entity("Fire Hydrant 2", fireHydrant, camera)));
-    //entities.push_back(Ref<Entity>(new Entity("Skull", skull, camera)));
-    //entities.push_back(Ref<Entity>(new Entity("Nanosuit", nanosuit, camera)));
-    //entities.push_back(Ref<Entity>(new Entity("Bugatti", bugatti, camera)));
-    //entities.push_back(Ref<Entity>(new Entity("car", car, camera)));
-    //entities.push_back(Ref<Entity>(new Entity("Balloon", balloon, camera)));
-  
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
