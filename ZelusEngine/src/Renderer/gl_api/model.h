@@ -34,9 +34,8 @@ public:
 
 	Model(std::string const& path);
 
-	void Draw(const Ref<Camera> camera);
-
-	void Update();
+	void Draw(const Ref<Camera> camera) override;
+	void Update() override;
 
 private:
 

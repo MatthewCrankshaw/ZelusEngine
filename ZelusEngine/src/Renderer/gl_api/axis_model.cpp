@@ -2,10 +2,10 @@
 
 AxisModel::AxisModel()
 {
-    glGenVertexArrays(1, &mVAO);
-    glGenBuffers(1, &mVBO);
-    glBindVertexArray(mVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+    glGenVertexArrays(1, &mVao);
+    glGenBuffers(1, &mVbo);
+    glBindVertexArray(mVao);
+    glBindBuffer(GL_ARRAY_BUFFER, mVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mVertices), &mVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -40,7 +40,7 @@ void AxisModel::Draw(const Ref<Camera> camera)
     glDisable(GL_DEPTH_TEST);
     glLineWidth(5.0f);
     glPointSize(10.0f);
-    glBindVertexArray(mVAO);
+    glBindVertexArray(mVao);
     glDrawArrays(GL_LINES, 0, 14);
     glDrawArrays(GL_POINTS, 0, 14);
     glBindVertexArray(0);

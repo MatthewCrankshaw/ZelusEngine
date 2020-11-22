@@ -2,13 +2,13 @@
 
 Rectangle::Rectangle()
 {
-	glGenVertexArrays(1, &mVAO);
-	glGenBuffers(1, &mVBO);
-	glGenBuffers(1, &mEBO);
-	glBindVertexArray(mVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glGenVertexArrays(1, &mVao);
+	glGenBuffers(1, &mVbo);
+	glGenBuffers(1, &mEbo);
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(mVertexData), mVertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -28,13 +28,13 @@ Rectangle::Rectangle()
 
 Rectangle::Rectangle(glm::vec3 colour)
 {
-	glGenVertexArrays(1, &mVAO);
-	glGenBuffers(1, &mVBO);
-	glGenBuffers(1, &mEBO);
-	glBindVertexArray(mVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glGenVertexArrays(1, &mVao);
+	glGenBuffers(1, &mVbo);
+	glGenBuffers(1, &mEbo);
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(mVertexData), mVertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -54,13 +54,13 @@ Rectangle::Rectangle(glm::vec3 colour)
 
 Rectangle::Rectangle(std::string textureFilename)
 {
-	glGenVertexArrays(1, &mVAO);
-	glGenBuffers(1, &mVBO);
-	glGenBuffers(1, &mEBO);
-	glBindVertexArray(mVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glGenVertexArrays(1, &mVao);
+	glGenBuffers(1, &mVbo);
+	glGenBuffers(1, &mEbo);
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(mVertexData), mVertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -114,7 +114,7 @@ void Rectangle::Draw(const Ref<Camera> camera)
 	shader->SetMat4("projection", projectionMat);
 	shader->SetMat4("model", mModelMat);
 
-	glBindVertexArray(mVAO);
+	glBindVertexArray(mVao);
 	if (mTexturedRect) {
 		shader->SetBool("textured", 1);
 		shader->SetVec3("colour", mColour);

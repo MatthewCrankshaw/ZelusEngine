@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../renderable.h"
 #include "../../shader_manager.h"
 #include "../../texture.h"
 #include "../../ref.h"
@@ -27,7 +28,7 @@ struct Vertex {
 
 extern ShaderManager* gShaderManager;
 
-class Mesh{
+class Mesh : public Renderable {
 private:
     /*  Mesh Data  */
     Ref<std::vector<Vertex>> vertices;
@@ -36,10 +37,6 @@ private:
 
     int indicesSize;
     int verticesSize;
-
-    GLuint VAO; 
-    GLuint VBO; 
-    GLuint EBO;
     
     static long memoryVertexUsed;
     static long memoryIndicesUsed;
@@ -50,9 +47,8 @@ public:
     Mesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures);
 
     // render the mesh
-    void Draw();
-
-    void Update();
+    void Draw(const Ref<Camera> camera) override;
+    void Update() override;
 
     void SetupMesh();
 };

@@ -8,12 +8,12 @@
 SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 {
 	// Create vertex array object and vertex buffer object
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &mVao);
+	glGenBuffers(1, &mVbo);
 
 	// Bind the vertex array object and buffer
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindVertexArray(mVao);
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 
 	// Buffer the cube data 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
@@ -50,7 +50,7 @@ void SkyBox::Draw(const Ref<Camera> camera)
 	shader->SetMat4("projection", projectionMat);
 	shader->SetMat4("model", mModelMat);
 
-	glBindVertexArray(VAO); 
+	glBindVertexArray(mVao); 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

@@ -2,13 +2,13 @@
 
 Cube::Cube()
 {
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
+    glGenVertexArrays(1, &mVao);
+    glGenBuffers(1, &mVbo);
     // fill buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, mVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // link vertex attributes
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -21,7 +21,7 @@ Cube::Cube()
 
 void Cube::Draw(const Ref<Camera> camera)
 {
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }

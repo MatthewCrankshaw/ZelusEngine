@@ -15,7 +15,7 @@ Mesh::Mesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> ind
 
 }
 
-void Mesh::Draw() {
+void Mesh::Draw(const Ref<Camera> camera) {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
@@ -54,7 +54,7 @@ void Mesh::Draw() {
 		glBindTexture(GL_TEXTURE_2D, textures->at(i).GetHandle());
 	}
 
-	glBindVertexArray(VAO); 
+	glBindVertexArray(mVao); 
 	glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0); 
 	glBindVertexArray(0);
 
@@ -67,17 +67,17 @@ void Mesh::Update() {
 
 void Mesh::SetupMesh() {
 
-	glGenVertexArrays(1, &VAO); 
-	glGenBuffers(1, &VBO); 
-	glGenBuffers(1, &EBO); 
+	glGenVertexArrays(1, &mVao); 
+	glGenBuffers(1, &mVbo); 
+	glGenBuffers(1, &mEbo); 
 
-	glBindVertexArray(VAO); 
+	glBindVertexArray(mVao); 
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO); 
+	glBindBuffer(GL_ARRAY_BUFFER, mVbo); 
 
 	glBufferData(GL_ARRAY_BUFFER, verticesSize * sizeof(Vertex), &vertices->at(0), GL_STATIC_DRAW); 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(unsigned int), &indices->at(0), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);

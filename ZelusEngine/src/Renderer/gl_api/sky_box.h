@@ -10,8 +10,6 @@ extern ShaderManager* gShaderManager;
 class SkyBox : public Renderable
 {
 private:
-
-    GLuint VAO, VBO;
     GLuint textureID;
 
     float skyboxVertices[108] = {
@@ -62,9 +60,8 @@ private:
 public:
 	SkyBox(std::vector<std::string> textureFacesFilenames);
 
-	void Draw(const Ref<Camera> camera);
-
-	void Update();
+	void Draw(const Ref<Camera> camera) override;
+	void Update() override;
 
     GLuint getTextureId();
 

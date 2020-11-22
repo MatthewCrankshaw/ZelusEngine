@@ -10,7 +10,6 @@ public:
 	virtual void Update() override;
 
 private: 
-    GLuint vao, vbo;
 
     float vertices[288] = {
         // back face

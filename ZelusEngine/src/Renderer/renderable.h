@@ -7,6 +7,10 @@
 class Renderable
 {
 protected:
+	GLuint mVao;
+	GLuint mVbo;
+	GLuint mEbo;
+
 	glm::mat4 mModelMat;
 	glm::mat4 mTranslation;
 	glm::mat4 mRotation;

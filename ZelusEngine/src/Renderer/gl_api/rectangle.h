@@ -17,19 +17,14 @@ public:
 	Rectangle(glm::vec3 colour);
 	Rectangle(std::string textureFilname);
 
-	void Draw(const Ref<Camera> camera);
-
-	void Update();
+	void Draw(const Ref<Camera> camera) override;
+	void Update() override;
 
 	void SetShaderMode(ShaderModes mode) {
 		mShaderMode = mode;
 	}
 
 private: 
-	GLuint mVAO;
-	GLuint mVBO;
-	GLuint mEBO;
-
 	bool mTexturedRect;
 	GLuint mTextureId;
 

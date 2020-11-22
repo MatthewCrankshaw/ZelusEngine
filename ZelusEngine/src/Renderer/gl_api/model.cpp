@@ -18,7 +18,7 @@ void Model::Draw(const Ref<Camera> camera) {
     shader->SetMat4("projection", projectionMatrix);
 
 	for (unsigned int i = 0; i < meshes.size(); i++) {
-		meshes[i]->Draw();
+		meshes[i]->Draw(camera);
 	}
 
     shader->UnUse();
