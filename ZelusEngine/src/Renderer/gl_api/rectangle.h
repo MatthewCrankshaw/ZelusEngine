@@ -1,9 +1,9 @@
 #pragma once
 
-#include "renderable.h"
-#include "../shader.h"
-#include "../texture.h"
-#include "../shader_manager.h"
+#include "../renderable.h"
+#include "../../shader.h"
+#include "../../texture.h"
+#include "../../shader_manager.h"
 
 extern ShaderManager* gShaderManager;
 

@@ -3,11 +3,11 @@
 #include <vector>
 
 #include "renderer.h"
-#include "rectangle.h"
+#include "gl_api/rectangle.h"
 #include "gl_api/cube.h"
-#include "sky_box.h"
-#include "model.h"
-#include "axis_model.h"
+#include "gl_api/sky_box.h"
+#include "gl_api/model.h"
+#include "gl_api/axis_model.h"
 
 extern UserInterface* gUserInterface;
 

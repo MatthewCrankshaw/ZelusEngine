@@ -6,12 +6,12 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../ref.h"
-#include "../user_interface.h"
-#include "../shader_manager.h"
-#include "../texture.h"
+#include "../../ref.h"
+#include "../../user_interface.h"
+#include "../../shader_manager.h"
+#include "../../texture.h"
 #include "mesh.h"
-#include "renderable.h"
+#include "../renderable.h"
 
 #include <string> 
 #include <fstream>
