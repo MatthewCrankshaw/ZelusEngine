@@ -14,11 +14,8 @@ extern UserInterface* gUserInterface;
 class RenderManager
 {
 public: 
-
 	void StartUp();
-
 	void Render();
-
 	void ShutDown();
 
 private:
