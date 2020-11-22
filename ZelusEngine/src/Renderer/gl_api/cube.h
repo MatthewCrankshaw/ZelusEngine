@@ -1,6 +1,6 @@
 #pragma once
-#include "../shader.h"
-#include "renderable.h"
+#include "../../shader.h"
+#include "../renderable.h"
 
 class Cube : public Renderable
 {

@@ -4,7 +4,7 @@
 
 #include "renderer.h"
 #include "rectangle.h"
-#include "Cube.h"
+#include "gl_api/cube.h"
 #include "sky_box.h"
 #include "model.h"
 #include "axis_model.h"
