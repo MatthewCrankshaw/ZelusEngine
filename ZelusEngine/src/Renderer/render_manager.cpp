@@ -121,13 +121,12 @@ void RenderManager::Render() {
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
 
-    Shader* lightShader = gShaderManager->getLighthingPassShader();
+    Ref<Shader> lightShader(gShaderManager->getLighthingPassShader());
 
     lightShader->Use();
     lightShader->SetInt("gPosition", 0);
     lightShader->SetInt("gNormal", 1);
     lightShader->SetInt("gAlbedoSpec", 2);
-
     lightShader->UnUse();
 
     Rectangle* quad = new Rectangle();
