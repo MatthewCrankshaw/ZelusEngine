@@ -187,10 +187,8 @@ void RenderManager::Render() {
             for (int i = 0; i < entities.size(); i++) {
                 Renderer::Submit(entities[i]);
             }
-    
 
             Renderer::EndDeferredScene();
-            
         }
             
         //=======================================================================
@@ -283,7 +281,6 @@ void RenderManager::Render() {
             quadHdr->SetShaderMode(Rectangle::ShaderModes::HDR_PASS);
             RenderCommands::DrawIndexed(quadHdr, camera);
             hdrShader->UnUse();
-
         
         glBindTexture(GL_TEXTURE_2D, finalTex);
         glGenerateTextureMipmap(finalTex);
@@ -295,11 +292,9 @@ void RenderManager::Render() {
 
         /* Swap front and back buffers */
         glfwSwapBuffers(gUserInterface->GetWindow());
-
     }
 }
 
 void RenderManager::ShutDown()
 {
-    
 }
