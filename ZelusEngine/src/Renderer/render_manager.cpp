@@ -1,6 +1,4 @@
 #include "render_manager.h"
-#include "entity.h"
-
 
 void RenderManager::StartUp()
 {

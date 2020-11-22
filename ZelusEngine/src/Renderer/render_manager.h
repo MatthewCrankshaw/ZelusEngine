@@ -34,8 +34,5 @@ private:
 	GLuint mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
 	// Depth Buffer
 	GLuint mRBODepth;
-
-	//void RenderQuad();
-	void RenderCube();
 };
 
