@@ -157,6 +157,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\renderer\entity_factory\abstract_entity_factory.cpp" />
+    <ClCompile Include="src\entity_component_manager.cpp" />
+    <ClCompile Include="src\renderer\entity_factory\gl_entity_factory.cpp" />
     <ClCompile Include="src\renderer\entity.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\renderer\gl_api\cube.cpp" />
@@ -190,6 +193,9 @@
     <ClCompile Include="src\ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\renderer\entity_factory\abstract_entity_factory.h" />
+    <ClInclude Include="src\entity_component_manager.h" />
+    <ClInclude Include="src\renderer\entity_factory\gl_entity_factory.h" />
     <ClInclude Include="src\renderer\entity.h" />
     <ClInclude Include="src\ref.h" />
     <ClInclude Include="src\log.h" />

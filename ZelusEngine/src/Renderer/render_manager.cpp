@@ -4,6 +4,8 @@ void RenderManager::StartUp()
 {
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
+    entityFactory = Ref<GlEntityFactory>(new GlEntityFactory);
+
     RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -144,7 +146,9 @@ void RenderManager::Render() {
 
     std::vector<Ref<Entity> > entities;
 
-    Ref<Renderable> cube(new Cube());
+    entt::entity cubeEntity = entityFactory->CreateCubeEntity();
+    auto view = gECM->mRegistry.view<Ref<Renderable>>();
+    Ref<Renderable> cube = view.get<Ref<Renderable>>(cubeEntity);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))

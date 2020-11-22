@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <entt/entt.hpp>
 
 #include "renderer.h"
+#include "entity_factory/gl_entity_factory.h"
 #include "gl_api/rectangle.h"
 #include "gl_api/cube.h"
 #include "gl_api/sky_box.h"
@@ -21,6 +23,8 @@ public:
 private:
 
 	Ref<Camera> camera;
+
+	Ref<AbstractEntityFactory> entityFactory;
 
 	GLuint finalFBO, finalTex, finalRBO;
 	GLuint hdrFBO, hdrBuffer, hdrRBO;
