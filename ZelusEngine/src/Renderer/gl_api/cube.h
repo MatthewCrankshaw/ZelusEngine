@@ -6,7 +6,7 @@ class Cube : public Renderable
 {
 public:
 	Cube();
-	virtual void Draw(const Camera& camera) override;
+	virtual void Draw(const Ref<Camera> camera) override;
 	virtual void Update() override;
 
 private: 

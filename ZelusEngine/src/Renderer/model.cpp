@@ -5,10 +5,10 @@ Model::Model(std::string const& path){
 }
 
 
-void Model::Draw(const Camera &camera) {
+void Model::Draw(const Ref<Camera> camera) {
     glm::mat4 viewMatrix, projectionMatrix;
-    camera.GetViewMatrix(viewMatrix);
-    camera.GetProjectionMatrix(projectionMatrix);
+    camera->GetViewMatrix(viewMatrix);
+    camera->GetProjectionMatrix(projectionMatrix);
 
     Shader* shader = gShaderManager->getGeometryPassShader();
 

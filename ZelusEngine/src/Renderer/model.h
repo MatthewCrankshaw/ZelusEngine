@@ -34,7 +34,7 @@ public:
 
 	Model(std::string const& path);
 
-	void Draw(const Camera &camera);
+	void Draw(const Ref<Camera> camera);
 
 	void Update();
 

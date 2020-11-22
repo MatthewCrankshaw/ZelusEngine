@@ -129,8 +129,8 @@ void RenderManager::Render() {
     lightShader->SetInt("gAlbedoSpec", 2);
     lightShader->UnUse();
 
-    Rectangle* quad = new Rectangle();
-    Rectangle* quadHdr = new Rectangle();
+    Ref<Rectangle> quad(new Rectangle());
+    Ref<Rectangle> quadHdr(new Rectangle());
 
     Ref<AxisModel> ax(new AxisModel());
 
@@ -143,7 +143,7 @@ void RenderManager::Render() {
         "skybox2/back.png"
     };
 
-    Renderable* skybox = new SkyBox(skyboxFiles);
+    Ref<Renderable> skybox(new SkyBox(skyboxFiles));
 
     std::vector<Ref<Entity> > entities;
 
@@ -221,7 +221,7 @@ void RenderManager::Render() {
             }
 
             quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
-            quad->Draw(*camera);
+            RenderCommands::DrawIndexed(quad, camera);
         }
             
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
@@ -242,8 +242,8 @@ void RenderManager::Render() {
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            skybox->Draw(*camera);
-            ax->Draw(*camera);
+            RenderCommands::DrawIndexed(skybox, camera);
+            RenderCommands::DrawIndexed(ax, camera);
 
             Renderer::EndScene();
 
@@ -259,7 +259,7 @@ void RenderManager::Render() {
                 basic->SetMat4("model", model);
                 basic->SetBool("textured", false);
                 basic->SetVec3("colour", lightColors[i]);
-                cube->Draw(*camera);
+                RenderCommands::DrawIndexed(cube, camera);
             }
             basic->UnUse();
 
@@ -281,7 +281,7 @@ void RenderManager::Render() {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, hdrBuffer); 
             quadHdr->SetShaderMode(Rectangle::ShaderModes::HDR_PASS);
-            quadHdr->Draw(*camera);
+            RenderCommands::DrawIndexed(quadHdr, camera);
             hdrShader->UnUse();
 
         

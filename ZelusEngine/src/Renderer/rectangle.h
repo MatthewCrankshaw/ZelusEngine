@@ -17,7 +17,7 @@ public:
 	Rectangle(glm::vec3 colour);
 	Rectangle(std::string textureFilname);
 
-	void Draw(const Camera& camera);
+	void Draw(const Ref<Camera> camera);
 
 	void Update();
 

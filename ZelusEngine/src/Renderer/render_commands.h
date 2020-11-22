@@ -17,7 +17,7 @@ public:
 		sAPI->CullBackFaces();
 	}
 
-	inline static void DrawIndexed(Renderable* renderable, Camera* camera) {
+	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> camera) {
 		sAPI->DrawIndexed(renderable, camera);
 	}
 private: 

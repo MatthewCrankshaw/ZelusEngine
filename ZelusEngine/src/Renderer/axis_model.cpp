@@ -13,7 +13,7 @@ AxisModel::AxisModel()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 }
 
-void AxisModel::Draw(const Camera& camera)
+void AxisModel::Draw(const Ref<Camera> camera)
 {
     Shader* shader = gShaderManager->getAxisShader();
     shader->Use();
@@ -23,10 +23,10 @@ void AxisModel::Draw(const Camera& camera)
 
     glm::mat4 projectionMat, viewMat;
 
-    camera.GetPosition(pos);
-    camera.GetForward(forward);
-    camera.GetOrthoProjectionMatrix(projectionMat);
-    camera.GetViewMatrix(viewMat);
+    camera->GetPosition(pos);
+    camera->GetForward(forward);
+    camera->GetOrthoProjectionMatrix(projectionMat);
+    camera->GetViewMatrix(viewMat);
 
     mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));
     mScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f));

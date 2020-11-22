@@ -82,7 +82,7 @@ Rectangle::Rectangle(std::string textureFilename)
 
 }
 
-void Rectangle::Draw(const Camera& camera)
+void Rectangle::Draw(const Ref<Camera> camera)
 {
 
 	Shader* shader;
@@ -107,8 +107,8 @@ void Rectangle::Draw(const Camera& camera)
 	shader->SetBool("textureProvided", true);
 
 	glm::mat4 viewMat, projectionMat;
-	camera.GetViewMatrix(viewMat);
-	camera.GetProjectionMatrix(projectionMat);
+	camera->GetViewMatrix(viewMat);
+	camera->GetProjectionMatrix(projectionMat);
 
 	shader->SetMat4("view", viewMat);
 	shader->SetMat4("projection", projectionMat);

@@ -19,7 +19,7 @@ Cube::Cube()
     glBindVertexArray(0);
 }
 
-void Cube::Draw(const Camera& camera)
+void Cube::Draw(const Ref<Camera> camera)
 {
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);

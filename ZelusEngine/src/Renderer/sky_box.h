@@ -62,7 +62,7 @@ private:
 public:
 	SkyBox(std::vector<std::string> textureFacesFilenames);
 
-	void Draw(const Camera& camera);
+	void Draw(const Ref<Camera> camera);
 
 	void Update();
 

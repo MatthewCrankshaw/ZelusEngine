@@ -30,7 +30,7 @@ SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 	textureID = texture.GetHandle();
 }
 
-void SkyBox::Draw(const Camera& camera)
+void SkyBox::Draw(const Ref<Camera> camera)
 {
 	Shader* shader = gShaderManager->getSkyBoxShader(); 
 
@@ -40,9 +40,9 @@ void SkyBox::Draw(const Camera& camera)
 	glm::vec3 position;
 	glm::mat4 viewMat, projectionMat;
 
-	camera.GetViewMatrix(viewMat);
-	camera.GetProjectionMatrix(projectionMat);
-	camera.GetPosition(position);
+	camera->GetViewMatrix(viewMat);
+	camera->GetProjectionMatrix(projectionMat);
+	camera->GetPosition(position);
 
 	SetPosition(position);
 	mModelMat = mTranslation * mRotation * mScale;

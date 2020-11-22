@@ -10,7 +10,7 @@ public:
 
 	virtual void CullBackFaces() override;
 
-	virtual void DrawIndexed(Renderable* renderable, Camera* cam) override;
+	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> cam) override;
 
 };
 

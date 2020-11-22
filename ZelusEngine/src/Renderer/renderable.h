@@ -1,6 +1,7 @@
 #pragma once
 #include<glm/glm.hpp>
 
+#include "../ref.h"
 #include "../camera.h"
 
 class Renderable
@@ -15,7 +16,7 @@ protected:
 public:
 	Renderable();
 
-	virtual void Draw(const Camera &camera) = 0;
+	virtual void Draw(const Ref<Camera> camera) = 0;
 	virtual void Update() = 0;
 
 	void SetPosition(const glm::vec3 position);
