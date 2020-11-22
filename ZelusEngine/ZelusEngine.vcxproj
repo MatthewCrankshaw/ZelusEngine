@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\Cube.cpp" />
     <ClCompile Include="src\Renderer\entity.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Renderer\render_commands.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="src\ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\Cube.h" />
     <ClInclude Include="src\Renderer\entity.h" />
     <ClInclude Include="src\ref.h" />
     <ClInclude Include="src\log.h" />
