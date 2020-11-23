@@ -1,4 +1,4 @@
-#include "model.h"
+#include "gl_model.h"
 
 Model::Model(std::string const& path){
 	LoadModel(path);

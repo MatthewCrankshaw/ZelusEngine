@@ -1,4 +1,4 @@
-#include "axis_model.h"
+#include "gl_axis_model.h"
 
 AxisModel::AxisModel()
 {

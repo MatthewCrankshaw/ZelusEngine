@@ -1,4 +1,4 @@
-#include "renderable.h"
+#include "gl_renderable.h"
 
 Renderable::Renderable() {
 	mTranslation = glm::mat4(1.0f);

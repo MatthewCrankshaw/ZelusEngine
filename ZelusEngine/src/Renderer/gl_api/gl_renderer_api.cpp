@@ -1,4 +1,4 @@
-#include "opengl_renderer_api.h"
+#include "gl_renderer_api.h"
 
 void OpenGLRendererAPI::SetClearColour(const glm::vec4& colour)
 {

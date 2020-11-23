@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader_manager.h"
 
 

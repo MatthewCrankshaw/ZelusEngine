@@ -3,8 +3,8 @@
 
 #include "abstract_entity_factory.h"
 #include "../../entity_component_manager.h"
-#include "../gl_api/sky_box.h"
-#include "../gl_api/cube.h"
+#include "../gl_api/gl_sky_box.h"
+#include "../gl_api/gl_cube.h"
 
 extern EntityComponentManager* gECM;
 

@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "gl_cube.h"
 
 Cube::Cube()
 {

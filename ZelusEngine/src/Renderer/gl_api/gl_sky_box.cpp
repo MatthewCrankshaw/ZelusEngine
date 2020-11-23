@@ -1,4 +1,4 @@
-#include "sky_box.h"
+#include "gl_sky_box.h"
 
 /**
  * \brief Creates a renderable cubemap

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader_manager.h"
 #include "../../texture.h"
 

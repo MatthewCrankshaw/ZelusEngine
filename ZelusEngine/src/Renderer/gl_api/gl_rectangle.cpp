@@ -1,4 +1,4 @@
-#include "rectangle.h"
+#include "gl_rectangle.h"
 
 Rectangle::Rectangle()
 {

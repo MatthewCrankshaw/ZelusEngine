@@ -10,8 +10,8 @@
 #include "../../user_interface.h"
 #include "../../shader_manager.h"
 #include "../../texture.h"
-#include "mesh.h"
-#include "../renderable.h"
+#include "gl_mesh.h"
+#include "gl_renderable.h"
 
 #include <string> 
 #include <fstream>

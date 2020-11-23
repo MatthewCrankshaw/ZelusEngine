@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader.h"
 #include "../../texture.h"
 #include "../../shader_manager.h"

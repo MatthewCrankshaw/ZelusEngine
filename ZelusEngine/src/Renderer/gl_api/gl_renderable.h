@@ -1,8 +1,8 @@
 #pragma once
 #include<glm/glm.hpp>
 
-#include "../ref.h"
-#include "../camera.h"
+#include "../../ref.h"
+#include "../../camera.h"
 
 class Renderable
 {

@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "gl_mesh.h"
 
 long Mesh::memoryVertexUsed = 0;
 long Mesh::memoryIndicesUsed = 0;
