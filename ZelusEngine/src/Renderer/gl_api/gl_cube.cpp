@@ -1,6 +1,6 @@
 #include "gl_cube.h"
 
-Cube::Cube()
+GLCube::GLCube()
 {
     glGenVertexArrays(1, &mVao);
     glGenBuffers(1, &mVbo);
@@ -19,13 +19,13 @@ Cube::Cube()
     glBindVertexArray(0);
 }
 
-void Cube::Draw(const Ref<Camera> camera)
+void GLCube::Draw(const Ref<Camera> camera)
 {
     glBindVertexArray(mVao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
 
-void Cube::Update()
+void GLCube::Update()
 {
 }

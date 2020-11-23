@@ -24,15 +24,15 @@ extern UserInterface* gUserInterface;
 extern Log* gLog;
 extern ShaderManager* gShaderManager;
 
-class Model : public Renderable
+class GLModel : public GLRenderable
 {
 public:
 	std::vector<Texture> texturesLoaded;
-	std::vector<Ref<Mesh>> meshes;
+	std::vector<Ref<GLMesh>> meshes;
 	std::string directory;
 	bool gammaCorrection;
 
-	Model(std::string const& path);
+	GLModel(std::string const& path);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

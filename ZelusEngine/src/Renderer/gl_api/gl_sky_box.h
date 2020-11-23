@@ -7,7 +7,7 @@
 
 extern ShaderManager* gShaderManager;
 
-class SkyBox : public Renderable
+class GLSkyBox : public GLRenderable
 {
 private:
     GLuint textureID;
@@ -64,7 +64,7 @@ private:
     };
 
 public:
-	SkyBox(std::vector<std::string> textureFacesFilenames);
+	GLSkyBox(std::vector<std::string> textureFacesFilenames);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

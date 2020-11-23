@@ -7,15 +7,15 @@
 
 extern ShaderManager* gShaderManager;
 
-class Rectangle : public Renderable
+class GLRectangle : public GLRenderable
 {
 public:
 
 	enum class ShaderModes { GEOMETRIC_PASS, LIGHTING_PASS, HDR_PASS, REGULAR };
 
-	Rectangle();
-	Rectangle(glm::vec3 colour);
-	Rectangle(std::string textureFilname);
+	GLRectangle();
+	GLRectangle(glm::vec3 colour);
+	GLRectangle(std::string textureFilname);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

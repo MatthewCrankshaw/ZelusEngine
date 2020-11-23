@@ -4,7 +4,7 @@
 #include "../../ref.h"
 #include "../../camera.h"
 
-class Renderable
+class GLRenderable
 {
 protected:
 	GLuint mVao;

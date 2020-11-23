@@ -2,4 +2,4 @@
 #include "gl_api/gl_renderer_api.h"
 
 
-RendererAPI* RenderCommands::sAPI = new OpenGLRendererAPI;
+RendererAPI* RenderCommands::sAPI = new GLRendererAPI;

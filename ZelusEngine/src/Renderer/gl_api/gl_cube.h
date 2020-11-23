@@ -2,10 +2,10 @@
 #include "../../shader.h"
 #include "gl_renderable.h"
 
-class Cube : public Renderable
+class GLCube : public GLRenderable
 {
 public:
-	Cube();
+	GLCube();
 	virtual void Draw(const Ref<Camera> camera) override;
 	virtual void Update() override;
 

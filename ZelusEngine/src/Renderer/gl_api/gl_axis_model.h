@@ -8,7 +8,7 @@
 
 extern ShaderManager* gShaderManager;
 
-class AxisModel : public Renderable
+class GLAxisModel : public GLRenderable
 {
 private: 
 	glm::mat4 mModelMat;
@@ -31,7 +31,7 @@ private:
 	};
 
 public: 
-	AxisModel();
+	GLAxisModel();
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

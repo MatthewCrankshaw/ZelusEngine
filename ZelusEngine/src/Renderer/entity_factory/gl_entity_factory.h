@@ -8,7 +8,7 @@
 
 extern EntityComponentManager* gECM;
 
-class GlEntityFactory : public AbstractEntityFactory
+class GLEntityFactory : public AbstractEntityFactory
 {
 public:
 	// Inherited via AbstractEntityFactory

@@ -1,21 +1,21 @@
 #include "gl_renderer_api.h"
 
-void OpenGLRendererAPI::SetClearColour(const glm::vec4& colour)
+void GLRendererAPI::SetClearColour(const glm::vec4& colour)
 {
 	glClearColor(colour.r, colour.g, colour.b, colour.a);
 }
 
-void OpenGLRendererAPI::Clear()
+void GLRendererAPI::Clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRendererAPI::CullBackFaces()
+void GLRendererAPI::CullBackFaces()
 {
 	glCullFace(GL_BACK);
 }
 
-void OpenGLRendererAPI::DrawIndexed(Ref<Renderable> renderable, Ref<Camera> camera)
+void GLRendererAPI::DrawIndexed(Ref<GLRenderable> renderable, Ref<Camera> camera)
 {
 	renderable->Draw(camera);
 }

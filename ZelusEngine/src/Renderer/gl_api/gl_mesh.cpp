@@ -1,9 +1,9 @@
 #include "gl_mesh.h"
 
-long Mesh::memoryVertexUsed = 0;
-long Mesh::memoryIndicesUsed = 0;
+long GLMesh::memoryVertexUsed = 0;
+long GLMesh::memoryIndicesUsed = 0;
 
-Mesh::Mesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures) {
+GLMesh::GLMesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;
@@ -15,7 +15,7 @@ Mesh::Mesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> ind
 
 }
 
-void Mesh::Draw(const Ref<Camera> camera) {
+void GLMesh::Draw(const Ref<Camera> camera) {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
@@ -61,11 +61,11 @@ void Mesh::Draw(const Ref<Camera> camera) {
 	glActiveTexture(GL_TEXTURE0);
 }
 
-void Mesh::Update() {
+void GLMesh::Update() {
 
 }
 
-void Mesh::SetupMesh() {
+void GLMesh::SetupMesh() {
 
 	glGenVertexArrays(1, &mVao); 
 	glGenBuffers(1, &mVbo); 

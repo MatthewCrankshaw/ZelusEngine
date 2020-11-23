@@ -5,7 +5,7 @@
  * 
  * \param textureFacesFilenames A vector of all of the cubemap texture files in the order right, left, top, bottom, front, back
  */
-SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
+GLSkyBox::GLSkyBox(std::vector<std::string> textureFacesFilenames)
 {
 	// Create vertex array object and vertex buffer object
 	glGenVertexArrays(1, &mVao);
@@ -35,7 +35,7 @@ SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 	mScale = glm::mat4(1.0f);
 }
 
-void SkyBox::Draw(const Ref<Camera> camera)
+void GLSkyBox::Draw(const Ref<Camera> camera)
 {
 	Shader* shader = gShaderManager->getSkyBoxShader(); 
 
@@ -65,15 +65,15 @@ void SkyBox::Draw(const Ref<Camera> camera)
 	glDepthFunc(GL_LESS);
 }
 
-void SkyBox::Update()
+void GLSkyBox::Update()
 {
 }
 
-void SkyBox::SetPosition(const glm::vec3 position) {
+void GLSkyBox::SetPosition(const glm::vec3 position) {
 	mPosition = position;
 	mTranslation = glm::translate(glm::mat4(1.0f), mPosition);
 }
 
-GLuint SkyBox::getTextureId() {
+GLuint GLSkyBox::getTextureId() {
 	return textureID;
 }

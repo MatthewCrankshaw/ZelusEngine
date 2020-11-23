@@ -1,6 +1,6 @@
 #include "gl_axis_model.h"
 
-AxisModel::AxisModel()
+GLAxisModel::GLAxisModel()
 {
     glGenVertexArrays(1, &mVao);
     glGenBuffers(1, &mVbo);
@@ -17,7 +17,7 @@ AxisModel::AxisModel()
     mScale = glm::mat4(1.0f);
 }
 
-void AxisModel::Draw(const Ref<Camera> camera)
+void GLAxisModel::Draw(const Ref<Camera> camera)
 {
     Shader* shader = gShaderManager->getAxisShader();
     shader->Use();
@@ -54,6 +54,6 @@ void AxisModel::Draw(const Ref<Camera> camera)
     shader->UnUse();
 }
 
-void AxisModel::Update()
+void GLAxisModel::Update()
 {
 }

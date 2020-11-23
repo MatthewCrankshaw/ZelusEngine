@@ -1,6 +1,6 @@
 #include "gl_rectangle.h"
 
-Rectangle::Rectangle()
+GLRectangle::GLRectangle()
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -28,7 +28,7 @@ Rectangle::Rectangle()
 	mTexturedRect = false;
 }
 
-Rectangle::Rectangle(glm::vec3 colour)
+GLRectangle::GLRectangle(glm::vec3 colour)
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -56,7 +56,7 @@ Rectangle::Rectangle(glm::vec3 colour)
 	mTexturedRect = false;
 }
 
-Rectangle::Rectangle(std::string textureFilename)
+GLRectangle::GLRectangle(std::string textureFilename)
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -88,7 +88,7 @@ Rectangle::Rectangle(std::string textureFilename)
 
 }
 
-void Rectangle::Draw(const Ref<Camera> camera)
+void GLRectangle::Draw(const Ref<Camera> camera)
 {
 
 	Shader* shader;
@@ -138,6 +138,6 @@ void Rectangle::Draw(const Ref<Camera> camera)
 	shader->UnUse();
 }
 
-void Rectangle::Update()
+void GLRectangle::Update()
 {
 }
