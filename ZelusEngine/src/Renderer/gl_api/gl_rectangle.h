@@ -1,21 +1,21 @@
 #pragma once
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader.h"
 #include "../../texture.h"
 #include "../../shader_manager.h"
 
 extern ShaderManager* gShaderManager;
 
-class Rectangle : public Renderable
+class GLRectangle : public GLRenderable
 {
 public:
 
 	enum class ShaderModes { GEOMETRIC_PASS, LIGHTING_PASS, HDR_PASS, REGULAR };
 
-	Rectangle();
-	Rectangle(glm::vec3 colour);
-	Rectangle(std::string textureFilname);
+	GLRectangle();
+	GLRectangle(glm::vec3 colour);
+	GLRectangle(std::string textureFilname);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;
@@ -29,6 +29,7 @@ private:
 	GLuint mTextureId;
 
 	glm::vec3 mColour;
+	glm::mat4 mModelMat;
 
 	ShaderModes mShaderMode;
 

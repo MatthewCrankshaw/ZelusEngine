@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader_manager.h"
 #include "../../texture.h"
 #include "../../ref.h"
@@ -28,9 +28,9 @@ struct Vertex {
 
 extern ShaderManager* gShaderManager;
 
-class Mesh : public Renderable {
+class GLMesh : public GLRenderable {
 private:
-    /*  Mesh Data  */
+    /*  GlMesh Data  */
     Ref<std::vector<Vertex>> vertices;
     Ref<std::vector<unsigned int>> indices;
     Ref<std::vector<Texture>> textures;
@@ -44,7 +44,7 @@ private:
 public:
     /*  Functions  */
     // constructor
-    Mesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures);
+    GLMesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Texture>> textures);
 
     // render the mesh
     void Draw(const Ref<Camera> camera) override;

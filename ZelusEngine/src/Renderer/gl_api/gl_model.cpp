@@ -1,11 +1,12 @@
-#include "model.h"
+#include "gl_model.h"
 
-Model::Model(std::string const& path){
+GLModel::GLModel(std::string const& path){
+    mModelMat = glm::mat4(1.0f);
 	LoadModel(path);
 }
 
 
-void Model::Draw(const Ref<Camera> camera) {
+void GLModel::Draw(const Ref<Camera> camera) {
     glm::mat4 viewMatrix, projectionMatrix;
     camera->GetViewMatrix(viewMatrix);
     camera->GetProjectionMatrix(projectionMatrix);
@@ -24,11 +25,11 @@ void Model::Draw(const Ref<Camera> camera) {
     shader->UnUse();
 }
 
-void Model::Update() {
+void GLModel::Update() {
 
 }
 
-void Model::LoadModel(std::string const& path) {
+void GLModel::LoadModel(std::string const& path) {
 	Assimp::Importer importer;
 
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -43,7 +44,7 @@ void Model::LoadModel(std::string const& path) {
 	ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene* scene) {
+void GLModel::ProcessNode(aiNode* node, const aiScene* scene) {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		ProcessMesh(mesh, scene);
@@ -54,7 +55,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 	}
 }
 
-void Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
+void GLModel::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
     Ref<std::vector<Vertex>> vertices(new std::vector<Vertex>);
     Ref<std::vector<unsigned int>> indices(new std::vector<unsigned int>);
     Ref<std::vector<Texture>> textures(new std::vector<Texture>);
@@ -152,11 +153,11 @@ void Model::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
     Ref<std::vector<Texture>> heightMaps(LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height"));
     textures->insert(textures->end(), heightMaps->begin(), heightMaps->end());
 
-    Ref<Mesh> m(new Mesh(vertices, indices, textures));
+    Ref<GLMesh> m(new GLMesh(vertices, indices, textures));
     meshes.push_back(m);
 }
 
-Ref<std::vector<Texture>> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
+Ref<std::vector<Texture>> GLModel::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
     Ref<std::vector<Texture>> textures(new std::vector<Texture>());
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {

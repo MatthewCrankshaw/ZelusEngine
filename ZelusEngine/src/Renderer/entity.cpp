@@ -1,6 +1,6 @@
 #include "entity.h"
 
-Entity::Entity(std::string name, Ref<Renderable> renderable, Ref<Camera> camera, Ref<Transform> transform, bool deferredShading)
+Entity::Entity(std::string name, Ref<GLRenderable> renderable, Ref<Camera> camera, Ref<Transform> transform, bool deferredShading)
 {
 	mName = name;
 	mRenderable = renderable;
@@ -9,7 +9,7 @@ Entity::Entity(std::string name, Ref<Renderable> renderable, Ref<Camera> camera,
 	mDeferredShading = deferredShading;
 }
 
-Entity::Entity(std::string name, Ref<Renderable> renderable, Ref<Camera> camera, bool deferredShading){
+Entity::Entity(std::string name, Ref<GLRenderable> renderable, Ref<Camera> camera, bool deferredShading){
 	mName = name; 
 	mRenderable = renderable; 
 	mCamera = camera;
@@ -18,14 +18,8 @@ Entity::Entity(std::string name, Ref<Renderable> renderable, Ref<Camera> camera,
 }
 
 void Entity::Draw(){ 
-	
-	glm::mat4 model = mTransform->GetModelTransform();
-
-	mRenderable->SetModelMat(model);
 	mRenderable->Draw(mCamera);
-
 }
 
 void Entity::Update(){ 
-
 }

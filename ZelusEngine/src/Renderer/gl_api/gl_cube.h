@@ -1,11 +1,11 @@
 #pragma once
 #include "../../shader.h"
-#include "../renderable.h"
+#include "gl_renderable.h"
 
-class Cube : public Renderable
+class GLCube : public GLRenderable
 {
 public:
-	Cube();
+	GLCube();
 	virtual void Draw(const Ref<Camera> camera) override;
 	virtual void Update() override;
 
@@ -55,6 +55,5 @@ private:
         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
     };
-
 };
 

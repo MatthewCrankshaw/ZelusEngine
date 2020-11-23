@@ -1,7 +1,7 @@
 #pragma once
 #include "../renderer_api.h"
 
-class OpenGLRendererAPI : public RendererAPI
+class GLRendererAPI : public RendererAPI
 {
 public:
 	virtual void SetClearColour(const glm::vec4& colour) override;
@@ -10,7 +10,7 @@ public:
 
 	virtual void CullBackFaces() override;
 
-	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> cam) override;
+	virtual void DrawIndexed(Ref<GLRenderable> renderable, Ref<Camera> cam) override;
 
 };
 

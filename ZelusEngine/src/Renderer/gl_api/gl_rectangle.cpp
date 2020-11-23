@@ -1,6 +1,6 @@
-#include "rectangle.h"
+#include "gl_rectangle.h"
 
-Rectangle::Rectangle()
+GLRectangle::GLRectangle()
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -16,6 +16,8 @@ Rectangle::Rectangle()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+	mModelMat = glm::mat4(1.0f);
 
 	mTextureId = 0;
 
@@ -26,7 +28,7 @@ Rectangle::Rectangle()
 	mTexturedRect = false;
 }
 
-Rectangle::Rectangle(glm::vec3 colour)
+GLRectangle::GLRectangle(glm::vec3 colour)
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -43,6 +45,8 @@ Rectangle::Rectangle(glm::vec3 colour)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
+	mModelMat = glm::mat4(1.0f);
+
 	mTextureId = 0;
 
 	mColour = colour;
@@ -52,7 +56,7 @@ Rectangle::Rectangle(glm::vec3 colour)
 	mTexturedRect = false;
 }
 
-Rectangle::Rectangle(std::string textureFilename)
+GLRectangle::GLRectangle(std::string textureFilename)
 {
 	glGenVertexArrays(1, &mVao);
 	glGenBuffers(1, &mVbo);
@@ -70,6 +74,8 @@ Rectangle::Rectangle(std::string textureFilename)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
 	mTextureId = 0;
 
+	mModelMat = glm::mat4(1.0f);
+
 	mColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	mShaderMode = ShaderModes::REGULAR;
@@ -82,7 +88,7 @@ Rectangle::Rectangle(std::string textureFilename)
 
 }
 
-void Rectangle::Draw(const Ref<Camera> camera)
+void GLRectangle::Draw(const Ref<Camera> camera)
 {
 
 	Shader* shader;
@@ -132,6 +138,6 @@ void Rectangle::Draw(const Ref<Camera> camera)
 	shader->UnUse();
 }
 
-void Rectangle::Update()
+void GLRectangle::Update()
 {
 }

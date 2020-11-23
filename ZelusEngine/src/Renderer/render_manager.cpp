@@ -4,6 +4,8 @@ void RenderManager::StartUp()
 {
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
+    entityFactory = Ref<GLEntityFactory>(new GLEntityFactory);
+
     RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -126,10 +128,10 @@ void RenderManager::Render() {
     lightShader->SetInt("gAlbedoSpec", 2);
     lightShader->UnUse();
 
-    Ref<Rectangle> quad(new Rectangle());
-    Ref<Rectangle> quadHdr(new Rectangle());
+    Ref<GLRectangle> quad(new GLRectangle());
+    Ref<GLRectangle> quadHdr(new GLRectangle());
 
-    Ref<AxisModel> ax(new AxisModel());
+    Ref<GLAxisModel> ax(new GLAxisModel());
 
     std::vector<std::string> skyboxFiles{
         "skybox2/right.png", 
@@ -140,11 +142,13 @@ void RenderManager::Render() {
         "skybox2/back.png"
     };
 
-    Ref<Renderable> skybox(new SkyBox(skyboxFiles));
+    Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
     std::vector<Ref<Entity> > entities;
 
-    Ref<Renderable> cube(new Cube());
+    entt::entity cubeEntity = entityFactory->CreateCubeEntity();
+    auto view = gECM->mRegistry.view<Ref<GLRenderable>>();
+    Ref<GLRenderable> cube = view.get<Ref<GLRenderable>>(cubeEntity);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -215,7 +219,7 @@ void RenderManager::Render() {
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
             }
 
-            quad->SetShaderMode(Rectangle::ShaderModes::LIGHTING_PASS);
+            quad->SetShaderMode(GLRectangle::ShaderModes::LIGHTING_PASS);
             RenderCommands::DrawIndexed(quad, camera);
         }
             
@@ -275,7 +279,7 @@ void RenderManager::Render() {
             hdrShader->SetFloat("gamma", gUserInterface->GetGamma());
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, hdrBuffer); 
-            quadHdr->SetShaderMode(Rectangle::ShaderModes::HDR_PASS);
+            quadHdr->SetShaderMode(GLRectangle::ShaderModes::HDR_PASS);
             RenderCommands::DrawIndexed(quadHdr, camera);
             hdrShader->UnUse();
         

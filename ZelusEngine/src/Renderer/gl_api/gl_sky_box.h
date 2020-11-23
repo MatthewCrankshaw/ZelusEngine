@@ -1,16 +1,22 @@
 #pragma once
 
 
-#include "../renderable.h"
+#include "gl_renderable.h"
 #include "../../shader_manager.h"
 #include "../../texture.h"
 
 extern ShaderManager* gShaderManager;
 
-class SkyBox : public Renderable
+class GLSkyBox : public GLRenderable
 {
 private:
     GLuint textureID;
+
+    glm::mat4 mModelMat;
+    glm::mat4 mTranslation; 
+    glm::mat4 mRotation;
+    glm::mat4 mScale;
+    glm::vec3 mPosition;
 
     float skyboxVertices[108] = {
         // positions          
@@ -58,10 +64,12 @@ private:
     };
 
 public:
-	SkyBox(std::vector<std::string> textureFacesFilenames);
+	GLSkyBox(std::vector<std::string> textureFacesFilenames);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;
+
+    void SetPosition(const glm::vec3 position);
 
     GLuint getTextureId();
 

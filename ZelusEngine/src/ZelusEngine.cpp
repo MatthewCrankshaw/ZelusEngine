@@ -7,14 +7,16 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "Renderer/render_manager.h"
+#include "renderer/render_manager.h"
 #include "log.h"
+#include "entity_component_manager.h"
 #include "shader_manager.h"
 
 // Global Singletons 
 // Should be started up in the order they are declared and then shut down in the reverse order
 UserInterface* gUserInterface = new UserInterface;
 Log* gLog = new Log;
+EntityComponentManager* gECM = new EntityComponentManager;
 RenderManager* gRenderManager = new RenderManager;
 ShaderManager* gShaderManager = new ShaderManager;
 
@@ -22,6 +24,7 @@ int main()
 {
     gUserInterface  ->StartUp();
     gLog            ->StartUp();
+    gECM            ->StartUp();
     gRenderManager  ->StartUp();
     gShaderManager  ->StartUp();
 
@@ -29,6 +32,7 @@ int main()
 
     gShaderManager  ->ShutDown();
     gRenderManager  ->ShutDown();
+    gECM            ->ShutDown();
     gLog            ->ShutDown();
     gUserInterface  ->ShutDown();
 }
