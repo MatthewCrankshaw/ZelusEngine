@@ -107,14 +107,14 @@ void RenderManager::Render() {
     for (unsigned int i = 0; i < NR_LIGHTS; i++)
     {
         // calculate slightly random offsets
-        float xPos = ((rand() % 100) / 100.0) * 15.0;
-        float yPos = ((rand() % 100) / 100.0) * 15.0;
-        float zPos = ((rand() % 100) / 100.0) * 15.0;
+        float xPos = ((rand() % 100) / 100.0f) * 15.0f;
+        float yPos = ((rand() % 100) / 100.0f) * 15.0f;
+        float zPos = ((rand() % 100) / 100.0f) * 15.0f;
         lightPositions.push_back(glm::vec3(xPos, yPos, zPos));
         // also calculate random color
-        float rColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
-        float gColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
-        float bColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.5 and 1.0
+        float rColor = ((rand() % 100) / 200.0f) + 0.1f; // between 0.5 and 1.0
+        float gColor = ((rand() % 100) / 200.0f) + 0.1f; // between 0.5 and 1.0
+        float bColor = ((rand() % 100) / 200.0f) + 0.1f; // between 0.5 and 1.0
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
 
@@ -181,7 +181,7 @@ void RenderManager::Render() {
 
             Renderer::BeginScene();
 
-            for (int i = 0; i < entities.size(); i++) {
+            for (size_t i = 0; i < entities.size(); i++) {
                 Renderer::Submit(entities[i]);
             }
 
@@ -208,8 +208,8 @@ void RenderManager::Render() {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 
-                const float linear = 0.005;
-                const float quadratic = 0.001;
+                const float linear = 0.005f;
+                const float quadratic = 0.001f;
 
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Linear", linear);
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
@@ -247,7 +247,7 @@ void RenderManager::Render() {
             basic->Use();
             basic->SetMat4("projection", projectionMatrix);
             basic->SetMat4("view", viewMatrix);
-            for (int i = 0; i < lightPositions.size(); i++) {
+            for (size_t i = 0; i < lightPositions.size(); i++) {
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, lightPositions[i]);
                 model = glm::scale(model, glm::vec3(0.125f));

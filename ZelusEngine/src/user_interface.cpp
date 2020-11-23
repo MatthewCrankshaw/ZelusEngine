@@ -262,7 +262,7 @@ void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    for(int i = 0; i < entities.size(); i++){
+    for(size_t i = 0; i < entities.size(); i++){
         char strHeader[100];
         sprintf(strHeader, "%s", entities[i]->GetName().c_str());
         if(ImGui::CollapsingHeader(strHeader)){

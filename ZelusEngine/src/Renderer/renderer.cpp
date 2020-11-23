@@ -7,7 +7,7 @@ void Renderer::BeginScene() {
 }
 
 void Renderer::EndDeferredScene() {
-	for(int i = 0; i < sEntities.size(); i++){
+	for(size_t i = 0; i < sEntities.size(); i++){
 		if(sEntities[i]->IsDeferredShading()){
 			sEntities[i]->Draw();
 		}
@@ -16,7 +16,7 @@ void Renderer::EndDeferredScene() {
 
 void Renderer::EndScene()
 {
-	for (int i = 0; i < sEntities.size(); i++) {
+	for (size_t i = 0; i < sEntities.size(); i++) {
 		if (!sEntities[i]->IsDeferredShading()) {
 			sEntities[i]->Draw();
 		}
