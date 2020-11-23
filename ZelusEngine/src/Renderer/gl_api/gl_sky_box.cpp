@@ -28,6 +28,11 @@ SkyBox::SkyBox(std::vector<std::string> textureFacesFilenames)
 
 	// The texture handle is for a cubemap
 	textureID = texture.GetHandle();
+
+	mModelMat = glm::mat4(1.0f);
+	mTranslation = glm::mat4(1.0f);
+	mRotation = glm::mat4(1.0f);
+	mScale = glm::mat4(1.0f);
 }
 
 void SkyBox::Draw(const Ref<Camera> camera)
@@ -62,6 +67,11 @@ void SkyBox::Draw(const Ref<Camera> camera)
 
 void SkyBox::Update()
 {
+}
+
+void SkyBox::SetPosition(const glm::vec3 position) {
+	mPosition = position;
+	mTranslation = glm::translate(glm::mat4(1.0f), mPosition);
 }
 
 GLuint SkyBox::getTextureId() {

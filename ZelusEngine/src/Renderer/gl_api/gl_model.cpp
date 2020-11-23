@@ -1,6 +1,7 @@
 #include "gl_model.h"
 
 Model::Model(std::string const& path){
+    mModelMat = glm::mat4(1.0f);
 	LoadModel(path);
 }
 

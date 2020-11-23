@@ -38,6 +38,7 @@ public:
 	void Update() override;
 
 private:
+	glm::mat4 mModelMat;
 
 	void LoadModel(std::string const& path);
 

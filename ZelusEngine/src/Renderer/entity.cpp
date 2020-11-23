@@ -18,14 +18,8 @@ Entity::Entity(std::string name, Ref<Renderable> renderable, Ref<Camera> camera,
 }
 
 void Entity::Draw(){ 
-	
-	glm::mat4 model = mTransform->GetModelTransform();
-
-	mRenderable->SetModelMat(model);
 	mRenderable->Draw(mCamera);
-
 }
 
 void Entity::Update(){ 
-
 }

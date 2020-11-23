@@ -29,6 +29,7 @@ private:
 	GLuint mTextureId;
 
 	glm::vec3 mColour;
+	glm::mat4 mModelMat;
 
 	ShaderModes mShaderMode;
 

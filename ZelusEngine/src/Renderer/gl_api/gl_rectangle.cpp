@@ -17,6 +17,8 @@ Rectangle::Rectangle()
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
+	mModelMat = glm::mat4(1.0f);
+
 	mTextureId = 0;
 
 	mColour = glm::vec3(0.3f, 0.3f, 0.3f);
@@ -42,6 +44,8 @@ Rectangle::Rectangle(glm::vec3 colour)
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+	mModelMat = glm::mat4(1.0f);
 
 	mTextureId = 0;
 
@@ -69,6 +73,8 @@ Rectangle::Rectangle(std::string textureFilename)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
 	mTextureId = 0;
+
+	mModelMat = glm::mat4(1.0f);
 
 	mColour = glm::vec3(1.0f, 1.0f, 1.0f);
 

@@ -11,6 +11,10 @@ AxisModel::AxisModel()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    mModelMat = glm::mat4(1.0f);
+    mTranslation = glm::mat4(1.0f);
+    mScale = glm::mat4(1.0f);
 }
 
 void AxisModel::Draw(const Ref<Camera> camera)
@@ -30,7 +34,6 @@ void AxisModel::Draw(const Ref<Camera> camera)
 
     mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));
     mScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
-
     mModelMat = mTranslation * mScale;
 
     shader->SetMat4("view", viewMat);
