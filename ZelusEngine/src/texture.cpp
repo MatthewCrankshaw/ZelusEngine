@@ -12,6 +12,7 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
 {
     mFilename = filename;
     mPath = directory + filename;
+    mPath = mPath.substr(0, mPath.find(" ", 0));
     
     glGenTextures(1, &mHandle);
     glBindTexture(GL_TEXTURE_2D, mHandle);
