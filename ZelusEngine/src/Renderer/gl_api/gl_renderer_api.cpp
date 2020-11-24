@@ -15,7 +15,7 @@ void GLRendererAPI::CullBackFaces()
 	glCullFace(GL_BACK);
 }
 
-void GLRendererAPI::DrawIndexed(Ref<GLRenderable> renderable, Ref<Camera> camera)
+void GLRendererAPI::DrawIndexed(Ref<Renderable> renderable, Ref<Camera> camera)
 {
 	renderable->Draw(camera);
 }

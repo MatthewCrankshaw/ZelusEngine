@@ -4,7 +4,7 @@ void RenderManager::StartUp()
 {
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
-    entityFactory = Ref<GLEntityFactory>(new GLEntityFactory);
+    factory = Ref<GLRenderableFactory>(new GLRenderableFactory);
 
     RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -131,6 +131,8 @@ void RenderManager::Render() {
     Ref<GLRectangle> quad(new GLRectangle());
     Ref<GLRectangle> quadHdr(new GLRectangle());
 
+    Ref<GLModel> muro(new GLModel("res/muro/muro.obj"));
+
     Ref<GLAxisModel> ax(new GLAxisModel());
 
     std::vector<std::string> skyboxFiles{
@@ -146,9 +148,9 @@ void RenderManager::Render() {
 
     std::vector<Ref<Entity> > entities;
 
-    entt::entity cubeEntity = entityFactory->CreateCubeEntity();
-    auto view = gECM->mRegistry.view<Ref<GLRenderable>>();
-    Ref<GLRenderable> cube = view.get<Ref<GLRenderable>>(cubeEntity);
+    entities.push_back(Ref<Entity>(new Entity("muro", muro, camera)));
+
+    Ref<Renderable> cube = factory->CreateCube();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))

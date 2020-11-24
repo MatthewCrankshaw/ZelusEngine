@@ -1,10 +1,9 @@
 #pragma once
 #include<glm/glm.hpp>
 
-#include "../../ref.h"
-#include "../../camera.h"
+#include "../renderable.h"
 
-class GLRenderable
+class GLRenderable : public Renderable
 {
 protected:
 	GLuint mVao;

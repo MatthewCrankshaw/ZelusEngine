@@ -1,4 +1,5 @@
 #pragma once
+#include "../renderable.h"
 #include "../renderer_api.h"
 
 class GLRendererAPI : public RendererAPI
@@ -10,7 +11,7 @@ public:
 
 	virtual void CullBackFaces() override;
 
-	virtual void DrawIndexed(Ref<GLRenderable> renderable, Ref<Camera> cam) override;
+	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> cam) override;
 
 };
 

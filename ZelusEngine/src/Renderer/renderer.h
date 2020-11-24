@@ -2,10 +2,12 @@
 
 #include "render_commands.h"
 #include "../log.h"
+#include "../entity_component_manager.h"
 #include "../ref.h"
 #include "entity.h"
 
 extern Log* gLog;
+extern EntityComponentManager* gECM;
 
 class Renderer
 {
@@ -19,10 +21,9 @@ public:
 	static void Submit(Ref<Entity> entity);
 
 	static inline std::vector<Ref<Entity>> GetEntities(){
-		return sEntities;
+		
 	}
 
 private:
-	static std::vector<Ref<Entity>> sEntities;
 };
 

@@ -3,8 +3,9 @@
 #include<glm/glm.hpp>
 #include<glad/glad.h>
 
+#include "renderable.h"
 #include "../ref.h"
-#include "gl_api/gl_renderable.h"
+#include "../camera.h"
 
 class RendererAPI
 {
@@ -14,7 +15,7 @@ public:
 	virtual void SetClearColour(const glm::vec4& colour) = 0; 
 	virtual void Clear() = 0; 
 	virtual void CullBackFaces() = 0;
-	virtual void DrawIndexed(Ref<GLRenderable> renderable, Ref<Camera> camera) = 0;
+	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> camera) = 0;
 
 	inline static API GetAPI() { return sAPI; }
 

@@ -4,7 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "renderer.h"
-#include "entity_factory/gl_entity_factory.h"
+#include "renderable_factory/gl_renderable_factory.h"
 #include "gl_api/gl_rectangle.h"
 #include "gl_api/gl_cube.h"
 #include "gl_api/gl_sky_box.h"
@@ -24,7 +24,7 @@ private:
 
 	Ref<Camera> camera;
 
-	Ref<AbstractEntityFactory> entityFactory;
+	Ref<GLRenderableFactory> factory;
 
 	GLuint finalFBO, finalTex, finalRBO;
 	GLuint hdrFBO, hdrBuffer, hdrRBO;
