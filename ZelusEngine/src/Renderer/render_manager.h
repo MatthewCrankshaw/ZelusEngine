@@ -26,8 +26,10 @@ private:
 
 	Ref<GLRenderableFactory> factory;
 
-	GLuint finalFBO, finalTex, finalRBO;
-	GLuint hdrFBO, hdrBuffer, hdrRBO;
+	Texture finalTex, hdrTex;
+
+	GLuint finalFBO, finalRBO;
+	GLuint hdrFBO, hdrRBO;
 
 	// Geometric buffer for differed shading
 	GLuint mGeometricBuffer;

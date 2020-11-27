@@ -11,12 +11,7 @@ void RenderManager::StartUp()
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    glGenTextures(1, &finalTex);
-    glBindTexture(GL_TEXTURE_2D, finalTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    finalTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     glGenRenderbuffers(1, &finalRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, finalRBO);
@@ -25,7 +20,7 @@ void RenderManager::StartUp()
 
     glGenFramebuffers(1, &finalFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTex.GetHandle(), 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, finalRBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
@@ -33,13 +28,7 @@ void RenderManager::StartUp()
     }
 
     //Create the framebuffer which will replace the default frame buffer
-
-    glGenTextures(1, &hdrBuffer);
-    glBindTexture(GL_TEXTURE_2D, hdrBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    hdrTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     glGenRenderbuffers(1, &hdrRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, hdrRBO);
@@ -48,7 +37,7 @@ void RenderManager::StartUp()
 
     glGenFramebuffers(1, &hdrFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrTex.GetHandle(), 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, hdrRBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
@@ -58,6 +47,7 @@ void RenderManager::StartUp()
     glGenFramebuffers(1, &mGeometricBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
 
+    Ref<Texture> tex(new Texture);
     glGenTextures(1, &mGeometricPosition);
     glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
@@ -261,8 +251,8 @@ void RenderManager::Render() {
             glDisable(GL_BLEND);
         }
 
-        glBindTexture(GL_TEXTURE_2D, hdrBuffer);
-        glGenerateTextureMipmap(hdrBuffer);
+        glBindTexture(GL_TEXTURE_2D, hdrTex.GetHandle());
+        glGenerateTextureMipmap(hdrTex.GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
@@ -273,16 +263,16 @@ void RenderManager::Render() {
             hdrShader->SetFloat("exposure", gUserInterface->GetExposure());
             hdrShader->SetFloat("gamma", gUserInterface->GetGamma());
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrBuffer); 
+            glBindTexture(GL_TEXTURE_2D, hdrTex.GetHandle());
             quadHdr->SetShaderMode(GLRectangle::ShaderModes::HDR_PASS);
             RenderCommands::DrawIndexed(quadHdr, camera);
             hdrShader->UnUse();
         
-        glBindTexture(GL_TEXTURE_2D, finalTex);
-        glGenerateTextureMipmap(finalTex);
+        glBindTexture(GL_TEXTURE_2D, finalTex.GetHandle());
+        glGenerateTextureMipmap(finalTex.GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
+        gUserInterface->Update(finalTex.GetHandle(), hdrTex.GetHandle(), mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
 
         gUserInterface->Render();
 

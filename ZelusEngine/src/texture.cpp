@@ -3,9 +3,24 @@
 #include "stb/stb_image.h"
 
 Texture::Texture(){
+    mFormat = GL_RGBA;
+    mWidth = 0;
+    mHeight = 0;
+    mNChannels = 3;
     mData = NULL;
     mHandle = 0;
     mIsLoaded = false;
+}
+
+void Texture::CreateEmptyTexture(int screenWidth, int screenHeight)
+{
+    mIsLoaded = true;
+    glGenTextures(1, &mHandle);
+    glBindTexture(GL_TEXTURE_2D, mHandle);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::LoadRegularTexture(std::string directory, std::string filename, bool flip)
@@ -45,7 +60,7 @@ void Texture::LoadRegularTexture(std::string directory, std::string filename, bo
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glad_glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, mFormat, mWidth, mHeight, 0, mFormat, GL_UNSIGNED_BYTE,mData);
+    glTexImage2D(GL_TEXTURE_2D, 0, mFormat, mWidth, mHeight, 0, mFormat, GL_UNSIGNED_BYTE, mData);
     stbi_image_free(mData);
     glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -115,8 +130,6 @@ void Texture::LoadCubeMapTexture(std::string textureDirectory, std::vector<std::
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     mIsLoaded = true;
-
-    
 }
 
 GLuint Texture::GetHandle()

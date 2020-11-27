@@ -16,6 +16,7 @@ public:
 
 	Texture();
 
+	void CreateEmptyTexture(int screenWidth, int screenHeight);
 	void LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip);
 	void LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip);
 
