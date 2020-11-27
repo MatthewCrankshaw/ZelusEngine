@@ -47,27 +47,14 @@ void RenderManager::StartUp()
     glGenFramebuffers(1, &mGeometricBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
 
-    Ref<Texture> tex(new Texture);
-    glGenTextures(1, &mGeometricPosition);
-    glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mGeometricPosition, 0);
+    mGeometricPosition.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mGeometricPosition.GetHandle(), 0);
 
-    glGenTextures(1, &mGeometricNormal);
-    glBindTexture(GL_TEXTURE_2D, mGeometricNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mGeometricNormal, 0);
+    mGeometricNormal.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mGeometricNormal.GetHandle(), 0);
 
-    glGenTextures(1, &mGeometricAlbedoSpecular);
-    glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mGeometricAlbedoSpecular, 0);
+    mGeometricAlbedoSpecular.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mGeometricAlbedoSpecular.GetHandle(), 0);
 
     unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 
@@ -187,11 +174,11 @@ void RenderManager::Render() {
             lightShader->Use();
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, mGeometricPosition);
+            glBindTexture(GL_TEXTURE_2D, mGeometricPosition.GetHandle());
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, mGeometricNormal);
+            glBindTexture(GL_TEXTURE_2D, mGeometricNormal.GetHandle());
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular);
+            glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular.GetHandle());
 
             for (unsigned int i = 0; i < lightPositions.size(); i++) {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
@@ -272,7 +259,7 @@ void RenderManager::Render() {
         glGenerateTextureMipmap(finalTex.GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(finalTex.GetHandle(), hdrTex.GetHandle(), mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
+        gUserInterface->Update(finalTex.GetHandle(), hdrTex.GetHandle(), mGeometricAlbedoSpecular.GetHandle(), mGeometricNormal.GetHandle(), mGeometricPosition.GetHandle());
 
         gUserInterface->Render();
 

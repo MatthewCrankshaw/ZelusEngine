@@ -6,18 +6,18 @@ Texture::Texture(){
     mFormat = GL_RGBA;
     mWidth = 0;
     mHeight = 0;
-    mNChannels = 3;
+    mNChannels = 4;
     mData = NULL;
     mHandle = 0;
     mIsLoaded = false;
 }
 
-void Texture::CreateEmptyTexture(int screenWidth, int screenHeight)
+void Texture::CreateEmptyTexture(int width, int height, GLenum type)
 {
     mIsLoaded = true;
     glGenTextures(1, &mHandle);
     glBindTexture(GL_TEXTURE_2D, mHandle);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, type, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);

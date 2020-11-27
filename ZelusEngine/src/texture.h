@@ -16,7 +16,7 @@ public:
 
 	Texture();
 
-	void CreateEmptyTexture(int screenWidth, int screenHeight);
+	void CreateEmptyTexture(int width, int height, GLenum type = GL_RGBA);
 	void LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip);
 	void LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip);
 

@@ -34,7 +34,7 @@ private:
 	// Geometric buffer for differed shading
 	GLuint mGeometricBuffer;
 	// Texture IDs for goemetric data for differed shading
-	GLuint mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
+	Texture mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
 	// Depth Buffer
 	GLuint mRBODepth;
 };
