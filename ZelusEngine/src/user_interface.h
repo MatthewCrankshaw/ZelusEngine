@@ -9,7 +9,6 @@
 #include "camera.h"
 #include "ui_input_handler.h"
 #include "Renderer/renderer.h"
-#include "Renderer/Entity.h"
 
 
 extern Log* gLog;
@@ -51,7 +50,7 @@ protected:
 	void UpdatePositionWindow(GLuint imageOutput);
 	void UpdateAlbedoWindow(GLuint imageOutput);
 	void UpdateNormalWindow(GLuint imageOutput);
-	void UpdatePropertiesWindow(std::vector<Ref<Entity>> entities);
+	void UpdatePropertiesWindow();
 	void UpdateLogWindow();
 
 
@@ -62,7 +61,7 @@ public:
 	void SetupGLFW();
 	void SetupOpenGL();
 
-	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput, std::vector<Ref<Entity>> entities);
+	void Update(GLuint output, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput);
 
 	void Render();
 

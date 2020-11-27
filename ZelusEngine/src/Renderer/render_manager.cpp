@@ -146,11 +146,9 @@ void RenderManager::Render() {
 
     Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
-    std::vector<Ref<Entity> > entities;
-
-    entities.push_back(Ref<Entity>(new Entity("muro", muro, camera)));
-
     Ref<Renderable> cube = factory->CreateCube();
+    auto entity = gECM->mRegistry.create();
+    gECM->mRegistry.emplace<Ref<Renderable>>(entity, muro);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -187,11 +185,7 @@ void RenderManager::Render() {
 
             Renderer::BeginScene();
 
-            for (size_t i = 0; i < entities.size(); i++) {
-                Renderer::Submit(entities[i]);
-            }
-
-            Renderer::EndDeferredScene();
+            Renderer::EndDeferredScene(camera);
         }
             
         //=======================================================================
@@ -289,7 +283,7 @@ void RenderManager::Render() {
         glGenerateTextureMipmap(finalTex);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition, entities);
+        gUserInterface->Update(finalTex, hdrBuffer, mGeometricAlbedoSpecular, mGeometricNormal, mGeometricPosition);
 
         gUserInterface->Render();
 

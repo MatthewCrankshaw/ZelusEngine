@@ -161,7 +161,6 @@
     <ClCompile Include="src\renderer\renderable_factory\abstract_renderable_factory.cpp" />
     <ClCompile Include="src\entity_component_manager.cpp" />
     <ClCompile Include="src\renderer\renderable_factory\gl_renderable_factory.cpp" />
-    <ClCompile Include="src\renderer\entity.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\renderer\gl_api\gl_cube.cpp" />
     <ClCompile Include="src\renderer\gl_api\gl_renderer_api.cpp" />
@@ -198,7 +197,6 @@
     <ClInclude Include="src\renderer\renderable_factory\abstract_renderable_factory.h" />
     <ClInclude Include="src\entity_component_manager.h" />
     <ClInclude Include="src\renderer\renderable_factory\gl_renderable_factory.h" />
-    <ClInclude Include="src\renderer\entity.h" />
     <ClInclude Include="src\ref.h" />
     <ClInclude Include="src\log.h" />
     <ClInclude Include="src\renderer\gl_api\gl_cube.h" />

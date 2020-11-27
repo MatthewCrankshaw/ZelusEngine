@@ -99,7 +99,7 @@ void UserInterface::SetupOpenGL()
     ImGui_ImplOpenGL3_Init(mGlslVersion);
 }
 
-void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput, std::vector<Ref<Entity>> entities)
+void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoOutput, GLuint gNormalOutput, GLuint gPositionOutput)
 {
     if (mCamera == nullptr) {
         std::cout << "USER_INTERFACE::UPDATE: Camera object is null! Camera must be set up before updating or rendering!" << std::endl;
@@ -118,7 +118,7 @@ void UserInterface::Update(GLuint imageOutput, GLuint hdrOutput, GLuint gAlbedoO
     UpdateNormalWindow(gNormalOutput);
     UpdatePositionWindow(gPositionOutput);
 
-    UpdatePropertiesWindow(entities);
+    UpdatePropertiesWindow();
 
     UpdateLogWindow();
 }
@@ -242,7 +242,7 @@ void UserInterface::UpdateNormalWindow(GLuint imageOutput)
     ImGui::End();
 }
 
-void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
+void UserInterface::UpdatePropertiesWindow() {
     ImGuiWindowFlags windowFlagsProperties = 0;
     windowFlagsProperties |= ImGuiWindowFlags_NoCollapse;
 
@@ -262,7 +262,7 @@ void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    for(size_t i = 0; i < entities.size(); i++){
+    /*for(size_t i = 0; i < entities.size(); i++){
         char strHeader[100];
         sprintf(strHeader, "%s", entities[i]->GetName().c_str());
         if(ImGui::CollapsingHeader(strHeader)){
@@ -278,7 +278,7 @@ void UserInterface::UpdatePropertiesWindow(std::vector<Ref<Entity>> entities) {
             ImGui::SliderFloat3(strscale, &entities[i]->GetTransform()->GetVec3ScalePtr()->x, 0.0f, 5.0f);
             ImGui::SliderFloat3(strrot, &entities[i]->GetTransform()->GetVec3RotationPtr()->x, 0.0f, 6.28f);
         }
-    }
+    }*/
 
     ImGui::End();
     

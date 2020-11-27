@@ -4,26 +4,19 @@
 #include "../log.h"
 #include "../entity_component_manager.h"
 #include "../ref.h"
-#include "entity.h"
 
 extern Log* gLog;
 extern EntityComponentManager* gECM;
 
 class Renderer
 {
+private: 
+	Ref<Camera> mCamera;
 public: 
 	static void BeginScene(); 
 
-	static void EndDeferredScene();
+	static void EndDeferredScene(Ref<Camera> camera);
 
 	static void EndScene();
-
-	static void Submit(Ref<Entity> entity);
-
-	static inline std::vector<Ref<Entity>> GetEntities(){
-		
-	}
-
-private:
 };
 
