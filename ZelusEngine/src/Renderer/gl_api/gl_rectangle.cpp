@@ -80,7 +80,7 @@ GLRectangle::GLRectangle(std::string textureFilename)
 
 	mShaderMode = ShaderModes::REGULAR;
 
-	Texture texture;
+	GLTexture texture;
 	texture.LoadRegularTexture("res/", textureFilename, true);
 	mTextureId = texture.GetHandle();
 

@@ -26,15 +26,15 @@ private:
 
 	Ref<GLRenderableFactory> factory;
 
-	Texture finalTex, hdrTex;
+	GLTexture finalTex, hdrTex;
 
 	GLuint finalFBO, finalRBO;
 	GLuint hdrFBO, hdrRBO;
 
 	// Geometric buffer for differed shading
 	GLuint mGeometricBuffer;
-	// Texture IDs for goemetric data for differed shading
-	Texture mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
+	// GLTexture IDs for goemetric data for differed shading
+	GLTexture mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
 	// Depth Buffer
 	GLuint mRBODepth;
 };

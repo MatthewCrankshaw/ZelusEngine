@@ -27,7 +27,7 @@ extern ShaderManager* gShaderManager;
 class GLModel : public GLRenderable
 {
 public:
-	std::vector<Texture> texturesLoaded;
+	std::vector<GLTexture> texturesLoaded;
 	std::vector<Ref<GLMesh>> meshes;
 	std::string directory;
 	bool gammaCorrection;
@@ -46,6 +46,6 @@ private:
 
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	Ref<std::vector<Texture>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	Ref<std::vector<GLTexture>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 };

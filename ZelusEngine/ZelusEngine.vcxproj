@@ -128,6 +128,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include; $(SolutionDir)ZelusEngine\vendor</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -183,6 +184,7 @@
     <ClCompile Include="src\ui_input_handler.cpp" />
     <ClCompile Include="src\user_interface.cpp" />
     <ClCompile Include="src\renderer\transform.cpp" />
+    <ClCompile Include="src\renderer\texture.cpp" />
     <ClCompile Include="vendor\glad.c" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
@@ -221,6 +223,7 @@
     <ClInclude Include="src\ui_input_handler.h" />
     <ClInclude Include="src\user_interface.h" />
     <ClInclude Include="src\renderer\transform.h" />
+    <ClInclude Include="src\renderer\texture.h" />
     <ClInclude Include="vendor\entt\entt.hpp" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\imgui.h" />

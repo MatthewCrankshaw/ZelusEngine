@@ -23,7 +23,7 @@ GLSkyBox::GLSkyBox(std::vector<std::string> textureFacesFilenames)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	// Create a texture object and load the cubemap
-	Texture texture;
+	GLTexture texture;
 	texture.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 
 	// The texture handle is for a cubemap

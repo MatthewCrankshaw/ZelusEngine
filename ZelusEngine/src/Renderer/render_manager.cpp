@@ -11,7 +11,7 @@ void RenderManager::StartUp()
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    finalTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
+    finalTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
 
     glGenRenderbuffers(1, &finalRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, finalRBO);
@@ -28,7 +28,7 @@ void RenderManager::StartUp()
     }
 
     //Create the framebuffer which will replace the default frame buffer
-    hdrTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
+    hdrTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
 
     glGenRenderbuffers(1, &hdrRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, hdrRBO);
