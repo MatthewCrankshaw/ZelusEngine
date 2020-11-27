@@ -11,7 +11,7 @@ void GLModel::Draw(const Ref<Camera> camera) {
     camera->GetViewMatrix(viewMatrix);
     camera->GetProjectionMatrix(projectionMatrix);
 
-    Shader* shader = gShaderManager->getGeometryPassShader();
+    Ref<Shader> shader = gShaderManager->getGeometryPassShader();
 
     shader->Use();
     shader->SetMat4("view", viewMatrix);

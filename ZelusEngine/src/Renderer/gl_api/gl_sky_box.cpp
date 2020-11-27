@@ -37,7 +37,7 @@ GLSkyBox::GLSkyBox(std::vector<std::string> textureFacesFilenames)
 
 void GLSkyBox::Draw(const Ref<Camera> camera)
 {
-	Shader* shader = gShaderManager->getSkyBoxShader(); 
+	Ref<Shader> shader = gShaderManager->getSkyBoxShader(); 
 
 	glDepthFunc(GL_LEQUAL); 
 	shader->Use();

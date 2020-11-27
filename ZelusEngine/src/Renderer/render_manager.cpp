@@ -147,8 +147,7 @@ void RenderManager::Render() {
     Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
     Ref<Renderable> cube = factory->CreateCube();
-    auto entity = gECM->mRegistry.create();
-    gECM->mRegistry.emplace<Ref<Renderable>>(entity, muro);
+    gECM->AddRenderable(muro);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -242,7 +241,7 @@ void RenderManager::Render() {
 
             Renderer::EndScene();
 
-            Shader* basic = gShaderManager->getBasicShader();
+            Ref<Shader> basic = gShaderManager->getBasicShader();
 
             basic->Use();
             basic->SetMat4("projection", projectionMatrix);
@@ -268,7 +267,7 @@ void RenderManager::Render() {
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Shader* hdrShader = gShaderManager->getHDRShader();
+            Ref<Shader> hdrShader = gShaderManager->getHDRShader();
             hdrShader->Use();
             hdrShader->SetInt("hdrBuffer", 0);
             hdrShader->SetFloat("exposure", gUserInterface->GetExposure());

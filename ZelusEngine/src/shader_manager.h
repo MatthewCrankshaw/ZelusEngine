@@ -1,70 +1,71 @@
 #pragma once
+#include "ref.h"
 #include "shader.h"
 
 class ShaderManager
 {
 private:
-	Shader* basicShader = nullptr;
-	Shader* multiLightShader = nullptr;
-	Shader* skyBoxShader = nullptr;
-	Shader* axisShader = nullptr;
-	Shader* geometricPassShader = nullptr;
-	Shader* lightingPassShader = nullptr;
-	Shader* hdrShader = nullptr;
+	Ref<Shader> basicShader = nullptr;
+	Ref<Shader> multiLightShader = nullptr;
+	Ref<Shader> skyBoxShader = nullptr;
+	Ref<Shader> axisShader = nullptr;
+	Ref<Shader> geometricPassShader = nullptr;
+	Ref<Shader> lightingPassShader = nullptr;
+	Ref<Shader> hdrShader = nullptr;
 public:
 
 	void StartUp();
 
 	void ShutDown();
 
-	Shader* getBasicShader() {
+	Ref<Shader> getBasicShader() {
 		if (basicShader == nullptr) {
-			basicShader = new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
+			basicShader = Ref<Shader>(new Shader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl"));
 		}
 		return basicShader;
 	}
 
-	Shader* getMultiLightShader() {
+	Ref<Shader> getMultiLightShader() {
 		if (multiLightShader == nullptr) {
-			multiLightShader = new Shader("Shaders/multi_light_vertex.glsl", "Shaders/multi_light_fragment.glsl");
+			multiLightShader = Ref<Shader>(new Shader("Shaders/multi_light_vertex.glsl", "Shaders/multi_light_fragment.glsl"));
 		}
 		return multiLightShader;
 	}
 
-	Shader* getSkyBoxShader() {
+	Ref<Shader> getSkyBoxShader() {
 		if(skyBoxShader == nullptr){
-			skyBoxShader = new Shader("Shaders/skybox_vertex.glsl", "Shaders/skybox_fragment.glsl");
+			skyBoxShader = Ref<Shader>(new Shader("Shaders/skybox_vertex.glsl", "Shaders/skybox_fragment.glsl"));
 		}
 		return skyBoxShader;
 	}
 
-	Shader* getAxisShader() {
+	Ref<Shader> getAxisShader() {
 		if (axisShader == nullptr) {
-			axisShader = new Shader("Shaders/axis_vertex.glsl", "Shaders/axis_fragment.glsl");
+			axisShader = Ref<Shader>(new Shader("Shaders/axis_vertex.glsl", "Shaders/axis_fragment.glsl"));
 		}
 		
 		return axisShader;
 	}
 
-	Shader* getGeometryPassShader() {
+	Ref<Shader> getGeometryPassShader() {
 		if (geometricPassShader == nullptr) {
-			geometricPassShader = new Shader("Shaders/geometric_pass_vertex.glsl", "Shaders/geometric_pass_fragment.glsl");
+			geometricPassShader = Ref<Shader>(new Shader("Shaders/geometric_pass_vertex.glsl", "Shaders/geometric_pass_fragment.glsl"));
 		}
 		
 		return geometricPassShader;
 	}
 
-	Shader* getLighthingPassShader() {
+	Ref<Shader> getLighthingPassShader() {
 		if (lightingPassShader == nullptr) {
-			lightingPassShader = new Shader("Shaders/lighting_pass_vertex.glsl", "Shaders/lighting_pass_fragment.glsl");
+			lightingPassShader = Ref<Shader>(new Shader("Shaders/lighting_pass_vertex.glsl", "Shaders/lighting_pass_fragment.glsl"));
 		}
 		
 		return lightingPassShader;
 	}
 
-	Shader* getHDRShader() {
+	Ref<Shader> getHDRShader() {
 		if (hdrShader == nullptr) {
-			hdrShader = new Shader("Shaders/hdr_vertex.glsl", "Shaders/hdr_fragment.glsl");
+			hdrShader = Ref<Shader>(new Shader("Shaders/hdr_vertex.glsl", "Shaders/hdr_fragment.glsl"));
 		}
 		
 		return hdrShader;

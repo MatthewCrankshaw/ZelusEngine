@@ -91,7 +91,7 @@ GLRectangle::GLRectangle(std::string textureFilename)
 void GLRectangle::Draw(const Ref<Camera> camera)
 {
 
-	Shader* shader;
+	Ref<Shader> shader;
 	switch (mShaderMode) {
 	case ShaderModes::GEOMETRIC_PASS:
 		shader = gShaderManager->getGeometryPassShader();
