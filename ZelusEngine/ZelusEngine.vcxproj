@@ -161,7 +161,7 @@
     <ClCompile Include="src\renderer\renderable_factory\abstract_renderable_factory.cpp" />
     <ClCompile Include="src\entity_component_manager.cpp" />
     <ClCompile Include="src\renderer\renderable_factory\gl_renderable_factory.cpp" />
-    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\renderer\gl_api\gl_cube.cpp" />
     <ClCompile Include="src\renderer\gl_api\gl_renderer_api.cpp" />
     <ClCompile Include="src\renderer\render_commands.cpp" />
