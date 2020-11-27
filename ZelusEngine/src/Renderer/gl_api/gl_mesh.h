@@ -4,8 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "gl_renderable.h"
+#include "gl_texture.h"
 #include "../../shader_manager.h"
-#include "../../texture.h"
 #include "../../ref.h"
 
 #include <string>

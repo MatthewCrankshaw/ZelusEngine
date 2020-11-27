@@ -179,7 +179,7 @@
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\shader_manager.cpp" />
     <ClCompile Include="src\renderer\gl_api\gl_sky_box.cpp" />
-    <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\renderer\gl_api\gl_texture.cpp" />
     <ClCompile Include="src\ui_input_handler.cpp" />
     <ClCompile Include="src\user_interface.cpp" />
     <ClCompile Include="src\renderer\transform.cpp" />
@@ -217,7 +217,7 @@
     <ClInclude Include="src\shader.h" />
     <ClInclude Include="src\shader_manager.h" />
     <ClInclude Include="src\renderer\gl_api\gl_sky_box.h" />
-    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\renderer\gl_api\gl_texture.h" />
     <ClInclude Include="src\ui_input_handler.h" />
     <ClInclude Include="src\user_interface.h" />
     <ClInclude Include="src\renderer\transform.h" />

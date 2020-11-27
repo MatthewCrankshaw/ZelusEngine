@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "log.h"
+#include "../../log.h"
 
 extern Log* gLog;
 

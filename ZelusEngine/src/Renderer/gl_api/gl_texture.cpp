@@ -1,5 +1,6 @@
-#include "texture.h"
+#pragma once
 
+#include "gl_texture.h"
 #include "stb/stb_image.h"
 
 Texture::Texture(){
