@@ -63,7 +63,7 @@ private:
     };
 
 public:
-	GLSkyBox(std::vector<std::string> textureFacesFilenames);
+	GLSkyBox(std::string* textureFacesFilenames);
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "renderer.h"
+#include "texture_factory/gl_texture_factory.h"
 #include "renderable_factory/gl_renderable_factory.h"
 #include "gl_api/gl_rectangle.h"
 #include "gl_api/gl_cube.h"
@@ -24,9 +25,10 @@ private:
 
 	Ref<Camera> camera;
 
-	Ref<GLRenderableFactory> factory;
+	Ref<GLRenderableFactory> renderableFactory;
+	Ref<GLTextureFactory> textureFactory;
 
-	GLTexture finalTex, hdrTex;
+	Ref<Texture> finalTex, hdrTex;
 
 	GLuint finalFBO, finalRBO;
 	GLuint hdrFBO, hdrRBO;
@@ -34,7 +36,7 @@ private:
 	// Geometric buffer for differed shading
 	GLuint mGeometricBuffer;
 	// GLTexture IDs for goemetric data for differed shading
-	GLTexture mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
+	Ref<GLTexture> mGeometricPosition, mGeometricNormal, mGeometricAlbedoSpecular;
 	// Depth Buffer
 	GLuint mRBODepth;
 };

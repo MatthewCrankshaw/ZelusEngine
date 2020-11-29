@@ -1,4 +1,5 @@
 #include "gl_rectangle.h"
+#include "../texture_factory/gl_texture_factory.h"
 
 GLRectangle::GLRectangle()
 {
@@ -80,9 +81,9 @@ GLRectangle::GLRectangle(std::string textureFilename)
 
 	mShaderMode = ShaderModes::REGULAR;
 
-	GLTexture texture;
-	texture.LoadRegularTexture("res/", textureFilename, true);
-	mTextureId = texture.GetHandle();
+	GLTextureFactory texFactory;
+	Ref<Texture> texture = texFactory.LoadRegularTexture("res/", textureFilename, true);
+	mTextureId = texture->GetHandle();
 
 	mTexturedRect = true;
 

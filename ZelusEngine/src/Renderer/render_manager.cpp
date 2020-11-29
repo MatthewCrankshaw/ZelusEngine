@@ -4,14 +4,14 @@ void RenderManager::StartUp()
 {
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
-    factory = Ref<GLRenderableFactory>(new GLRenderableFactory);
+    renderableFactory = Ref<GLRenderableFactory>(new GLRenderableFactory);
 
     RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    finalTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
+    finalTex = textureFactory->CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
 
     glGenRenderbuffers(1, &finalRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, finalRBO);
@@ -20,7 +20,7 @@ void RenderManager::StartUp()
 
     glGenFramebuffers(1, &finalFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTex.GetHandle(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTex->GetHandle(), 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, finalRBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
@@ -28,7 +28,7 @@ void RenderManager::StartUp()
     }
 
     //Create the framebuffer which will replace the default frame buffer
-    hdrTex.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
+    hdrTex = textureFactory->CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
 
     glGenRenderbuffers(1, &hdrRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, hdrRBO);
@@ -37,7 +37,7 @@ void RenderManager::StartUp()
 
     glGenFramebuffers(1, &hdrFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrTex.GetHandle(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrTex->GetHandle(), 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, hdrRBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Framebuffer is not complete!" << std::endl;
@@ -47,14 +47,14 @@ void RenderManager::StartUp()
     glGenFramebuffers(1, &mGeometricBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mGeometricBuffer);
 
-    mGeometricPosition.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mGeometricPosition.GetHandle(), 0);
+    mGeometricPosition = textureFactory->CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mGeometricPosition->GetHandle(), 0);
 
-    mGeometricNormal.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mGeometricNormal.GetHandle(), 0);
+    mGeometricNormal = textureFactory->CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB16F);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mGeometricNormal->GetHandle(), 0);
 
-    mGeometricAlbedoSpecular.CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mGeometricAlbedoSpecular.GetHandle(), 0);
+    mGeometricAlbedoSpecular = textureFactory->CreateEmptyTexture(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mGeometricAlbedoSpecular->GetHandle(), 0);
 
     unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 
@@ -112,7 +112,7 @@ void RenderManager::Render() {
 
     Ref<GLAxisModel> ax(new GLAxisModel());
 
-    std::vector<std::string> skyboxFiles{
+    std::string skyboxFiles[] = {
         "skybox2/right.png", 
         "skybox2/left.png", 
         "skybox2/top.png", 
@@ -123,7 +123,7 @@ void RenderManager::Render() {
 
     Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
-    Ref<Renderable> cube = factory->CreateCube();
+    Ref<Renderable> cube = renderableFactory->CreateCube();
     gECM->AddRenderable(muro);
 
     /* Loop until the user closes the window */
@@ -174,11 +174,11 @@ void RenderManager::Render() {
             lightShader->Use();
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, mGeometricPosition.GetHandle());
+            glBindTexture(GL_TEXTURE_2D, mGeometricPosition->GetHandle());
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, mGeometricNormal.GetHandle());
+            glBindTexture(GL_TEXTURE_2D, mGeometricNormal->GetHandle());
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular.GetHandle());
+            glBindTexture(GL_TEXTURE_2D, mGeometricAlbedoSpecular->GetHandle());
 
             for (unsigned int i = 0; i < lightPositions.size(); i++) {
                 lightShader->SetVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
@@ -238,8 +238,8 @@ void RenderManager::Render() {
             glDisable(GL_BLEND);
         }
 
-        glBindTexture(GL_TEXTURE_2D, hdrTex.GetHandle());
-        glGenerateTextureMipmap(hdrTex.GetHandle());
+        glBindTexture(GL_TEXTURE_2D, hdrTex->GetHandle());
+        glGenerateTextureMipmap(hdrTex->GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
@@ -250,16 +250,16 @@ void RenderManager::Render() {
             hdrShader->SetFloat("exposure", gUserInterface->GetExposure());
             hdrShader->SetFloat("gamma", gUserInterface->GetGamma());
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrTex.GetHandle());
+            glBindTexture(GL_TEXTURE_2D, hdrTex->GetHandle());
             quadHdr->SetShaderMode(GLRectangle::ShaderModes::HDR_PASS);
             RenderCommands::DrawIndexed(quadHdr, camera);
             hdrShader->UnUse();
         
-        glBindTexture(GL_TEXTURE_2D, finalTex.GetHandle());
-        glGenerateTextureMipmap(finalTex.GetHandle());
+        glBindTexture(GL_TEXTURE_2D, finalTex->GetHandle());
+        glGenerateTextureMipmap(finalTex->GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        gUserInterface->Update(finalTex.GetHandle(), hdrTex.GetHandle(), mGeometricAlbedoSpecular.GetHandle(), mGeometricNormal.GetHandle(), mGeometricPosition.GetHandle());
+        gUserInterface->Update(finalTex->GetHandle(), hdrTex->GetHandle(), mGeometricAlbedoSpecular->GetHandle(), mGeometricNormal->GetHandle(), mGeometricPosition->GetHandle());
 
         gUserInterface->Render();
 

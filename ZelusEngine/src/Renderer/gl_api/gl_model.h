@@ -12,6 +12,7 @@
 #include "../../ref.h"
 #include "../../user_interface.h"
 #include "../../shader_manager.h"
+#include "../texture_factory/gl_texture_factory.h"
 
 #include <string> 
 #include <fstream>
@@ -27,7 +28,8 @@ extern ShaderManager* gShaderManager;
 class GLModel : public GLRenderable
 {
 public:
-	std::vector<GLTexture> texturesLoaded;
+	GLTextureFactory texFactory;
+	std::vector<Ref<GLTexture>> texturesLoaded;
 	std::vector<Ref<GLMesh>> meshes;
 	std::string directory;
 	bool gammaCorrection;
@@ -46,6 +48,6 @@ private:
 
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	Ref<std::vector<GLTexture>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	Ref<std::vector<Ref<GLTexture>>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 };

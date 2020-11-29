@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\renderer\texture_factory\gl_texture_factory.cpp" />
     <ClCompile Include="src\renderer\renderable.cpp" />
     <ClCompile Include="src\renderer\renderable_factory\abstract_renderable_factory.cpp" />
     <ClCompile Include="src\entity_component_manager.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="src\ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\renderer\texture_factory\gl_texture_factory.h" />
     <ClInclude Include="src\renderer\renderable.h" />
     <ClInclude Include="src\renderer\renderable_factory\abstract_renderable_factory.h" />
     <ClInclude Include="src\entity_component_manager.h" />

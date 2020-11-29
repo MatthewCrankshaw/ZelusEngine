@@ -12,12 +12,29 @@ protected:
 	std::string mPath;
 	std::string mFilename;
 	std::string mTextureType;
-	int mWidth, mHeight, mNChannels;
+	int mWidth, mHeight;
 	bool mIsLoaded;
 public:
-	virtual void CreateEmptyTexture(int width, int height, int format) = 0;
-	virtual void LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip) = 0;
-	virtual void LoadCubeMapTexture(std::string textureDirectory, std::vector<std::string> faceTextureFilenames, bool flip) = 0;
+	virtual void CreateEmptyTexture() = 0;
+	virtual void LoadTextureFromFile(bool flip = false) = 0;
+	virtual void LoadCubeMap(std::string paths[6]) = 0;
+
+	inline void SetTextureSize(int width, int height) {
+		mWidth = width;
+		mHeight = height;
+	}
+
+	inline void SetTextureType(std::string textureType) {
+		mTextureType = textureType;
+	}
+
+	inline void SetPath(std::string path) {
+		mPath = path;
+	}
+
+	inline void SetFormat(int format) {
+		mFormat = format;
+	}
 
 	inline unsigned int GetHandle() {
 		if (!mIsLoaded) {
@@ -37,10 +54,6 @@ public:
 
 	inline std::string GetTextureType() {
 		return mTextureType;
-	}
-
-	inline void SetTextureType(std::string textureType) {
-		mTextureType = textureType;
 	}
 };
 

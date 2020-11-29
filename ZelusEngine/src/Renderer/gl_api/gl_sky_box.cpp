@@ -1,11 +1,12 @@
 #include "gl_sky_box.h"
+#include "../texture_factory/gl_texture_factory.h"
 
 /**
  * \brief Creates a renderable cubemap
  * 
  * \param textureFacesFilenames A vector of all of the cubemap texture files in the order right, left, top, bottom, front, back
  */
-GLSkyBox::GLSkyBox(std::vector<std::string> textureFacesFilenames)
+GLSkyBox::GLSkyBox(std::string* textureFacesFilenames)
 {
 	// Create vertex array object and vertex buffer object
 	glGenVertexArrays(1, &mVao);
@@ -23,11 +24,11 @@ GLSkyBox::GLSkyBox(std::vector<std::string> textureFacesFilenames)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	// Create a texture object and load the cubemap
-	GLTexture texture;
-	texture.LoadCubeMapTexture("res/", textureFacesFilenames, false);
+	GLTextureFactory texFactory;
+	Ref<GLTexture> texture = texFactory.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 
 	// The texture handle is for a cubemap
-	textureID = texture.GetHandle();
+	textureID = texture->GetHandle();
 
 	mModelMat = glm::mat4(1.0f);
 	mTranslation = glm::mat4(1.0f);

@@ -58,7 +58,7 @@ void GLModel::ProcessNode(aiNode* node, const aiScene* scene) {
 void GLModel::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
     Ref<std::vector<Vertex>> vertices(new std::vector<Vertex>);
     Ref<std::vector<unsigned int>> indices(new std::vector<unsigned int>);
-    Ref<std::vector<GLTexture>> textures(new std::vector<GLTexture>);
+    Ref<std::vector<Ref<GLTexture>>> textures(new std::vector<Ref<GLTexture>>);
 
     vertices->reserve(aimesh->mNumVertices);
     indices->reserve(aimesh->mNumFaces);
@@ -141,24 +141,24 @@ void GLModel::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
 
     aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 
-    Ref<std::vector<GLTexture>> diffuseMaps(LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse"));
+    Ref<std::vector<Ref<GLTexture>>> diffuseMaps(LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse"));
     textures->insert(textures->end(), diffuseMaps->begin(), diffuseMaps->end());
 
-    Ref<std::vector<GLTexture>> specularMaps(LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular"));
+    Ref<std::vector<Ref<GLTexture>>> specularMaps(LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular"));
     textures->insert(textures->end(), specularMaps->begin(), specularMaps->end());
 
-    Ref<std::vector<GLTexture>> normalMaps(LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal"));
+    Ref<std::vector<Ref<GLTexture>>> normalMaps(LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal"));
     textures->insert(textures->end(), normalMaps->begin(), normalMaps->end());
 
-    Ref<std::vector<GLTexture>> heightMaps(LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height"));
+    Ref<std::vector<Ref<GLTexture>>> heightMaps(LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height"));
     textures->insert(textures->end(), heightMaps->begin(), heightMaps->end());
 
     Ref<GLMesh> m(new GLMesh(vertices, indices, textures));
     meshes.push_back(m);
 }
 
-Ref<std::vector<GLTexture>> GLModel::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
-    Ref<std::vector<GLTexture>> textures(new std::vector<GLTexture>());
+Ref<std::vector<Ref<GLTexture>>> GLModel::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
+    Ref<std::vector<Ref<GLTexture>>> textures(new std::vector<Ref<GLTexture>>());
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
@@ -168,7 +168,7 @@ Ref<std::vector<GLTexture>> GLModel::LoadMaterialTextures(aiMaterial* mat, aiTex
         bool skip = false;
 
         for (unsigned int j = 0; j < texturesLoaded.size(); j++) {
-            if (std::strcmp(texturesLoaded[j].GetFilename().data(), str.C_Str()) == 0) {
+            if (std::strcmp(texturesLoaded[j]->GetFilename().data(), str.C_Str()) == 0) {
                 textures->push_back(texturesLoaded[j]);
                 skip = true;
                 break;
@@ -176,9 +176,8 @@ Ref<std::vector<GLTexture>> GLModel::LoadMaterialTextures(aiMaterial* mat, aiTex
         }
 
         if (!skip) {
-            GLTexture texture;
-            texture.LoadRegularTexture(directory + "/", str.C_Str(), false);
-            texture.SetTextureType(typeName);
+            Ref<GLTexture> texture = texFactory.LoadRegularTexture(directory + "/", str.C_Str(), false);
+            texture->SetTextureType(typeName);
             textures->push_back(texture);
             texturesLoaded.push_back(texture);
         }

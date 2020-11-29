@@ -3,7 +3,7 @@
 long GLMesh::memoryVertexUsed = 0;
 long GLMesh::memoryIndicesUsed = 0;
 
-GLMesh::GLMesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<GLTexture>> textures) {
+GLMesh::GLMesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Ref<GLTexture>>> textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;
@@ -34,7 +34,7 @@ void GLMesh::Draw(const Ref<Camera> camera) {
 		glActiveTexture(GL_TEXTURE0 + i);
 
 		std::string number;
-		std::string name = textures->at(i).GetTextureType();
+		std::string name = textures->at(i)->GetTextureType();
 
 		if (name == "texture_diffuse") {
 			number = std::to_string(diffuseNr++);
@@ -51,7 +51,7 @@ void GLMesh::Draw(const Ref<Camera> camera) {
 
 		shader->SetInt((name + number).c_str(), i);
 
-		glBindTexture(GL_TEXTURE_2D, textures->at(i).GetHandle());
+		glBindTexture(GL_TEXTURE_2D, textures->at(i)->GetHandle());
 	}
 
 	glBindVertexArray(mVao); 
