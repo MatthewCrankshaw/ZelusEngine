@@ -3,7 +3,7 @@
 long GLMesh::memoryVertexUsed = 0;
 long GLMesh::memoryIndicesUsed = 0;
 
-GLMesh::GLMesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Ref<GLTexture>>> textures) {
+GLMesh::GLMesh(Ref<std::vector<Vertex>> vertices, Ref<std::vector<unsigned int>> indices, Ref<std::vector<Ref<Texture>>> textures) {
 	this->vertices = vertices; 
 	this->indices = indices; 
 	this->textures = textures;

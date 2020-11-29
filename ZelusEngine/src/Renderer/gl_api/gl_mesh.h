@@ -33,7 +33,7 @@ private:
     /*  GlMesh Data  */
     Ref<std::vector<Vertex>> vertices;
     Ref<std::vector<unsigned int>> indices;
-    Ref<std::vector<Ref<GLTexture>>> textures;
+    Ref<std::vector<Ref<Texture>>> textures;
 
     int indicesSize;
     int verticesSize;
@@ -44,7 +44,7 @@ private:
 public:
     /*  Functions  */
     // constructor
-    GLMesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Ref<GLTexture>>> textures);
+    GLMesh(Ref<std::vector<Vertex>> vertices, Ref< std::vector<unsigned int>> indices, Ref<std::vector<Ref<Texture>>> textures);
 
     // render the mesh
     void Draw(const Ref<Camera> camera) override;

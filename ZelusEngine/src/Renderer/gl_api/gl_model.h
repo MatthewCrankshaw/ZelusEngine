@@ -29,7 +29,7 @@ class GLModel : public GLRenderable
 {
 public:
 	GLTextureFactory texFactory;
-	std::vector<Ref<GLTexture>> texturesLoaded;
+	std::vector<Ref<Texture>> texturesLoaded;
 	std::vector<Ref<GLMesh>> meshes;
 	std::string directory;
 	bool gammaCorrection;
@@ -48,6 +48,6 @@ private:
 
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	Ref<std::vector<Ref<GLTexture>>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	Ref<std::vector<Ref<Texture>>> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 };
