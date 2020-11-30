@@ -25,7 +25,7 @@ GLSkyBox::GLSkyBox(std::string* textureFacesFilenames)
 
 	// Create a texture object and load the cubemap
 	GLTextureFactory texFactory;
-	Ref<GLTexture> texture = texFactory.LoadCubeMapTexture("res/", textureFacesFilenames, false);
+	Ref<Texture> texture = texFactory.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 
 	// The texture handle is for a cubemap
 	textureID = texture->GetHandle();

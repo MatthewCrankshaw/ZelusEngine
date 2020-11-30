@@ -2,13 +2,13 @@
 #include <string>
 
 #include "../gl_api/gl_texture.h"
-#include "../../ref.h"
+#include "abstract_texture_factory.h"
 
-class GLTextureFactory
+class GLTextureFactory : public AbstractTextureFactory
 {
 public:
-	Ref<GLTexture> CreateEmptyTexture(int width, int height, int format);
-	Ref<GLTexture> LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip);
-	Ref<GLTexture> LoadCubeMapTexture(std::string textureDirectory, std::string* faceTextureFilenames, bool flip);
+	Ref<Texture> CreateEmptyTexture(int width, int height, int format) override;
+	Ref<Texture> LoadRegularTexture(std::string textureDirectory, std::string textureFilename, bool flip) override;
+	Ref<Texture> LoadCubeMapTexture(std::string textureDirectory, std::string* faceTextureFilenames, bool flip) override;
 };
 

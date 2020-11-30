@@ -5,6 +5,7 @@ void RenderManager::StartUp()
     camera = Ref<Camera>(gUserInterface->GetCamera());
 
     renderableFactory = Ref<GLRenderableFactory>(new GLRenderableFactory);
+    textureFactory = Ref<GLTextureFactory>(new GLTextureFactory);
 
     RenderCommands::CullBackFaces();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
