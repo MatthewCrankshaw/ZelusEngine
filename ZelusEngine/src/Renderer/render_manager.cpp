@@ -109,7 +109,8 @@ void RenderManager::Render() {
     Ref<GLRectangle> quad(new GLRectangle());
     Ref<GLRectangle> quadHdr(new GLRectangle());
 
-    Ref<GLModel> muro(new GLModel("res/muro/muro.obj"));
+    Ref<Renderable> muro = renderableFactory->CreateModel("res/muro/muro.obj");
+    Ref<Renderable> cube = renderableFactory->CreateCube();
 
     Ref<GLAxisModel> ax(new GLAxisModel());
 
@@ -124,7 +125,6 @@ void RenderManager::Render() {
 
     Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
-    Ref<Renderable> cube = renderableFactory->CreateCube();
     gECM->AddRenderable(muro);
 
     /* Loop until the user closes the window */
