@@ -126,6 +126,9 @@
     <ClCompile Include="src\renderer\texture_factory\abstract_texture_factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\shader_factory\abstract_shader_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imconfig.h">
@@ -249,6 +252,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\texture_factory\abstract_texture_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\shader_factory\abstract_shader_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
