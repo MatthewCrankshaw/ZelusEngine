@@ -11,7 +11,7 @@ public:
 
 	virtual void CullBackFaces() override;
 
-	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> cam) override;
+	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> cam) override;
 
 };
 

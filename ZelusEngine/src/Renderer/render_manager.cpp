@@ -125,7 +125,9 @@ void RenderManager::Render() {
 
     Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
 
-    gECM->AddRenderable(muro);
+    gECM->AddDeferredEntity(muro);
+    gECM->AddSkyboxEntity(skybox);
+    gECM->AddAxisEntity(ax);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -160,9 +162,11 @@ void RenderManager::Render() {
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Renderer::BeginScene();
+            Renderer::BeginScene(camera);
 
-            Renderer::EndDeferredScene(camera);
+            Renderer::RenderScene();
+
+            Renderer::EndScene();
         }
             
         //=======================================================================
@@ -193,7 +197,7 @@ void RenderManager::Render() {
             }
 
             quad->SetShaderMode(GLRectangle::ShaderModes::LIGHTING_PASS);
-            RenderCommands::DrawIndexed(quad, camera);
+            RenderCommands::DrawIndexed(quad, NULL, NULL, camera);
         }
             
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
@@ -214,8 +218,8 @@ void RenderManager::Render() {
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            RenderCommands::DrawIndexed(skybox, camera);
-            RenderCommands::DrawIndexed(ax, camera);
+            RenderCommands::DrawIndexed(skybox, NULL, NULL, camera);
+            RenderCommands::DrawIndexed(ax, NULL, NULL, camera);
 
             Renderer::EndScene();
 
@@ -231,7 +235,7 @@ void RenderManager::Render() {
                 basic->SetMat4("model", model);
                 basic->SetBool("textured", false);
                 basic->SetVec3("colour", lightColors[i]);
-                RenderCommands::DrawIndexed(cube, camera);
+                RenderCommands::DrawIndexed(cube, NULL, NULL, camera);
             }
             basic->UnUse();
 
@@ -253,7 +257,7 @@ void RenderManager::Render() {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, hdrTex->GetHandle());
             quadHdr->SetShaderMode(GLRectangle::ShaderModes::HDR_PASS);
-            RenderCommands::DrawIndexed(quadHdr, camera);
+            RenderCommands::DrawIndexed(quadHdr, NULL, NULL, camera);
             hdrShader->UnUse();
         
         glBindTexture(GL_TEXTURE_2D, finalTex->GetHandle());

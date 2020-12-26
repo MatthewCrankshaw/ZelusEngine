@@ -1,6 +1,8 @@
 #pragma once
 
 #include "renderer_api.h"
+#include "shader.h"
+#include "transform.h"
 
 class RenderCommands {
 public:
@@ -17,8 +19,8 @@ public:
 		sAPI->CullBackFaces();
 	}
 
-	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Camera> camera) {
-		sAPI->DrawIndexed(renderable, camera);
+	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) {
+		sAPI->DrawIndexed(renderable, transform, shader, camera);
 	}
 private: 
 

@@ -11,11 +11,17 @@ extern EntityComponentManager* gECM;
 class Renderer
 {
 private: 
-	Ref<Camera> mCamera;
-public: 
-	static void BeginScene(); 
+	static Ref<Camera> sCamera;
 
-	static void EndDeferredScene(Ref<Camera> camera);
+	static void RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+
+public: 
+	static void BeginScene(Ref<Camera> camera);
+
+	static void RenderScene();
 
 	static void EndScene();
 };
