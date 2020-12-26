@@ -6,8 +6,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "../texture.h"
-#include "../../log.h"
+#include "../../texture.h"
+#include "../../../log.h"
 
 extern Log* gLog;
 

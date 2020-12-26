@@ -158,7 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\renderer\shader_factory\abstract_shader_factory.cpp" />
+    <ClCompile Include="src\renderer\shader.cpp" />
     <ClCompile Include="src\renderer\texture_factory\abstract_texture_factory.cpp" />
     <ClCompile Include="src\renderer\texture_factory\gl_texture_factory.cpp" />
     <ClCompile Include="src\renderer\renderable.cpp" />
@@ -166,24 +166,24 @@
     <ClCompile Include="src\entity_component_manager.cpp" />
     <ClCompile Include="src\renderer\renderable_factory\gl_renderable_factory.cpp" />
     <ClCompile Include="src\log.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_cube.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_renderer_api.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_cube.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_renderer_api.cpp" />
     <ClCompile Include="src\renderer\render_commands.cpp" />
     <ClCompile Include="src\renderer\renderer.cpp" />
     <ClCompile Include="src\renderer\renderer_api.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_axis_model.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_axis_model.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\globals.cpp" />
     <ClCompile Include="src\input_handler.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_mesh.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_model.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_rectangle.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_renderable.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_mesh.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_model.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_rectangle.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_renderable.cpp" />
     <ClCompile Include="src\renderer\render_manager.cpp" />
-    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\renderer\gl_api\shader\gl_shader.cpp" />
     <ClCompile Include="src\shader_manager.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_sky_box.cpp" />
-    <ClCompile Include="src\renderer\gl_api\gl_texture.cpp" />
+    <ClCompile Include="src\renderer\gl_api\renderables\gl_sky_box.cpp" />
+    <ClCompile Include="src\renderer\gl_api\texture\gl_texture.cpp" />
     <ClCompile Include="src\ui_input_handler.cpp" />
     <ClCompile Include="src\user_interface.cpp" />
     <ClCompile Include="src\renderer\transform.cpp" />
@@ -198,7 +198,7 @@
     <ClCompile Include="src\ZelusEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\renderer\shader_factory\abstract_shader_factory.h" />
+    <ClInclude Include="src\renderer\shader.h" />
     <ClInclude Include="src\renderer\texture_factory\abstract_texture_factory.h" />
     <ClInclude Include="src\renderer\texture_factory\gl_texture_factory.h" />
     <ClInclude Include="src\renderer\renderable.h" />
@@ -207,25 +207,25 @@
     <ClInclude Include="src\renderer\renderable_factory\gl_renderable_factory.h" />
     <ClInclude Include="src\ref.h" />
     <ClInclude Include="src\log.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_cube.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_renderer_api.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_cube.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_renderer_api.h" />
     <ClInclude Include="src\renderer\renderer.h" />
     <ClInclude Include="src\renderer\render_commands.h" />
     <ClInclude Include="src\renderer\renderer_api.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_axis_model.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_axis_model.h" />
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\globals.h" />
     <ClInclude Include="src\input_handler.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_mesh.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_model.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_rectangle.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_renderable.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_mesh.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_model.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_rectangle.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_renderable.h" />
     <ClInclude Include="src\renderer\render_manager.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\renderer\gl_api\shader\gl_shader.h" />
     <ClInclude Include="src\shader_manager.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_sky_box.h" />
-    <ClInclude Include="src\renderer\gl_api\gl_texture.h" />
+    <ClInclude Include="src\renderer\gl_api\renderables\gl_sky_box.h" />
+    <ClInclude Include="src\renderer\gl_api\texture\gl_texture.h" />
     <ClInclude Include="src\ui_input_handler.h" />
     <ClInclude Include="src\user_interface.h" />
     <ClInclude Include="src\renderer\transform.h" />

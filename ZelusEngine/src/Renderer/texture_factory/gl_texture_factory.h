@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "../gl_api/gl_texture.h"
+#include "../gl_api/texture/gl_texture.h"
 #include "abstract_texture_factory.h"
 
 class GLTextureFactory : public AbstractTextureFactory

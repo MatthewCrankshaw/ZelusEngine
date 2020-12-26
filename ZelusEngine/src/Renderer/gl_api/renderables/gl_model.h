@@ -8,11 +8,11 @@
 
 #include "gl_mesh.h"
 #include "gl_renderable.h"
-#include "gl_texture.h"
-#include "../../ref.h"
-#include "../../user_interface.h"
-#include "../../shader_manager.h"
-#include "../texture_factory/gl_texture_factory.h"
+#include "../texture/gl_texture.h"
+#include "../../../ref.h"
+#include "../../../user_interface.h"
+#include "../../../shader_manager.h"
+#include "../../texture_factory/gl_texture_factory.h"
 
 #include <string> 
 #include <fstream>

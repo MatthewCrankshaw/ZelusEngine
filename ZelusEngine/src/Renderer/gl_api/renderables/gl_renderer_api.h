@@ -1,6 +1,6 @@
 #pragma once
-#include "../renderable.h"
-#include "../renderer_api.h"
+#include "gl_renderable.h"
+#include "../../renderer_api.h"
 
 class GLRendererAPI : public RendererAPI
 {

@@ -3,10 +3,10 @@
 
 #include "abstract_renderable_factory.h"
 #include "../../entity_component_manager.h"
-#include "../gl_api/gl_rectangle.h"
-#include "../gl_api/gl_sky_box.h"
-#include "../gl_api/gl_cube.h"
-#include "../gl_api/gl_model.h"
+#include "../gl_api/renderables/gl_rectangle.h"
+#include "../gl_api/renderables/gl_sky_box.h"
+#include "../gl_api/renderables/gl_cube.h"
+#include "../gl_api/renderables/gl_model.h"
 
 extern EntityComponentManager* gECM;
 

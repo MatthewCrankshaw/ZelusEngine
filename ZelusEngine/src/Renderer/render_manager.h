@@ -6,11 +6,11 @@
 #include "renderer.h"
 #include "texture_factory/gl_texture_factory.h"
 #include "renderable_factory/gl_renderable_factory.h"
-#include "gl_api/gl_rectangle.h"
-#include "gl_api/gl_cube.h"
-#include "gl_api/gl_sky_box.h"
-#include "gl_api/gl_model.h"
-#include "gl_api/gl_axis_model.h"
+#include "gl_api/renderables/gl_rectangle.h"
+#include "gl_api/renderables/gl_cube.h"
+#include "gl_api/renderables/gl_sky_box.h"
+#include "gl_api/renderables/gl_model.h"
+#include "gl_api/renderables/gl_axis_model.h"
 
 extern UserInterface* gUserInterface;
 

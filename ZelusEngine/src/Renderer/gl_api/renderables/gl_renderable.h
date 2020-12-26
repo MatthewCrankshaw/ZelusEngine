@@ -1,7 +1,7 @@
 #pragma once
 #include<glm/glm.hpp>
 
-#include "../renderable.h"
+#include "../../renderable.h"
 
 class GLRenderable : public Renderable
 {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "gl_renderable.h"
-#include "gl_texture.h"
-#include "../../shader_manager.h"
+#include "../texture/gl_texture.h"
+#include "../../../shader_manager.h"
 
 extern ShaderManager* gShaderManager;
 

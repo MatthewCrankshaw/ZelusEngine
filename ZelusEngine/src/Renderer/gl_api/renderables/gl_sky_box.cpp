@@ -1,5 +1,5 @@
 #include "gl_sky_box.h"
-#include "../texture_factory/gl_texture_factory.h"
+#include "../../texture_factory/gl_texture_factory.h"
 
 /**
  * \brief Creates a renderable cubemap

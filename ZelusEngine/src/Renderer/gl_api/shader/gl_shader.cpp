@@ -1,16 +1,39 @@
-#include "shader.h"
+#include "gl_shader.h"
 
+/*!
+ * Destructor of the shader object
+ * @details - will remove all shader objects
+ */
+GLShader::~GLShader() {
+    glDeleteShader(mHandle);
+    gLog->AddLog("[info] Shaders Deleted: %s and %s", mVertexPath.c_str(), mFragmentPath.c_str());
+}
 
+/*!
+ * Use this objects shader program {glUseProgram(mHandle)}
+ * @return void
+ */
+void GLShader::Use() {
+    glUseProgram(mHandle);
+}
 
-Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader) {
-    vertexPath = vertexShader;
-    fragmentPath = fragmentShader;
+/*!
+ * Stop using this objects shader program {glUseProgram(0)}
+ * @return void
+ */
+void GLShader::UnUse() {
+    glUseProgram(0);
+}
 
+void GLShader::LoadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+{
+    mVertexPath = vertexShaderPath;
+    mFragmentPath = fragmentShaderPath;
     char* vertexShaderString;
     char* fragmentShaderString;
 
-    vertexShaderString = ReadShaderFiles(vertexShader);
-    fragmentShaderString = ReadShaderFiles(fragmentShader);
+    vertexShaderString = ReadShaderFiles(mVertexPath);
+    fragmentShaderString = ReadShaderFiles(mFragmentPath);
 
     GLuint vertexHandle, fragmentHandle;
 
@@ -46,18 +69,18 @@ Shader::Shader(const std::string& vertexShader, const std::string& fragmentShade
         delete[] str;
     }
 
-    handle = glCreateProgram();
-    glAttachShader(handle, vertexHandle);
-    glAttachShader(handle, fragmentHandle);
+    mHandle = glCreateProgram();
+    glAttachShader(mHandle, vertexHandle);
+    glAttachShader(mHandle, fragmentHandle);
 
-    glLinkProgram(handle);
+    glLinkProgram(mHandle);
 
-    glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logLength);
-    glGetShaderiv(handle, GL_LINK_STATUS, &success);
+    glGetShaderiv(mHandle, GL_INFO_LOG_LENGTH, &logLength);
+    glGetShaderiv(mHandle, GL_LINK_STATUS, &success);
 
     if (!success) {
         str = new char[logLength];
-        glGetShaderInfoLog(handle, logLength, NULL, str);
+        glGetShaderInfoLog(mHandle, logLength, NULL, str);
         std::cout << str << std::endl;
         delete[] str;
     }
@@ -68,62 +91,7 @@ Shader::Shader(const std::string& vertexShader, const std::string& fragmentShade
     free(vertexShaderString);
     free(fragmentShaderString);
 
-    gLog->AddLog("[info] Shaders Loaded: %s and %s", vertexPath.c_str(), fragmentPath.c_str());
-}
-
-/*!
- * Destructor of the shader object
- * @details - will remove all shader objects
- */
-Shader::~Shader() {
-    glDeleteShader(handle);
-    gLog->AddLog("[info] Shaders Deleted: %s and %s", vertexPath.c_str(), fragmentPath.c_str());
-}
-
-/*!
- * Read in a shader file (.glsl) and create a c string of that shader file
- * @param filename - The name of the shader file to be read
- * @return - A pointer to the c string copy of the shader file.
- */
-char* Shader::ReadShaderFiles(const std::string& filename) {
-
-    std::ifstream file(filename); 
-
-    if (!file.good()) {
-        gLog->AddLog("[error] Shader::ReadShaderFiles : Could not read shader: %s", filename.c_str());
-    }
-
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
-    file.close();
-
-    std::string temp = buffer.str();
-    size_t size = temp.size() + 1;
-    char* str = new char[size];
-
-    for (unsigned int i = 0; i < size; i++) {
-        str[i] = temp[i];
-    }
-    str[size - 1] = '\0';
-
-    return str;
-}
-
-/*!
- * Use this objects shader program {glUseProgram(handle)}
- * @return void
- */
-void Shader::Use() {
-    glUseProgram(handle);
-}
-
-/*!
- * Stop using this objects shader program {glUseProgram(0)}
- * @return void
- */
-void Shader::UnUse() {
-    glUseProgram(0);
+    gLog->AddLog("[info] Shaders Loaded: %s and %s", mVertexPath.c_str(), mFragmentPath.c_str());
 }
 
 /*!
@@ -131,9 +99,9 @@ void Shader::UnUse() {
  * @param name - Name of the location, used in the shader program
  * @param value - Boolean value passed to the shader
  */
-void Shader::SetBool(const std::string& name, bool value) const {
-    glUseProgram(handle);
-    glUniform1i(glGetUniformLocation(handle, name.c_str()), (int)value);
+void GLShader::SetBool(const std::string& name, bool value) const {
+    glUseProgram(mHandle);
+    glUniform1i(glGetUniformLocation(mHandle, name.c_str()), (int)value);
 }
 
 /*!
@@ -141,9 +109,9 @@ void Shader::SetBool(const std::string& name, bool value) const {
  * @param name - Name of the location, used in the shader program
  * @param value - Integer value passed to the shader
  */
-void Shader::SetInt(const std::string& name, int value) const {
-    glUseProgram(handle);
-    glUniform1i(glGetUniformLocation(handle, name.c_str()), value);
+void GLShader::SetInt(const std::string& name, int value) const {
+    glUseProgram(mHandle);
+    glUniform1i(glGetUniformLocation(mHandle, name.c_str()), value);
 }
 
 /*!
@@ -151,9 +119,9 @@ void Shader::SetInt(const std::string& name, int value) const {
  * @param name - Name of the location, used in the shader program
  * @param value
  */
-void Shader::SetFloat(const std::string& name, float value) const {
-    glUseProgram(handle);
-    glUniform1f(glGetUniformLocation(handle, name.c_str()), value);
+void GLShader::SetFloat(const std::string& name, float value) const {
+    glUseProgram(mHandle);
+    glUniform1f(glGetUniformLocation(mHandle, name.c_str()), value);
 }
 
 /*!
@@ -161,9 +129,9 @@ void Shader::SetFloat(const std::string& name, float value) const {
  * @param name - Name of the location, used in the shader program
  * @param value - 2D Vector value passed to the shader
  */
-void Shader::SetVec2(const std::string& name, glm::vec2& value) const {
-    glUseProgram(handle);
-    glUniform2fv(glGetUniformLocation(handle, name.c_str()), 1, glm::value_ptr(value));
+void GLShader::SetVec2(const std::string& name, glm::vec2& value) const {
+    glUseProgram(mHandle);
+    glUniform2fv(glGetUniformLocation(mHandle, name.c_str()), 1, glm::value_ptr(value));
 }
 
 /*!
@@ -172,9 +140,9 @@ void Shader::SetVec2(const std::string& name, glm::vec2& value) const {
  * @param x - Value of X passed to the shader
  * @param y - Value of Y passed to the shader
  */
-void Shader::SetVec2(const std::string& name, float x, float y) const {
-    glUseProgram(handle);
-    glUniform2f(glGetUniformLocation(handle, name.c_str()), x, y);
+void GLShader::SetVec2(const std::string& name, float x, float y) const {
+    glUseProgram(mHandle);
+    glUniform2f(glGetUniformLocation(mHandle, name.c_str()), x, y);
 }
 
 /*!
@@ -182,9 +150,9 @@ void Shader::SetVec2(const std::string& name, float x, float y) const {
  * @param name - Name of the location, used in the shader program
  * @param value - 3D Vector value passed to the shader
  */
-void Shader::SetVec3(const std::string& name, glm::vec3& value) const {
-    glUseProgram(handle);
-    glUniform3fv(glGetUniformLocation(handle, name.c_str()), 1, glm::value_ptr(value));
+void GLShader::SetVec3(const std::string& name, glm::vec3& value) const {
+    glUseProgram(mHandle);
+    glUniform3fv(glGetUniformLocation(mHandle, name.c_str()), 1, glm::value_ptr(value));
 }
 
 /*!
@@ -194,9 +162,19 @@ void Shader::SetVec3(const std::string& name, glm::vec3& value) const {
  * @param y - Value of y passed to the shader
  * @param z - Value of z passed to the shader
  */
-void Shader::SetVec3(const std::string& name, float x, float y, float z) const {
-    glUseProgram(handle);
-    glUniform3f(glGetUniformLocation(handle, name.c_str()), x, y, z);
+void GLShader::SetVec3(const std::string& name, float x, float y, float z) const {
+    glUseProgram(mHandle);
+    glUniform3f(glGetUniformLocation(mHandle, name.c_str()), x, y, z);
+}
+
+/*!
+ * Create a uniform location and value for a 3D vector inside this shader program
+ * @param name - Name of the location, used in the shader program
+ * @param value - 4D Vector value passed to shader this will be parsed to be 3D
+ */
+void GLShader::SetVec3(const std::string& name, glm::vec4& value) const {
+    glUseProgram(mHandle);
+    glUniform3fv(glGetUniformLocation(mHandle, name.c_str()), 1, glm::value_ptr(glm::vec3(value)));
 }
 
 /*!
@@ -204,9 +182,9 @@ void Shader::SetVec3(const std::string& name, float x, float y, float z) const {
  * @param name - Name of the location, used in the shader program
  * @param value - 4D Vector value passed to the shader
  */
-void Shader::SetVec4(const std::string& name, glm::vec4& value) const {
-    glUseProgram(handle);
-    glUniform4fv(glGetUniformLocation(handle, name.c_str()), 1, glm::value_ptr(value));
+void GLShader::SetVec4(const std::string& name, glm::vec4& value) const {
+    glUseProgram(mHandle);
+    glUniform4fv(glGetUniformLocation(mHandle, name.c_str()), 1, glm::value_ptr(value));
 }
 
 /*!
@@ -217,9 +195,9 @@ void Shader::SetVec4(const std::string& name, glm::vec4& value) const {
  * @param z - Value of x passed to the shader
  * @param w - Value of x passed to the shader
  */
-void Shader::SetVec4(const std::string& name, float x, float y, float z, float w) const {
-    glUseProgram(handle);
-    glUniform4f(glGetUniformLocation(handle, name.c_str()), x, y, z, w);
+void GLShader::SetVec4(const std::string& name, float x, float y, float z, float w) const {
+    glUseProgram(mHandle);
+    glUniform4f(glGetUniformLocation(mHandle, name.c_str()), x, y, z, w);
 }
 
 /*!
@@ -227,9 +205,9 @@ void Shader::SetVec4(const std::string& name, float x, float y, float z, float w
  * @param name - Name of the location, used in the shader program
  * @param value - 2D Matrix value passed to shader
  */
-void Shader::SetMat2(const std::string& name, glm::mat2& value) const {
-    glUseProgram(handle);
-    glUniformMatrix2fv(glGetUniformLocation(handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+void GLShader::SetMat2(const std::string& name, glm::mat2& value) const {
+    glUseProgram(mHandle);
+    glUniformMatrix2fv(glGetUniformLocation(mHandle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 /*!
@@ -237,9 +215,9 @@ void Shader::SetMat2(const std::string& name, glm::mat2& value) const {
  * @param name - Name of the location, used in the shader program
  * @param value - 3D Matrix value passed to shader
  */
-void Shader::SetMat3(const std::string& name, glm::mat3& value) const {
-    glUseProgram(handle);
-    glUniformMatrix3fv(glGetUniformLocation(handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+void GLShader::SetMat3(const std::string& name, glm::mat3& value) const {
+    glUseProgram(mHandle);
+    glUniformMatrix3fv(glGetUniformLocation(mHandle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 /*!
@@ -247,7 +225,7 @@ void Shader::SetMat3(const std::string& name, glm::mat3& value) const {
  * @param name - Name of the location, used in the shader program
  * @param value - 4D Matrix value passed to shader
  */
-void Shader::SetMat4(const std::string& name, glm::mat4& value) const {
-    glUseProgram(handle);
-    glUniformMatrix4fv(glGetUniformLocation(handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+void GLShader::SetMat4(const std::string& name, glm::mat4& value) const {
+    glUseProgram(mHandle);
+    glUniformMatrix4fv(glGetUniformLocation(mHandle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
