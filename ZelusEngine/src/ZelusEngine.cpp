@@ -16,23 +16,23 @@
 // Should be started up in the order they are declared and then shut down in the reverse order
 UserInterface* gUserInterface = new UserInterface;
 Log* gLog = new Log;
+ShaderManager* gShaderManager = new ShaderManager;
 EntityComponentManager* gECM = new EntityComponentManager;
 RenderManager* gRenderManager = new RenderManager;
-ShaderManager* gShaderManager = new ShaderManager;
 
 int main()
 {
     gUserInterface  ->StartUp();
     gLog            ->StartUp();
+    gShaderManager  ->StartUp();
     gECM            ->StartUp();
     gRenderManager  ->StartUp();
-    gShaderManager  ->StartUp();
 
     gRenderManager  ->Render();
 
-    gShaderManager  ->ShutDown();
     gRenderManager  ->ShutDown();
     gECM            ->ShutDown();
+    gShaderManager  ->ShutDown();
     gLog            ->ShutDown();
     gUserInterface  ->ShutDown();
 }
