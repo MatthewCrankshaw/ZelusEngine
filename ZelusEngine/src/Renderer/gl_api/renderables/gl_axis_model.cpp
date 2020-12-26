@@ -19,7 +19,7 @@ GLAxisModel::GLAxisModel()
 
 void GLAxisModel::Draw(const Ref<Camera> camera)
 {
-    Ref<Shader> shader = gShaderManager->getAxisShader();
+    Ref<Shader> shader = gShaderManager->GetShader(ShaderType::AXIS_SHADER);
     shader->Use();
 
     glm::vec3 pos;

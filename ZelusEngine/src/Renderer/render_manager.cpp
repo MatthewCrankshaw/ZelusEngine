@@ -98,7 +98,7 @@ void RenderManager::Render() {
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
 
-    Ref<Shader> lightShader(gShaderManager->getLighthingPassShader());
+    Ref<Shader> lightShader(gShaderManager->GetShader(ShaderType::LIGHTING_PASS));
 
     lightShader->Use();
     lightShader->SetInt("gPosition", 0);
@@ -219,7 +219,7 @@ void RenderManager::Render() {
 
             Renderer::EndScene();
 
-            Ref<Shader> basic = gShaderManager->getBasicShader();
+            Ref<Shader> basic = gShaderManager->GetShader(ShaderType::BASIC);
 
             basic->Use();
             basic->SetMat4("projection", projectionMatrix);
@@ -245,7 +245,7 @@ void RenderManager::Render() {
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Ref<Shader> hdrShader = gShaderManager->getHDRShader();
+            Ref<Shader> hdrShader = gShaderManager->GetShader(ShaderType::HDR);
             hdrShader->Use();
             hdrShader->SetInt("hdrBuffer", 0);
             hdrShader->SetFloat("exposure", gUserInterface->GetExposure());

@@ -21,7 +21,7 @@ void GLMesh::Draw(const Ref<Camera> camera) {
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
 
-	Ref<Shader> shader = gShaderManager->getGeometryPassShader();
+	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
 
 	if (textures->size() >= 1) {
 		shader->SetBool("textureProvided", true);
