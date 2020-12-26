@@ -8,8 +8,9 @@
 
 #include "../../texture.h"
 #include "../../../log.h"
+#include "../../../ref.h"
 
-extern Log* gLog;
+extern Ref<Log> gLog;
 
 class GLTexture : public Texture
 {

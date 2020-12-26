@@ -4,7 +4,7 @@
 #include "../texture/gl_texture.h"
 #include "../../../shader_manager.h"
 
-extern ShaderManager* gShaderManager;
+extern Ref<ShaderManager> gShaderManager;
 
 class GLSkyBox : public GLRenderable
 {

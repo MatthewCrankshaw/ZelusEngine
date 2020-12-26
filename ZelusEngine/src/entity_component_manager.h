@@ -14,7 +14,7 @@ enum class EntityType {
 	AXIS
 };
 
-extern ShaderManager* gShaderManager;
+extern Ref<ShaderManager> gShaderManager;
 
 class EntityComponentManager
 {

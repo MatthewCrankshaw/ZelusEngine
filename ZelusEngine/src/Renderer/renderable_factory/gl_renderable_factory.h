@@ -8,7 +8,7 @@
 #include "../gl_api/renderables/gl_cube.h"
 #include "../gl_api/renderables/gl_model.h"
 
-extern EntityComponentManager* gECM;
+extern Ref<EntityComponentManager> gECM;
 
 class GLRenderableFactory : public AbstractRenderableFactory
 {

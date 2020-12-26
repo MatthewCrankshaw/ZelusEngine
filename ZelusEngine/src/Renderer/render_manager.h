@@ -12,7 +12,7 @@
 #include "gl_api/renderables/gl_model.h"
 #include "gl_api/renderables/gl_axis_model.h"
 
-extern UserInterface* gUserInterface;
+extern Ref<UserInterface> gUserInterface;
 
 class RenderManager
 {

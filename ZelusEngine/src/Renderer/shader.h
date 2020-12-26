@@ -8,9 +8,10 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../ref.h"
 #include "../log.h"
 
-extern Log* gLog;
+extern Ref<Log> gLog;
 
 class Shader
 {

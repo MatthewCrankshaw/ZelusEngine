@@ -21,9 +21,9 @@
 #include <vector>
 #include <future>
 
-extern UserInterface* gUserInterface;
-extern Log* gLog;
-extern ShaderManager* gShaderManager;
+extern Ref<UserInterface> gUserInterface;
+extern Ref<Log> gLog;
+extern Ref<ShaderManager> gShaderManager;
 
 class GLModel : public GLRenderable
 {

@@ -5,7 +5,7 @@
 #include "../../shader.h"
 #include "../../../shader_manager.h"
 
-extern ShaderManager* gShaderManager;
+extern Ref<ShaderManager> gShaderManager;
 
 class GLRectangle : public GLRenderable
 {

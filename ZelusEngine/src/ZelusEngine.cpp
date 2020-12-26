@@ -14,11 +14,11 @@
 
 // Global Singletons 
 // Should be started up in the order they are declared and then shut down in the reverse order
-UserInterface* gUserInterface = new UserInterface;
-Log* gLog = new Log;
-ShaderManager* gShaderManager = new ShaderManager;
-EntityComponentManager* gECM = new EntityComponentManager;
-RenderManager* gRenderManager = new RenderManager;
+Ref<UserInterface> gUserInterface(new UserInterface());
+Ref<Log> gLog(new Log());
+Ref<ShaderManager> gShaderManager(new ShaderManager());
+Ref<EntityComponentManager> gECM(new EntityComponentManager());
+Ref<RenderManager> gRenderManager(new RenderManager());
 
 int main()
 {

@@ -11,7 +11,7 @@
 #include "Renderer/renderer.h"
 
 
-extern Log* gLog;
+extern Ref<Log> gLog;
 
 class UserInterface
 {

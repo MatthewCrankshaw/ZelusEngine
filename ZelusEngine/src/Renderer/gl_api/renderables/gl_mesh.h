@@ -26,7 +26,7 @@ struct Vertex {
     glm::vec3 Bitangent;
 };
 
-extern ShaderManager* gShaderManager;
+extern Ref<ShaderManager> gShaderManager;
 
 class GLMesh : public GLRenderable {
 private:

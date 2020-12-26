@@ -5,8 +5,8 @@
 #include "../entity_component_manager.h"
 #include "../ref.h"
 
-extern Log* gLog;
-extern EntityComponentManager* gECM;
+extern Ref<Log> gLog;
+extern Ref<EntityComponentManager> gECM;
 
 class Renderer
 {

@@ -6,7 +6,7 @@
 #include "../../../shader_manager.h"
 
 
-extern ShaderManager* gShaderManager;
+extern Ref<ShaderManager> gShaderManager;
 
 class GLAxisModel : public GLRenderable
 {
