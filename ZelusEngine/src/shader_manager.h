@@ -91,6 +91,15 @@ public:
 			else {
 				return mShaders->at(type);
 			}
+		default:
+			if (mShaders->find(type) == mShaders->end()) {
+				mShaders->emplace(type, Ref<GLShader>(new GLShader()));
+				mShaders->at(type)->LoadShader("Shaders/basic_shader_vertex.glsl", "Shaders/basic_shader_fragment.glsl");
+				return mShaders->at(type);
+			}
+			else {
+				return mShaders->at(type);
+			}
 		}
 	}
 };
