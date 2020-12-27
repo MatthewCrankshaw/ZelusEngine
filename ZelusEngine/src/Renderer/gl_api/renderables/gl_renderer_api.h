@@ -11,6 +11,8 @@ public:
 
 	virtual void CullBackFaces() override;
 
+	virtual void EnableDepthTest() override;
+
 	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> cam) override;
 
 };

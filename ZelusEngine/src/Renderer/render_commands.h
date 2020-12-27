@@ -19,6 +19,10 @@ public:
 		sAPI->CullBackFaces();
 	}
 
+	inline static void EnableDepthTest() {
+		sAPI->EnableDepthTest();
+	}
+
 	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) {
 		sAPI->DrawIndexed(renderable, transform, shader, camera);
 	}
