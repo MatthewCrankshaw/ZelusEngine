@@ -27,10 +27,10 @@ void GLAxisModel::Draw(const Ref<Camera> camera)
 
     glm::mat4 projectionMat, viewMat;
 
-    camera->GetPosition(pos);
-    camera->GetForward(forward);
-    camera->GetOrthoProjectionMatrix(projectionMat);
-    camera->GetViewMatrix(viewMat);
+    pos = camera->GetPosition();
+    forward = camera->GetForward();
+    projectionMat = camera->GetOrthoProjectionMatrix();
+    viewMat = camera->GetViewMatrix();
 
     mTranslation = glm::translate(glm::mat4(1.0), pos + (forward * glm::vec3(2.0)));
     mScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f));

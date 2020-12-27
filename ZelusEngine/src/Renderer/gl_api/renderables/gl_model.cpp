@@ -8,8 +8,8 @@ GLModel::GLModel(std::string const& path){
 
 void GLModel::Draw(const Ref<Camera> camera) {
     glm::mat4 viewMatrix, projectionMatrix;
-    camera->GetViewMatrix(viewMatrix);
-    camera->GetProjectionMatrix(projectionMatrix);
+    viewMatrix = camera->GetViewMatrix();
+    projectionMatrix = camera->GetProjectionMatrix();
 
     Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
 

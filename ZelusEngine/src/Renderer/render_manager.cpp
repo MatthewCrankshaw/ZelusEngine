@@ -147,8 +147,8 @@ void RenderManager::Render() {
         }
 
         glm::mat4 viewMatrix(1.0f), projectionMatrix(1.0f);
-        camera->GetViewMatrix(viewMatrix);
-        camera->GetProjectionMatrix(projectionMatrix);
+        viewMatrix = camera->GetViewMatrix();
+        projectionMatrix = camera->GetProjectionMatrix();
 
 
         /* Render here */

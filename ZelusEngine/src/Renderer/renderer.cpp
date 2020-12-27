@@ -49,7 +49,7 @@ void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform
 	shader->Use();
 
 	glm::vec3 position;
-	sCamera->GetPosition(position);
+	position = sCamera->GetPosition();
 	transform->SetPosition(position);
 
 	glm::mat4 model = transform->GetModelTransform();

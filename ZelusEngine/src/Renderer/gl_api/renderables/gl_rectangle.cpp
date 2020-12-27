@@ -115,8 +115,8 @@ void GLRectangle::Draw(const Ref<Camera> camera)
 	shader->SetBool("textureProvided", true);
 
 	glm::mat4 viewMat, projectionMat;
-	camera->GetViewMatrix(viewMat);
-	camera->GetProjectionMatrix(projectionMat);
+	viewMat = camera->GetViewMatrix();
+	projectionMat = camera->GetProjectionMatrix();
 	
 	shader->SetMat4("view", viewMat);
 	shader->SetMat4("projection", projectionMat);
