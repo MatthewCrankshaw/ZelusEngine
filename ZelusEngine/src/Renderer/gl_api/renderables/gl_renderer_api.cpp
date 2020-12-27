@@ -15,19 +15,12 @@ void GLRendererAPI::CullBackFaces()
 	glCullFace(GL_BACK);
 }
 
+void GLRendererAPI::EnableDepthTest()
+{
+	glEnable(GL_DEPTH_TEST);
+}
+
 void GLRendererAPI::DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera)
 {
-	//shader->Use();
-
-	//glm::mat4 projection = camera->GetProjectionMatrix();
-	//glm::mat4 view = camera->GetViewMatrix();
-	//glm::mat4 model = transform->GetModelTransform();
-
-	//shader->SetMat4("projection", projection);
-	//shader->SetMat4("view", view);
-	//shader->SetMat4("model", model);
-
 	renderable->Draw(camera);
-
-	//shader->UnUse();
 }

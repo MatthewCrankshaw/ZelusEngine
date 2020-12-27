@@ -67,7 +67,27 @@ void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform
 }
 
 void Renderer::RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+	shader->Use();
+
+	glm::vec3 pos, forward;
+	glm::mat4 projectionMat, viewMat, modelMat;
+
+	pos = sCamera->GetPosition();
+	forward = sCamera->GetForward();
+	projectionMat = sCamera->GetOrthoProjectionMatrix();
+	viewMat = sCamera->GetViewMatrix();
+
+	transform->SetPosition(pos + (forward * glm::vec3(2.0)));
+	transform->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+	modelMat = transform->GetModelTransform();
+
+	shader->SetMat4("view", viewMat);
+	shader->SetMat4("model", modelMat);
+	shader->SetMat4("projection", projectionMat);
+
 	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+
+	shader->UnUse();
 }
 
 void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {

@@ -8,6 +8,7 @@ void RenderManager::StartUp()
     textureFactory = Ref<GLTextureFactory>(new GLTextureFactory);
 
     RenderCommands::CullBackFaces();
+    RenderCommands::EnableDepthTest();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -112,7 +113,7 @@ void RenderManager::Render() {
     Ref<Renderable> muro = renderableFactory->CreateModel("res/muro/muro.obj");
     Ref<Renderable> cube = renderableFactory->CreateCube();
 
-    Ref<GLAxisModel> ax(new GLAxisModel());
+    Ref<Renderable> ax(new GLAxisModel());
 
     std::string skyboxFiles[] = {
         "skybox2/right.png", 
@@ -218,7 +219,7 @@ void RenderManager::Render() {
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            RenderCommands::DrawIndexed(ax, NULL, NULL, camera);
+            //RenderCommands::DrawIndexed(ax, NULL, NULL, camera);
 
             Renderer::EndScene();
 
