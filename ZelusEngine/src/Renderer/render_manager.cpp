@@ -123,7 +123,7 @@ void RenderManager::Render() {
         "skybox2/back.png"
     };
 
-    Ref<GLRenderable> skybox(new GLSkyBox(skyboxFiles));
+    Ref<Renderable> skybox(new GLSkyBox(skyboxFiles));
 
     gECM->AddDeferredEntity(muro);
     gECM->AddSkyboxEntity(skybox);
@@ -218,7 +218,6 @@ void RenderManager::Render() {
             glEnable(GL_BLEND);
 
             //Skybox should be the first thing to render now
-            RenderCommands::DrawIndexed(skybox, NULL, NULL, camera);
             RenderCommands::DrawIndexed(ax, NULL, NULL, camera);
 
             Renderer::EndScene();

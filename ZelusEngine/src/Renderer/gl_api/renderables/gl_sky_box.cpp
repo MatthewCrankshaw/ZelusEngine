@@ -25,56 +25,22 @@ GLSkyBox::GLSkyBox(std::string* textureFacesFilenames)
 
 	// Create a texture object and load the cubemap
 	GLTextureFactory texFactory;
-	Ref<Texture> texture = texFactory.LoadCubeMapTexture("res/", textureFacesFilenames, false);
-
-	// The texture handle is for a cubemap
-	textureID = texture->GetHandle();
-
-	mModelMat = glm::mat4(1.0f);
-	mTranslation = glm::mat4(1.0f);
-	mRotation = glm::mat4(1.0f);
-	mScale = glm::mat4(1.0f);
+	mTexture = texFactory.LoadCubeMapTexture("res/", textureFacesFilenames, false);
 }
 
 void GLSkyBox::Draw(const Ref<Camera> camera)
 {
-	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::SKYBOX);
-
 	glDepthFunc(GL_LEQUAL); 
-	shader->Use();
-
-	glm::vec3 position;
-	glm::mat4 viewMat, projectionMat;
-
-	camera->GetViewMatrix(viewMat);
-	camera->GetProjectionMatrix(projectionMat);
-	camera->GetPosition(position);
-
-	SetPosition(position);
-	mModelMat = mTranslation * mRotation * mScale;
-	shader->SetMat4("view", viewMat);
-	shader->SetMat4("projection", projectionMat);
-	shader->SetMat4("model", mModelMat);
 
 	glBindVertexArray(mVao); 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, mTexture->GetHandle());
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
-	shader->UnUse();
 	glDepthFunc(GL_LESS);
 }
 
 void GLSkyBox::Update()
 {
-}
-
-void GLSkyBox::SetPosition(const glm::vec3 position) {
-	mPosition = position;
-	mTranslation = glm::translate(glm::mat4(1.0f), mPosition);
-}
-
-GLuint GLSkyBox::getTextureId() {
-	return textureID;
 }

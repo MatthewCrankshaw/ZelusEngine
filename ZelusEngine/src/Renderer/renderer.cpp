@@ -46,7 +46,24 @@ void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> tr
 }
 
 void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+	shader->Use();
+
+	glm::vec3 position;
+	sCamera->GetPosition(position);
+	transform->SetPosition(position);
+
+	glm::mat4 model = transform->GetModelTransform();
+	glm::mat4 view = sCamera->GetViewMatrix();
+	glm::mat4 projection = sCamera->GetProjectionMatrix();
+	
+
+	shader->SetMat4("model", model);
+	shader->SetMat4("view", view);
+	shader->SetMat4("projection", projection);
+
 	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+
+	shader->UnUse();
 }
 
 void Renderer::RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
