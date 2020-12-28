@@ -6,9 +6,9 @@
 #include "shader_manager.h"
 
 enum class EntityType {
-	GEOMETRIC_PASS,
-	LIGHTING_PASS, 
-	DEFERRED,
+	DEFERRED_LIGHTING,
+	DEFERRED_GEOMETRY,
+	HDR_PASS,
 	REGULAR,
 	SKYBOX,
 	AXIS
@@ -18,11 +18,25 @@ extern Ref<ShaderManager> gShaderManager;
 
 class EntityComponentManager
 {
-public:
+private:
 	entt::registry mRegistry;
-
+	entt::entity mHDRBuffer;
+	entt::entity mLightingBuffer;
+public:
 	void StartUp();
 	void ShutDown();
+
+	inline entt::registry& GetRegistry() {
+		return mRegistry;
+	}
+
+	inline entt::entity& GetHDRBuffer() {
+		return mHDRBuffer;
+	}
+
+	inline entt::entity& GetLightingBuffer() {
+		return mLightingBuffer;
+	}
 
 	void AddRegularEntity(Ref<Renderable> renderable);
 	void AddDeferredEntity(Ref<Renderable> renderable);

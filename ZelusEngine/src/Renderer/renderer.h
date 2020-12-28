@@ -12,16 +12,23 @@ class Renderer
 {
 private: 
 	static Ref<Camera> sCamera;
+	static std::vector<entt::entity> sDeferredEntityQueue;
+	static std::vector<entt::entity> sRegularEntityQueue;
 
 	static void RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 	static void RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 	static void RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 	static void RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderHDRPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderRegularScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 
 public: 
 	static void BeginScene(Ref<Camera> camera);
 
-	static void RenderScene();
+	static void RenderDeferredGeometryBuffer();
+	static void RenderDeferredLightingBuffer();
+	static void RenderHDRBuffer();
+	static void RenderRegularBuffer();
 
 	static void EndScene();
 };

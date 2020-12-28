@@ -11,7 +11,7 @@ class GLRectangle : public GLRenderable
 {
 public:
 
-	enum class ShaderModes { GEOMETRIC_PASS, LIGHTING_PASS, HDR_PASS, REGULAR };
+	enum class ShaderModes { GEOMETRIC_PASS, DEFERRED_LIGHTING, HDR_PASS, REGULAR };
 
 	GLRectangle();
 	GLRectangle(glm::vec3 colour);

@@ -11,7 +11,7 @@ enum class ShaderType {
 		SKYBOX,
 		AXIS_SHADER,
 		GEOMETRY_PASS, 
-		LIGHTING_PASS, 
+		DEFERRED_LIGHTING, 
 		HDR
 };
 
@@ -73,7 +73,7 @@ public:
 			else {
 				return mShaders->at(type);
 			}
-		case ShaderType::LIGHTING_PASS:
+		case ShaderType::DEFERRED_LIGHTING:
 			if (mShaders->find(type) == mShaders->end()) {
 				mShaders->emplace(type, Ref<GLShader>(new GLShader()));
 				mShaders->at(type)->LoadShader("Shaders/lighting_pass_vertex.glsl", "Shaders/lighting_pass_fragment.glsl");

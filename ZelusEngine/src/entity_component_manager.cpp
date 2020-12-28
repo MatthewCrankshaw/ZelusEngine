@@ -27,7 +27,7 @@ void EntityComponentManager::AddDeferredEntity(Ref<Renderable> renderable)
 	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
 
 	auto entity = mRegistry.create();
-	mRegistry.emplace<EntityType>(entity, EntityType::DEFERRED);
+	mRegistry.emplace<EntityType>(entity, EntityType::DEFERRED_GEOMETRY);
 	mRegistry.emplace<Ref<Renderable>>(entity, renderable);
 	mRegistry.emplace<Ref<Transform>>(entity, transform);
 	mRegistry.emplace<Ref<Shader>>(entity, shader);
@@ -60,11 +60,11 @@ void EntityComponentManager::AddAxisEntity(Ref<Renderable> renderable)
 void EntityComponentManager::AddLightingPassEntity(Ref<Renderable> renderable)
 {
 	Ref<Transform> transform(new Transform());
-	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::LIGHTING_PASS);
+	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::DEFERRED_LIGHTING);
 
-	auto entity = mRegistry.create();
-	mRegistry.emplace<EntityType>(entity, EntityType::LIGHTING_PASS);
-	mRegistry.emplace<Ref<Renderable>>(entity, renderable);
-	mRegistry.emplace<Ref<Transform>>(entity, transform);
-	mRegistry.emplace<Ref<Shader>>(entity, shader);
+	mLightingBuffer = mRegistry.create();
+	mRegistry.emplace<EntityType>(mLightingBuffer, EntityType::DEFERRED_LIGHTING);
+	mRegistry.emplace<Ref<Renderable>>(mLightingBuffer, renderable);
+
+	mRegistry.emplace<Ref<Shader>>(mLightingBuffer, shader);
 }

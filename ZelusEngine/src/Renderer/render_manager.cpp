@@ -99,7 +99,7 @@ void RenderManager::Render() {
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
 
-    Ref<Shader> lightShader(gShaderManager->GetShader(ShaderType::LIGHTING_PASS));
+    Ref<Shader> lightShader(gShaderManager->GetShader(ShaderType::DEFERRED_LIGHTING));
 
     lightShader->Use();
     lightShader->SetInt("gPosition", 0);
@@ -156,6 +156,8 @@ void RenderManager::Render() {
         RenderCommands::SetClearColour(gUserInterface->GetScreenClearColour());
         RenderCommands::Clear();
 
+        Renderer::BeginScene(camera);
+
         //=======================================================================
         // Geometric Pass
         //=======================================================================
@@ -163,11 +165,7 @@ void RenderManager::Render() {
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Renderer::BeginScene(camera);
-
-            Renderer::RenderScene();
-
-            Renderer::EndScene();
+            Renderer::RenderDeferredGeometryBuffer();
         }
             
         //=======================================================================
@@ -176,6 +174,8 @@ void RenderManager::Render() {
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            //Renderer::RenderDeferredLightingBuffer();
 
             lightShader->Use();
 
@@ -197,7 +197,7 @@ void RenderManager::Render() {
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
             }
 
-            quad->SetShaderMode(GLRectangle::ShaderModes::LIGHTING_PASS);
+            quad->SetShaderMode(GLRectangle::ShaderModes::DEFERRED_LIGHTING);
             RenderCommands::DrawIndexed(quad, NULL, NULL, camera);
         }
             
@@ -214,6 +214,8 @@ void RenderManager::Render() {
         //=======================================================================
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         {
+            //Renderer::RenderHDRBuffer();
+
             //Start the regular shading for things that require blending or special lighting effects
             //Enable blending
             glEnable(GL_BLEND);
@@ -239,6 +241,8 @@ void RenderManager::Render() {
             }
             basic->UnUse();
 
+            Renderer::RenderRegularBuffer();
+
             //Disable blending as we are now done
             glDisable(GL_BLEND);
         }
@@ -263,6 +267,8 @@ void RenderManager::Render() {
         glBindTexture(GL_TEXTURE_2D, finalTex->GetHandle());
         glGenerateTextureMipmap(finalTex->GetHandle());
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        Renderer::EndScene();
 
         gUserInterface->Update(finalTex->GetHandle(), hdrTex->GetHandle(), mGeometricAlbedoSpecular->GetHandle(), mGeometricNormal->GetHandle(), mGeometricPosition->GetHandle());
 

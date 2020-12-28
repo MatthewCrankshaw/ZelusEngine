@@ -98,8 +98,8 @@ void GLRectangle::Draw(const Ref<Camera> camera)
 	case ShaderModes::GEOMETRIC_PASS:
 		shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
 		break;
-	case ShaderModes::LIGHTING_PASS:
-		shader = gShaderManager->GetShader(ShaderType::LIGHTING_PASS);
+	case ShaderModes::DEFERRED_LIGHTING:
+		shader = gShaderManager->GetShader(ShaderType::DEFERRED_LIGHTING);
 		break;
 	case ShaderModes::HDR_PASS:
 		shader = gShaderManager->GetShader(ShaderType::HDR);

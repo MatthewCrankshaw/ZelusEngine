@@ -2,47 +2,116 @@
 #include "transform.h"
 
 Ref<Camera> Renderer::sCamera = nullptr;
+std::vector<entt::entity> Renderer::sDeferredEntityQueue;
+std::vector<entt::entity> Renderer::sRegularEntityQueue;
 
 void Renderer::BeginScene(Ref<Camera> camera) {
 	sCamera = camera;
-}
-
-void Renderer::RenderScene() {
-	if (sCamera == nullptr) {
-		gLog->AddLog("[ERROR] BeginScene in Renderer is not called before RenderScene");
-	}
-	//TODO Here we want to render the scene in the correct order 
-	entt::basic_view view = gECM->mRegistry.view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
 
 	for (auto entity : view) {
+		EntityType type = view.get<EntityType>(entity);
+		if (type == EntityType::DEFERRED_GEOMETRY) {
+			sDeferredEntityQueue.push_back(entity);
+		}
+		else if (type == EntityType::REGULAR) {
+			sRegularEntityQueue.push_back(entity);
+		}
+		else if (type == EntityType::SKYBOX || type == EntityType::AXIS) {
+			sDeferredEntityQueue.push_back(entity);
+		}
+	}
+}
 
+void Renderer::RenderDeferredGeometryBuffer()
+{
+	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+
+	for (auto entity : sDeferredEntityQueue) {
+		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
+		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
+		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
+		RenderDeferredScene(renderable, transform, shader);
+	}
+}
+
+void Renderer::RenderDeferredLightingBuffer()
+{
+	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
+
+	EntityType type = view.get<EntityType>(gECM->GetLightingBuffer());
+	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetLightingBuffer());
+	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetLightingBuffer());
+
+	RenderLightingPass(renderable, NULL, shader);
+}
+
+void Renderer::RenderHDRBuffer()
+{
+	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
+
+	EntityType type = view.get<EntityType>(gECM->GetHDRBuffer());
+	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetHDRBuffer());
+	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetHDRBuffer());
+
+	RenderHDRPass(renderable, NULL, shader);
+}
+
+void Renderer::RenderRegularBuffer()
+{
+	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+
+	for (auto entity : sRegularEntityQueue) {
 		EntityType type = view.get<EntityType>(entity);
 		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 
-		switch (type) {
-			case EntityType::REGULAR:
-				RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-				break;
-			case EntityType::DEFERRED:
-				RenderDeferredScene(renderable, transform, shader);
-				break;
-			case EntityType::AXIS:
-				RenderAxis(renderable, transform, shader);
-				break;
-			case EntityType::SKYBOX:
-				RenderSkybox(renderable, transform, shader);
-				break;
-			case EntityType::LIGHTING_PASS:
-				RenderLightingPass(renderable, transform, shader);
-				break;
+		if (type == EntityType::REGULAR) {
+			RenderRegularScene(renderable, transform, shader);
 		}
 	}
 }
 
+void Renderer::EndScene() {
+	sDeferredEntityQueue.clear();
+	sRegularEntityQueue.clear();
+}
+
 void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+
+	for (auto entity : sDeferredEntityQueue) {
+		EntityType type = view.get<EntityType>(entity);
+		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
+		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
+		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
+
+		if (type == EntityType::DEFERRED_GEOMETRY) {
+			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+		}
+		else if (type == EntityType::SKYBOX) {
+			RenderSkybox(renderable, transform, shader);
+		}
+		else if (type == EntityType::AXIS) {
+			RenderAxis(renderable, transform, shader);
+		}
+	}
+}
+
+void Renderer::RenderRegularScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+
+	for (auto entity : sRegularEntityQueue) {
+		EntityType type = view.get<EntityType>(entity);
+		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
+		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
+		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
+
+		if (type == EntityType::REGULAR) {
+			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+		}
+	}
 }
 
 void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
@@ -91,8 +160,22 @@ void Renderer::RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, 
 }
 
 void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+	shader->Use();
+
+	glm::mat4 viewMat, projectionMat, modelMat;
+	viewMat = sCamera->GetViewMatrix();
+	projectionMat = sCamera->GetProjectionMatrix();
+	modelMat = transform->GetModelTransform();
+
+	shader->SetMat4("view", viewMat);
+	shader->SetMat4("projection", projectionMat);
+	shader->SetMat4("model", modelMat);
+
 	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+
+	shader->UnUse();
 }
 
-void Renderer::EndScene() {
+void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
 }
