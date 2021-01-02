@@ -11,9 +11,6 @@ extern Ref<ShaderManager> gShaderManager;
 class GLRectangle : public GLRenderable
 {
 public:
-
-	enum class ShaderModes { GEOMETRIC_PASS, DEFERRED_LIGHTING, HDR_PASS, REGULAR };
-
 	GLRectangle();
 	GLRectangle(glm::vec3 colour);
 	GLRectangle(std::string textureFilname);
@@ -21,17 +18,11 @@ public:
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;
 
-	void SetShaderMode(ShaderModes mode) {
-		mShaderMode = mode;
-	}
-
 private: 
 	bool mTexturedRect;
 	GLuint mTextureId;
 
 	glm::vec3 mColour;
-
-	ShaderModes mShaderMode;
 
 	float mVertexData[32] = {
 		// positions			// texture coords	// normal		
