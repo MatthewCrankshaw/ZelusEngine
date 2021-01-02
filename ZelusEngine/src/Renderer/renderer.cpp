@@ -42,10 +42,10 @@ void Renderer::RenderDeferredLightingBuffer()
 	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetLightingBuffer());
 	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetLightingBuffer());
 
-	RenderLightingPass(renderable, NULL, shader);
+	RenderLightingPass(renderable, shader);
 }
 
-void Renderer::RenderHDRBuffer()
+void Renderer::RenderHDRBuffer(Ref<Texture> buffer)
 {
 	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
 
@@ -53,7 +53,7 @@ void Renderer::RenderHDRBuffer()
 	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetHDRBuffer());
 	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetHDRBuffer());
 
-	RenderHDRPass(renderable, NULL, shader);
+	RenderHDRPass(renderable, shader, buffer);
 }
 
 void Renderer::RenderRegularBuffer()
@@ -158,23 +158,33 @@ void Renderer::RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, 
 	shader->UnUse();
 }
 
-void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
+void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Shader> shader) {
 	shader->Use();
 
 	glm::mat4 viewMat, projectionMat, modelMat;
 	viewMat = sCamera->GetViewMatrix();
 	projectionMat = sCamera->GetProjectionMatrix();
-	modelMat = transform->GetModelTransform();
+	modelMat = glm::mat4(1.0);
 
 	shader->SetMat4("view", viewMat);
 	shader->SetMat4("projection", projectionMat);
 	shader->SetMat4("model", modelMat);
 
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
 
 	shader->UnUse();
 }
 
-void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Shader> shader, Ref<Texture> buffer) {
+	shader->Use();
+
+	shader->SetInt("hdrBuffer", 0);
+	shader->SetFloat("exposure", gUserInterface->GetExposure());
+	shader->SetFloat("gamma", gUserInterface->GetGamma());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, buffer->GetHandle());
+
+	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
+
+	shader->UnUse();
 }

@@ -64,6 +64,16 @@ void EntityComponentManager::AddLightingPassEntity(Ref<Renderable> renderable)
 	mLightingBuffer = mRegistry.create();
 	mRegistry.emplace<EntityType>(mLightingBuffer, EntityType::DEFERRED_LIGHTING);
 	mRegistry.emplace<Ref<Renderable>>(mLightingBuffer, renderable);
-
 	mRegistry.emplace<Ref<Shader>>(mLightingBuffer, shader);
+}
+
+void EntityComponentManager::AddHdrBufferEntity(Ref<Renderable> renderable)
+{
+	Ref<Transform> transform(new Transform());
+	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::HDR);
+
+	mHDRBuffer = mRegistry.create();
+	mRegistry.emplace<EntityType>(mHDRBuffer, EntityType::HDR_PASS);
+	mRegistry.emplace<Ref<Renderable>>(mHDRBuffer, renderable);
+	mRegistry.emplace<Ref<Shader>>(mHDRBuffer, shader);
 }

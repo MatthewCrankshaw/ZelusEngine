@@ -17,14 +17,7 @@ GLRectangle::GLRectangle()
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	mModelMat = glm::mat4(1.0f);
-
-	mTextureId = 0;
-
 	mColour = glm::vec3(0.3f, 0.3f, 0.3f);
-
-	mShaderMode = ShaderModes::REGULAR;
-
 	mTexturedRect = false;
 }
 
@@ -45,14 +38,7 @@ GLRectangle::GLRectangle(glm::vec3 colour)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	mModelMat = glm::mat4(1.0f);
-
-	mTextureId = 0;
-
 	mColour = colour;
-
-	mShaderMode = ShaderModes::REGULAR;
-
 	mTexturedRect = false;
 }
 
@@ -72,13 +58,8 @@ GLRectangle::GLRectangle(std::string textureFilename)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-	mTextureId = 0;
-
-	mModelMat = glm::mat4(1.0f);
 
 	mColour = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	mShaderMode = ShaderModes::REGULAR;
 
 	GLTextureFactory texFactory;
 	Ref<Texture> texture = texFactory.LoadRegularTexture("res/", textureFilename, true);
@@ -90,52 +71,9 @@ GLRectangle::GLRectangle(std::string textureFilename)
 
 void GLRectangle::Draw(const Ref<Camera> camera)
 {
-
-	Ref<Shader> shader;
-	switch (mShaderMode) {
-	case ShaderModes::GEOMETRIC_PASS:
-		shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
-		break;
-	case ShaderModes::DEFERRED_LIGHTING:
-		shader = gShaderManager->GetShader(ShaderType::DEFERRED_LIGHTING);
-		break;
-	case ShaderModes::HDR_PASS:
-		shader = gShaderManager->GetShader(ShaderType::HDR);
-		break;
-	case ShaderModes::REGULAR:
-		shader = gShaderManager->GetShader(ShaderType::BASIC);
-		break;
-	default: 
-		shader = gShaderManager->GetShader(ShaderType::BASIC);
-	}
-	shader->Use();
-
-	shader->SetBool("textureProvided", true);
-
-	glm::mat4 viewMat, projectionMat;
-	viewMat = camera->GetViewMatrix();
-	projectionMat = camera->GetProjectionMatrix();
-	
-	shader->SetMat4("view", viewMat);
-	shader->SetMat4("projection", projectionMat);
-	shader->SetMat4("model", mModelMat);
-
 	glBindVertexArray(mVao);
-	if (mTexturedRect) {
-		shader->SetBool("textured", 1);
-		shader->SetVec3("colour", mColour);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, mTextureId);
-	}
-	else {
-	
-		shader->SetBool("textured", 0);
-		shader->SetVec3("colour", mColour);
-	}
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-
-	shader->UnUse();
 }
 
 void GLRectangle::Update()

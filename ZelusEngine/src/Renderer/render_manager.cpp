@@ -107,8 +107,8 @@ void RenderManager::Render() {
     lightShader->SetInt("gAlbedoSpec", 2);
     lightShader->UnUse();
 
-    Ref<GLRectangle> quad(new GLRectangle());
-    Ref<GLRectangle> quadHdr(new GLRectangle());
+    Ref<Renderable> deferredBuffer(new GLRectangle());
+    Ref<Renderable> hdrBuffer(new GLRectangle());
 
     Ref<Renderable> muro = renderableFactory->CreateModel("res/muro/muro.obj");
     Ref<Renderable> cube = renderableFactory->CreateCube();
@@ -129,6 +129,8 @@ void RenderManager::Render() {
     gECM->AddDeferredEntity(muro);
     gECM->AddSkyboxEntity(skybox);
     gECM->AddAxisEntity(ax);
+    gECM->AddLightingPassEntity(deferredBuffer);
+    gECM->AddHdrBufferEntity(hdrBuffer);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -175,8 +177,6 @@ void RenderManager::Render() {
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //Renderer::RenderDeferredLightingBuffer();
-
             lightShader->Use();
 
             glActiveTexture(GL_TEXTURE0);
@@ -197,8 +197,7 @@ void RenderManager::Render() {
                 lightShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
             }
 
-            quad->SetShaderMode(GLRectangle::ShaderModes::DEFERRED_LIGHTING);
-            RenderCommands::DrawIndexed(quad, NULL, NULL, camera);
+            Renderer::RenderDeferredLightingBuffer();
         }
             
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mGeometricBuffer);
@@ -219,9 +218,6 @@ void RenderManager::Render() {
             //Start the regular shading for things that require blending or special lighting effects
             //Enable blending
             glEnable(GL_BLEND);
-
-            //Skybox should be the first thing to render now
-            //RenderCommands::DrawIndexed(ax, NULL, NULL, camera);
 
             Renderer::EndScene();
 
@@ -253,16 +249,7 @@ void RenderManager::Render() {
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Ref<Shader> hdrShader = gShaderManager->GetShader(ShaderType::HDR);
-            hdrShader->Use();
-            hdrShader->SetInt("hdrBuffer", 0);
-            hdrShader->SetFloat("exposure", gUserInterface->GetExposure());
-            hdrShader->SetFloat("gamma", gUserInterface->GetGamma());
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrTex->GetHandle());
-            quadHdr->SetShaderMode(GLRectangle::ShaderModes::HDR_PASS);
-            RenderCommands::DrawIndexed(quadHdr, NULL, NULL, camera);
-            hdrShader->UnUse();
+            Renderer::RenderHDRBuffer(hdrTex);
         
         glBindTexture(GL_TEXTURE_2D, finalTex->GetHandle());
         glGenerateTextureMipmap(finalTex->GetHandle());

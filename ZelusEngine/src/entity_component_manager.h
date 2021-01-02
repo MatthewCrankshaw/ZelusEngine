@@ -44,5 +44,6 @@ public:
 	void AddSkyboxEntity(Ref<Renderable> renderable);
 	void AddAxisEntity(Ref<Renderable> renderable);
 	void AddLightingPassEntity(Ref<Renderable> renderable);
+	void AddHdrBufferEntity(Ref<Renderable> renderable);
 };
 

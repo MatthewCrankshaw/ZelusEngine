@@ -20,8 +20,8 @@ private:
 	static void RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 	static void RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 	static void RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
-	static void RenderLightingPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
-	static void RenderHDRPass(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
+	static void RenderLightingPass(Ref<Renderable> renderable, Ref<Shader> shader);
+	static void RenderHDRPass(Ref<Renderable> renderable, Ref<Shader> shader, Ref<Texture> buffer);
 	static void RenderRegularScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader);
 
 public: 
@@ -29,7 +29,7 @@ public:
 
 	static void RenderDeferredGeometryBuffer();
 	static void RenderDeferredLightingBuffer();
-	static void RenderHDRBuffer();
+	static void RenderHDRBuffer(Ref<Texture> buffer);
 	static void RenderRegularBuffer();
 
 	static void EndScene();

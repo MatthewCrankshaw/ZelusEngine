@@ -4,6 +4,7 @@
 #include "../texture/gl_texture.h"
 #include "../../../shader_manager.h"
 #include "../../transform.h"
+#include "../../texture_factory/gl_texture_factory.h"
 
 extern Ref<ShaderManager> gShaderManager;
 
