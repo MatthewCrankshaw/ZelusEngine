@@ -3,6 +3,7 @@
 #include "renderer_api.h"
 #include "shader.h"
 #include "transform.h"
+#include "gl_api/renderables/gl_renderer_api.h"
 
 class RenderCommands {
 public:

@@ -3,6 +3,7 @@
 #include "../texture/gl_texture.h"
 #include "gl_renderable.h"
 #include "../../shader.h"
+#include "../../texture_factory/gl_texture_factory.h"
 #include "../../../shader_manager.h"
 
 extern Ref<ShaderManager> gShaderManager;

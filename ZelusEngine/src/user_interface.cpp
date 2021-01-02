@@ -1,7 +1,4 @@
-
 #include "user_interface.h"
-
-
 
 void UserInterface::StartUp() {
 

@@ -1,5 +1,4 @@
 #include "entity_component_manager.h"
-#include "renderer/transform.h"
 
 void EntityComponentManager::StartUp()
 {

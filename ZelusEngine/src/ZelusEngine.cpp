@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "user_interface.h"
 #include "renderer/render_manager.h"
 #include "log.h"
 #include "entity_component_manager.h"

@@ -1,10 +1,12 @@
 #pragma once
-
-#include "render_commands.h"
+#include "../user_interface.h"
 #include "../log.h"
 #include "../entity_component_manager.h"
-#include "../ref.h"
+#include "transform.h"
+#include "texture.h"
+#include "render_commands.h"
 
+extern Ref<UserInterface> gUserInterface;
 extern Ref<Log> gLog;
 extern Ref<EntityComponentManager> gECM;
 

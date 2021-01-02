@@ -11,8 +11,7 @@
 #include "gl_api/renderables/gl_sky_box.h"
 #include "gl_api/renderables/gl_model.h"
 #include "gl_api/renderables/gl_axis_model.h"
-
-extern Ref<UserInterface> gUserInterface;
+#include "render_commands.h"
 
 class RenderManager
 {

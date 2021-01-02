@@ -1,6 +1,4 @@
 #include "gl_rectangle.h"
-#include "../../texture_factory/gl_texture_factory.h"
-#include "../../gl_api/texture/gl_texture.h"
 
 GLRectangle::GLRectangle()
 {

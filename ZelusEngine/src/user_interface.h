@@ -8,7 +8,6 @@
 #include "log.h"
 #include "camera.h"
 #include "ui_input_handler.h"
-#include "Renderer/renderer.h"
 
 
 extern Ref<Log> gLog;

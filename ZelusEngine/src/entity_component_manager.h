@@ -4,6 +4,7 @@
 #include "renderer/shader.h"
 #include "renderer/gl_api/shader/gl_shader.h"
 #include "shader_manager.h"
+#include "renderer/transform.h"
 
 enum class EntityType {
 	DEFERRED_LIGHTING,
