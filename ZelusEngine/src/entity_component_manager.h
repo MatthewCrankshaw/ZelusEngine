@@ -5,6 +5,7 @@
 #include "renderer/gl_api/shader/gl_shader.h"
 #include "shader_manager.h"
 #include "renderer/transform.h"
+#include "renderer/texture.h"
 
 enum class EntityType {
 	DEFERRED_LIGHTING,
@@ -40,10 +41,10 @@ public:
 	}
 
 	void AddRegularEntity(Ref<Renderable> renderable);
-	void AddDeferredEntity(Ref<Renderable> renderable);
+	void AddDeferredEntity(Ref<Renderable> renderable, Ref<Texture> texture = nullptr);
 	void AddSkyboxEntity(Ref<Renderable> renderable);
 	void AddAxisEntity(Ref<Renderable> renderable);
 	void AddLightingPassEntity(Ref<Renderable> renderable);
-	void AddHdrBufferEntity(Ref<Renderable> renderable);
+	void AddHdrBufferEntity(Ref<Renderable> renderable, Ref<Texture> texture);
 };
 

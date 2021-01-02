@@ -8,6 +8,7 @@
 #include "shader.h"
 #include "../ref.h"
 #include "../camera.h"
+#include "texture.h"
 
 
 class RendererAPI
@@ -20,6 +21,7 @@ public:
 	virtual void CullBackFaces() = 0;
 	virtual void EnableDepthTest() = 0;
 	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) = 0;
+	virtual void SetTexture(Ref<Shader> shader, Ref<Texture> texture) = 0;
 
 	inline static API GetAPI() { return sAPI; }
 

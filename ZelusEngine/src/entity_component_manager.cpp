@@ -20,7 +20,7 @@ void EntityComponentManager::AddRegularEntity(Ref<Renderable> renderable)
 	mRegistry.emplace<Ref<Shader>>(entity, shader);
 }
 
-void EntityComponentManager::AddDeferredEntity(Ref<Renderable> renderable)
+void EntityComponentManager::AddDeferredEntity(Ref<Renderable> renderable, Ref<Texture> texture)
 {
 	Ref<Transform> transform(new Transform());
 	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
@@ -30,6 +30,10 @@ void EntityComponentManager::AddDeferredEntity(Ref<Renderable> renderable)
 	mRegistry.emplace<Ref<Renderable>>(entity, renderable);
 	mRegistry.emplace<Ref<Transform>>(entity, transform);
 	mRegistry.emplace<Ref<Shader>>(entity, shader);
+
+	if (texture != nullptr) {
+		mRegistry.emplace<Ref<Texture>>(entity, texture);
+	}
 }
 
 void EntityComponentManager::AddSkyboxEntity(Ref<Renderable> renderable)
@@ -67,7 +71,7 @@ void EntityComponentManager::AddLightingPassEntity(Ref<Renderable> renderable)
 	mRegistry.emplace<Ref<Shader>>(mLightingBuffer, shader);
 }
 
-void EntityComponentManager::AddHdrBufferEntity(Ref<Renderable> renderable)
+void EntityComponentManager::AddHdrBufferEntity(Ref<Renderable> renderable, Ref<Texture> texture)
 {
 	Ref<Transform> transform(new Transform());
 	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::HDR);
@@ -76,4 +80,5 @@ void EntityComponentManager::AddHdrBufferEntity(Ref<Renderable> renderable)
 	mRegistry.emplace<EntityType>(mHDRBuffer, EntityType::HDR_PASS);
 	mRegistry.emplace<Ref<Renderable>>(mHDRBuffer, renderable);
 	mRegistry.emplace<Ref<Shader>>(mHDRBuffer, shader);
+	mRegistry.emplace<Ref<Texture>>(mHDRBuffer, texture);
 }

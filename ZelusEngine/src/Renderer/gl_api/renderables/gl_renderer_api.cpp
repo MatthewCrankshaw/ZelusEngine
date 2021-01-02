@@ -24,3 +24,9 @@ void GLRendererAPI::DrawIndexed(Ref<Renderable> renderable, Ref<Transform> trans
 {
 	renderable->Draw(camera);
 }
+
+void GLRendererAPI::SetTexture(Ref<Shader> shader, Ref<Texture> texture) 
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture->GetHandle());
+}

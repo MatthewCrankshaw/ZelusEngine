@@ -130,7 +130,7 @@ void RenderManager::Render() {
     gECM->AddSkyboxEntity(skybox);
     gECM->AddAxisEntity(ax);
     gECM->AddLightingPassEntity(deferredBuffer);
-    gECM->AddHdrBufferEntity(hdrBuffer);
+    gECM->AddHdrBufferEntity(hdrBuffer, hdrTex);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -249,7 +249,7 @@ void RenderManager::Render() {
 
         glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Renderer::RenderHDRBuffer(hdrTex);
+            Renderer::RenderHDRBuffer();
         
         glBindTexture(GL_TEXTURE_2D, finalTex->GetHandle());
         glGenerateTextureMipmap(finalTex->GetHandle());

@@ -27,6 +27,10 @@ public:
 	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) {
 		sAPI->DrawIndexed(renderable, transform, shader, camera);
 	}
+
+	inline static void SetTexture(Ref<Shader> shader, Ref<Texture> texture) {
+		sAPI->SetTexture(shader, texture);
+	}
 private: 
 
 	static RendererAPI* sAPI;

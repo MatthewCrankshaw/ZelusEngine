@@ -15,5 +15,7 @@ public:
 
 	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> cam) override;
 
+	virtual void SetTexture(Ref<Shader> shader, Ref<Texture> texture) override;
+
 };
 

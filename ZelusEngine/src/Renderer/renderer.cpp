@@ -45,15 +45,17 @@ void Renderer::RenderDeferredLightingBuffer()
 	RenderLightingPass(renderable, shader);
 }
 
-void Renderer::RenderHDRBuffer(Ref<Texture> buffer)
+void Renderer::RenderHDRBuffer()
 {
-	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
+	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>, Ref<Texture>>();
+	auto entity = gECM->GetHDRBuffer();
 
-	EntityType type = view.get<EntityType>(gECM->GetHDRBuffer());
-	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetHDRBuffer());
-	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetHDRBuffer());
+	EntityType type = view.get<EntityType>(entity);
+	Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
+	Ref<Shader> shader = view.get<Ref<Shader>>(entity);
+	Ref<Texture> texture = view.get<Ref<Texture>>(entity);
 
-	RenderHDRPass(renderable, shader, buffer);
+	RenderHDRPass(renderable, shader, texture);
 }
 
 void Renderer::RenderRegularBuffer()
@@ -80,13 +82,16 @@ void Renderer::EndScene() {
 void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
 	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
 
-	for (auto entity : sDeferredEntityQueue) {
+	for (entt::entity entity : sDeferredEntityQueue) {
 		EntityType type = view.get<EntityType>(entity);
 		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 
 		if (type == EntityType::DEFERRED_GEOMETRY) {
+			if (gECM->GetRegistry().has<Ref<Texture>>(entity)) {
+				RenderCommands::SetTexture(shader, gECM->GetRegistry().get<Ref<Texture>>(entity));
+			}
 			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
 		}
 		else if (type == EntityType::SKYBOX) {
@@ -175,16 +180,15 @@ void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Shader> shader
 	shader->UnUse();
 }
 
-void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Shader> shader, Ref<Texture> buffer) {
+void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Shader> shader, Ref<Texture> texture) {
 	shader->Use();
 
 	shader->SetInt("hdrBuffer", 0);
 	shader->SetFloat("exposure", gUserInterface->GetExposure());
 	shader->SetFloat("gamma", gUserInterface->GetGamma());
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, buffer->GetHandle());
-
+	RenderCommands::SetTexture(shader, texture);
 	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
 
 	shader->UnUse();
 }
+
