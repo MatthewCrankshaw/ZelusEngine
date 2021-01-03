@@ -7,22 +7,9 @@ GLModel::GLModel(std::string const& path){
 
 
 void GLModel::Draw(const Ref<Camera> camera) {
-    glm::mat4 viewMatrix, projectionMatrix;
-    viewMatrix = camera->GetViewMatrix();
-    projectionMatrix = camera->GetProjectionMatrix();
-
-    Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
-
-    shader->Use();
-    shader->SetMat4("view", viewMatrix);
-    shader->SetMat4("model", mModelMat);
-    shader->SetMat4("projection", projectionMatrix);
-
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i]->Draw(camera);
 	}
-
-    shader->UnUse();
 }
 
 void GLModel::Update() {
