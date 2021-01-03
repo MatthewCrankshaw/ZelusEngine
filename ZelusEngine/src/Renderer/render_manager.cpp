@@ -127,12 +127,12 @@ void RenderManager::Render() {
 
     Ref<Renderable> skybox(new GLSkyBox(skyboxFiles));
 
-    gECM->AddDeferredEntity(muro);
-    gECM->AddSkyboxEntity(skybox);
-    gECM->AddAxisEntity(ax);
-    gECM->AddLightingPassEntity(deferredBuffer);
-    gECM->AddHdrBufferEntity(hdrBuffer, hdrTex);
-    gECM->AddRegularEntity(box, boxTex);
+    gECM->AddDeferredEntity("Muro", muro);
+    gECM->AddSkyboxEntity("Skybox", skybox);
+    gECM->AddAxisEntity("Axis", ax);
+    gECM->AddLightingPassEntity("Deferred Buffer", deferredBuffer);
+    gECM->AddHdrBufferEntity("HDR Buffer", hdrBuffer, hdrTex);
+    gECM->AddRegularEntity("Box", box, boxTex);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))

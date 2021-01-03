@@ -6,10 +6,10 @@ std::vector<entt::entity> Renderer::sRegularEntityQueue;
 
 void Renderer::BeginScene(Ref<Camera> camera) {
 	sCamera = camera;
-	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
+	entt::basic_view view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Shader>>();
 
 	for (auto entity : view) {
-		EntityType type = view.get<EntityType>(entity);
+		EntityType type = view.get<Ref<MetaData>>(entity)->GetType();
 		if (type == EntityType::DEFERRED_GEOMETRY) {
 			sDeferredEntityQueue.push_back(entity);
 		}
@@ -24,10 +24,10 @@ void Renderer::BeginScene(Ref<Camera> camera) {
 
 void Renderer::RenderDeferredGeometryBuffer()
 {
-	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+	entt::basic_view view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
 
 	for (auto entity : sDeferredEntityQueue) {
-		EntityType type = view.get<EntityType>(entity);
+		EntityType type = view.get<Ref<MetaData>>(entity)->GetType();
 		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
@@ -87,9 +87,9 @@ void Renderer::RenderDeferredGeometryBuffer()
 
 void Renderer::RenderDeferredLightingBuffer()
 {
-	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>>();
+	auto view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Shader>>();
 
-	EntityType type = view.get<EntityType>(gECM->GetLightingBuffer());
+	EntityType type = view.get<Ref<MetaData>>(gECM->GetLightingBuffer())->GetType();
 	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetLightingBuffer());
 	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetLightingBuffer());
 
@@ -107,10 +107,10 @@ void Renderer::RenderDeferredLightingBuffer()
 
 void Renderer::RenderHDRBuffer()
 {
-	auto view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Shader>, Ref<Texture>>();
+	auto view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Shader>, Ref<Texture>>();
 	auto entity = gECM->GetHDRBuffer();
 
-	EntityType type = view.get<EntityType>(entity);
+	EntityType type = view.get<Ref<MetaData>>(entity)->GetType();
 	Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 	Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 	Ref<Texture> texture = view.get<Ref<Texture>>(entity);
@@ -124,10 +124,10 @@ void Renderer::RenderHDRBuffer()
 
 void Renderer::RenderRegularBuffer()
 {
-	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+	entt::basic_view view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
 
 	for (auto entity : sRegularEntityQueue) {
-		EntityType type = view.get<EntityType>(entity);
+		EntityType type = view.get<Ref<MetaData>>(entity)->GetType();
 		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);

@@ -5,6 +5,7 @@
 
 #include "gl_renderable.h"
 #include "../texture/gl_texture.h"
+#include "../../render_commands.h"
 #include "../../../shader_manager.h"
 #include "../../../ref.h"
 

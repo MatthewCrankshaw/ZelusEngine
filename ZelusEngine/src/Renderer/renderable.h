@@ -1,6 +1,7 @@
 #pragma once
 #include "../ref.h"
 #include "../camera.h"
+
 class Renderable
 {
 public:

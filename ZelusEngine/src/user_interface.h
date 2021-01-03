@@ -5,12 +5,15 @@
 
 #include "glad/glad.h"
 #include "ref.h"
+#include "entity_component_manager.h"
 #include "log.h"
 #include "camera.h"
 #include "ui_input_handler.h"
+#include "../meta_data.h"
 
 
 extern Ref<Log> gLog;
+extern Ref<EntityComponentManager> gECM;
 
 class UserInterface
 {
@@ -51,10 +54,7 @@ protected:
 	void UpdateNormalWindow(GLuint imageOutput);
 	void UpdatePropertiesWindow();
 	void UpdateLogWindow();
-
-
 public:
-
 	void StartUp();
 	void ShutDown();
 	void SetupGLFW();

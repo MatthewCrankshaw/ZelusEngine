@@ -6,15 +6,7 @@
 #include "shader_manager.h"
 #include "renderer/transform.h"
 #include "renderer/texture.h"
-
-enum class EntityType {
-	DEFERRED_LIGHTING,
-	DEFERRED_GEOMETRY,
-	HDR_PASS,
-	REGULAR,
-	SKYBOX,
-	AXIS
-};
+#include "../meta_data.h"
 
 extern Ref<ShaderManager> gShaderManager;
 
@@ -56,11 +48,15 @@ public:
 		return mRegistry.get<Ref<Transform>>(entity);
 	}
 
-	void AddRegularEntity(Ref<Renderable> renderable, Ref<Texture> texture);
-	void AddDeferredEntity(Ref<Renderable> renderable, Ref<Texture> texture = nullptr);
-	void AddSkyboxEntity(Ref<Renderable> renderable);
-	void AddAxisEntity(Ref<Renderable> renderable);
-	void AddLightingPassEntity(Ref<Renderable> renderable);
-	void AddHdrBufferEntity(Ref<Renderable> renderable, Ref<Texture> texture);
+	inline Ref<MetaData> GetMetaData(entt::entity entity) {
+		return mRegistry.get<Ref<MetaData>>(entity);
+	}
+
+	void AddRegularEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture);
+	void AddDeferredEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture = nullptr);
+	void AddSkyboxEntity(std::string name, Ref<Renderable> renderable);
+	void AddAxisEntity(std::string name, Ref<Renderable> renderable);
+	void AddLightingPassEntity(std::string name, Ref<Renderable> renderable);
+	void AddHdrBufferEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture);
 };
 

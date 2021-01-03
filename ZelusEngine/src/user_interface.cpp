@@ -16,16 +16,12 @@ void UserInterface::StartUp() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     mIo = &ImGui::GetIO(); (void)mIo;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     mIo->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     mIo->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     mIo->ConfigViewportsNoAutoMerge = true;
     mIo->ConfigViewportsNoTaskBarIcon = true;
 
-    //ImGui::StyleColorsClassic();
-    //ImGui::StyleColorsLight();
     ImGui::StyleColorsDark();
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
@@ -259,23 +255,29 @@ void UserInterface::UpdatePropertiesWindow() {
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    /*for(size_t i = 0; i < entities.size(); i++){
+    auto view = gECM->GetRegistry().view<Ref<MetaData>, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+
+    for(auto entity : view){
+        Ref<MetaData> metaData = gECM->GetMetaData(entity);
+        Ref<Transform> transform = gECM->GetTransform(entity);
+
         char strHeader[100];
-        sprintf(strHeader, "%s", entities[i]->GetName().c_str());
+        sprintf(strHeader, "%d - %s", metaData->GetId(), metaData->GetName().c_str());
         if(ImGui::CollapsingHeader(strHeader)){
             char strtrans[100];
             char strscale[100];
             char strrot[100];
 
-            sprintf(strtrans, "Transform %d", i);
-            sprintf(strscale, "Scale %d", i);
-            sprintf(strrot, "Rotation %d", i);
+            sprintf(strtrans, "Transform %d - %s", metaData->GetId(), metaData->GetName().c_str());
+            sprintf(strscale, "Scale %d - %s", metaData->GetId(), metaData->GetName().c_str());
+            sprintf(strrot, "Rotation %d - %s", metaData->GetId(), metaData->GetName().c_str());
 
-            ImGui::SliderFloat3(strtrans, &entities[i]->GetTransform()->GetVec3PositionPtr()->x, -50.0f, 50.0f);
-            ImGui::SliderFloat3(strscale, &entities[i]->GetTransform()->GetVec3ScalePtr()->x, 0.0f, 5.0f);
-            ImGui::SliderFloat3(strrot, &entities[i]->GetTransform()->GetVec3RotationPtr()->x, 0.0f, 6.28f);
+
+            ImGui::SliderFloat3(strtrans, &transform->GetVec3PositionPtr()->x, -50.0f, 50.0f);
+            ImGui::SliderFloat3(strscale, &transform->GetVec3ScalePtr()->x, 0.0f, 5.0f);
+            ImGui::SliderFloat3(strrot, &transform->GetVec3RotationPtr()->x, 0.0f, 6.28f);
         }
-    }*/
+    }
 
     ImGui::End();
     
