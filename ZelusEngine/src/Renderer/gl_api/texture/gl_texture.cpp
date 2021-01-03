@@ -28,10 +28,10 @@ void GLTexture::LoadTextureFromFile(bool flip)
     int nChannels;
     glBindTexture(GL_TEXTURE_2D, mHandle);
     stbi_set_flip_vertically_on_load(flip);
-    unsigned char* data = stbi_load(mPath.c_str(), &mWidth, &mHeight, &nChannels, 0);
+    unsigned char* data = stbi_load(mPaths.front().c_str(), &mWidth, &mHeight, &nChannels, 0);
 
     if (data == nullptr) {
-        gLog->AddLog("[error] GLTexture::LoaderRegularTexture() : Could not load texture! %s", mPath.c_str());
+        gLog->AddLog("[error] GLTexture::LoaderRegularTexture() : Could not load texture! %s", mPaths.front().c_str());
     }
 
     if (data) {
@@ -59,7 +59,7 @@ void GLTexture::LoadTextureFromFile(bool flip)
     stbi_image_free(data);
     glGenerateMipmap(GL_TEXTURE_2D);
     
-    gLog->AddLog("[info] GLTexture::LoadRegularTexture() : GLTexture Loaded [%s]", mPath.c_str());
+    gLog->AddLog("[info] GLTexture::LoadRegularTexture() : GLTexture Loaded [%s]", mPaths.front().c_str());
 
     mIsLoaded = true;
 }
@@ -71,6 +71,7 @@ void GLTexture::LoadCubeMap(std::string paths[6])
     stbi_set_flip_vertically_on_load(false);
 
     for (GLuint i = 0; i < 6; i++) {
+        mPaths.push_back(paths[i]);
 
         unsigned char* data = stbi_load(paths[i].c_str(), &mWidth, &mHeight, &nChannels, 0);
 
@@ -104,7 +105,7 @@ void GLTexture::LoadCubeMap(std::string paths[6])
             exit(1);
         }
 
-        gLog->AddLog("[info] GLTexture::LoadCubeMapTexture() : Cube Map GLTexture Loaded [%s]", mPath.c_str());
+        gLog->AddLog("[info] GLTexture::LoadCubeMapTexture() : Cube Map GLTexture Loaded [%s]", mPaths[i].c_str());
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

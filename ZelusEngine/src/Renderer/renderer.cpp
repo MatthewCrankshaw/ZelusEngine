@@ -42,7 +42,7 @@ void Renderer::RenderDeferredGeometryBuffer()
 			shader->SetMat4("projection", projection);
 			shader->SetBool("textured", 0);
 			if (gECM->HasTexture(entity)) {
-				RenderCommands::SetTexture(shader, gECM->GetTexture(entity));
+				RenderCommands::SetSingleTexture(shader, gECM->GetTexture(entity));
 				shader->SetBool("textured", 1);
 			}
 			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
@@ -56,10 +56,13 @@ void Renderer::RenderDeferredGeometryBuffer()
 			glm::mat4 view = sCamera->GetViewMatrix();
 			glm::mat4 projection = sCamera->GetProjectionMatrix();
 
-
 			shader->SetMat4("model", model);
 			shader->SetMat4("view", view);
 			shader->SetMat4("projection", projection);
+
+			if (gECM->HasTexture(entity)) {
+				RenderCommands::SetCubeMapTexture(shader, gECM->GetTexture(entity));
+			}
 
 			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
 		}
@@ -118,7 +121,7 @@ void Renderer::RenderHDRBuffer()
 	shader->SetInt("hdrBuffer", 0);
 	shader->SetFloat("exposure", gUserInterface->GetExposure());
 	shader->SetFloat("gamma", gUserInterface->GetGamma());
-	RenderCommands::SetTexture(shader, texture);
+	RenderCommands::SetSingleTexture(shader, texture);
 	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
 }
 
@@ -142,7 +145,7 @@ void Renderer::RenderRegularBuffer()
 			shader->SetMat4("projection", projection);
 			shader->SetBool("textured", 0);
 			if (gECM->HasTexture(entity)) {
-				RenderCommands::SetTexture(shader, gECM->GetTexture(entity));
+				RenderCommands::SetSingleTexture(shader, gECM->GetTexture(entity));
 				shader->SetBool("textured", 1);
 			}
 

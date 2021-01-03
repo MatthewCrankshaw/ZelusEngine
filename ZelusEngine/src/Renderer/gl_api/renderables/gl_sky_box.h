@@ -11,9 +11,6 @@ extern Ref<ShaderManager> gShaderManager;
 class GLSkyBox : public GLRenderable
 {
 private:
-    Ref<Texture> mTexture;
-    Ref<Transform> mTransform;
-
     float skyboxVertices[108] = {
         // positions          
         -1.0f,  1.0f, -1.0f,
@@ -60,7 +57,7 @@ private:
     };
 
 public:
-	GLSkyBox(std::string* textureFacesFilenames);
+	GLSkyBox();
 
 	void Draw(const Ref<Camera> camera) override;
 	void Update() override;

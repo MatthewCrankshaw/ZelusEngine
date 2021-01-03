@@ -272,7 +272,13 @@ void UserInterface::UpdatePropertiesWindow() {
             sprintf(strscale, "Scale %d - %s", metaData->GetId(), metaData->GetName().c_str());
             sprintf(strrot, "Rotation %d - %s", metaData->GetId(), metaData->GetName().c_str());
 
-
+            if (gECM->HasTexture(entity)) {
+                std::vector<std::string> paths = gECM->GetTexture(entity)->GetPaths();
+                for (std::string path : paths) {
+                    ImGui::Text("Texture: %s", path.c_str());
+                }
+            }
+            
             ImGui::SliderFloat3(strtrans, &transform->GetVec3PositionPtr()->x, -50.0f, 50.0f);
             ImGui::SliderFloat3(strscale, &transform->GetVec3ScalePtr()->x, 0.0f, 5.0f);
             ImGui::SliderFloat3(strrot, &transform->GetVec3RotationPtr()->x, 0.0f, 6.28f);

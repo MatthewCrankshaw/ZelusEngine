@@ -125,10 +125,11 @@ void RenderManager::Render() {
         "skybox2/back.png"
     };
 
-    Ref<Renderable> skybox(new GLSkyBox(skyboxFiles));
+    Ref<Texture> skyboxTex = textureFactory->LoadCubeMapTexture("res/", skyboxFiles, false);
+    Ref<Renderable> skybox(new GLSkyBox());
 
     gECM->AddDeferredEntity("Muro", muro);
-    gECM->AddSkyboxEntity("Skybox", skybox);
+    gECM->AddSkyboxEntity("Skybox", skybox, skyboxTex);
     gECM->AddAxisEntity("Axis", ax);
     gECM->AddLightingPassEntity("Deferred Buffer", deferredBuffer);
     gECM->AddHdrBufferEntity("HDR Buffer", hdrBuffer, hdrTex);

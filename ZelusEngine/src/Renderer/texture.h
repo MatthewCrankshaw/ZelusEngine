@@ -9,8 +9,7 @@ class Texture
 protected:
 	unsigned int mHandle;
 	unsigned int mFormat;
-	std::string mPath;
-	std::string mFilename;
+	std::vector<std::string> mPaths;
 	std::string mTextureType;
 	int mWidth, mHeight;
 	bool mIsLoaded;
@@ -29,7 +28,7 @@ public:
 	}
 
 	inline void SetPath(std::string path) {
-		mPath = path;
+		mPaths.push_back(path);
 	}
 
 	inline void SetFormat(int format) {
@@ -38,18 +37,14 @@ public:
 
 	inline unsigned int GetHandle() {
 		if (!mIsLoaded) {
-			std::cout << "TEXTURE::GET_HANDLE: Error getting texture handle: GLTexture object created but texture not loaded. Load texture first" << mPath << std::endl;
+			std::cout << "TEXTURE::GET_HANDLE: Error getting texture handle: GLTexture object created but texture not loaded. Load texture first" << mPaths.front() << std::endl;
 			exit(1);
 		}
 		return mHandle;
 	}
 
-	inline std::string GetPath() {
-		return mPath;
-	}
-
-	inline std::string GetFilename() {
-		return mFilename;
+	inline std::vector<std::string> GetPaths() {
+		return mPaths;
 	}
 
 	inline std::string GetTextureType() {

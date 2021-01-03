@@ -25,8 +25,14 @@ void GLRendererAPI::DrawIndexed(Ref<Renderable> renderable, Ref<Transform> trans
 	renderable->Draw(camera);
 }
 
-void GLRendererAPI::SetTexture(Ref<Shader> shader, Ref<Texture> texture) 
+void GLRendererAPI::SetSingleTexture(Ref<Shader> shader, Ref<Texture> texture) 
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->GetHandle());
+}
+
+void GLRendererAPI::SetCubeMapTexture(Ref<Shader> shader, Ref<Texture> texture)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture->GetHandle());
 }

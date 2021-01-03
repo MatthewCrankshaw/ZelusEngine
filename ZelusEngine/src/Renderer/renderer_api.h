@@ -21,7 +21,8 @@ public:
 	virtual void CullBackFaces() = 0;
 	virtual void EnableDepthTest() = 0;
 	virtual void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) = 0;
-	virtual void SetTexture(Ref<Shader> shader, Ref<Texture> texture) = 0;
+	virtual void SetSingleTexture(Ref<Shader> shader, Ref<Texture> texture) = 0;
+	virtual void SetCubeMapTexture(Ref<Shader> shader, Ref<Texture> texture) = 0;
 
 	inline static API GetAPI() { return sAPI; }
 

@@ -6,6 +6,7 @@
 #include "shader_manager.h"
 #include "renderer/transform.h"
 #include "renderer/texture.h"
+#include "renderer/texture_factory/gl_texture_factory.h"
 #include "../meta_data.h"
 
 extern Ref<ShaderManager> gShaderManager;
@@ -54,7 +55,7 @@ public:
 
 	void AddRegularEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture);
 	void AddDeferredEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture = nullptr);
-	void AddSkyboxEntity(std::string name, Ref<Renderable> renderable);
+	void AddSkyboxEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture);
 	void AddAxisEntity(std::string name, Ref<Renderable> renderable);
 	void AddLightingPassEntity(std::string name, Ref<Renderable> renderable);
 	void AddHdrBufferEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture);

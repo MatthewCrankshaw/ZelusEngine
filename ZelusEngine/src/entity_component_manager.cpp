@@ -42,7 +42,7 @@ void EntityComponentManager::AddDeferredEntity(std::string name, Ref<Renderable>
 	}
 }
 
-void EntityComponentManager::AddSkyboxEntity(std::string name, Ref<Renderable> renderable)
+void EntityComponentManager::AddSkyboxEntity(std::string name, Ref<Renderable> renderable, Ref<Texture> texture)
 {
 	Ref<Transform> transform(new Transform());
 	Ref<MetaData> data(new MetaData(name, EntityType::SKYBOX));
@@ -53,6 +53,7 @@ void EntityComponentManager::AddSkyboxEntity(std::string name, Ref<Renderable> r
 	mRegistry.emplace<Ref<Renderable>>(entity, renderable);
 	mRegistry.emplace<Ref<Transform>>(entity, transform);
 	mRegistry.emplace<Ref<Shader>>(entity, shader);
+	mRegistry.emplace<Ref<Texture>>(entity, texture);
 }
 
 void EntityComponentManager::AddAxisEntity(std::string name, Ref<Renderable> renderable)

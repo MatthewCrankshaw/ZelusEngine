@@ -30,8 +30,12 @@ public:
 		shader->UnUse();
 	}
 
-	inline static void SetTexture(Ref<Shader> shader, Ref<Texture> texture) {
-		sAPI->SetTexture(shader, texture);
+	inline static void SetSingleTexture(Ref<Shader> shader, Ref<Texture> texture) {
+		sAPI->SetSingleTexture(shader, texture);
+	}
+
+	inline static void SetCubeMapTexture(Ref<Shader> shader, Ref<Texture> texture) {
+		sAPI->SetCubeMapTexture(shader, texture);
 	}
 private: 
 

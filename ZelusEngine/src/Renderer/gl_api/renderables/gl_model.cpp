@@ -155,7 +155,7 @@ Ref<std::vector<Ref<Texture>>> GLModel::LoadMaterialTextures(aiMaterial* mat, ai
         bool skip = false;
 
         for (unsigned int j = 0; j < texturesLoaded.size(); j++) {
-            if (std::strcmp(texturesLoaded[j]->GetFilename().data(), str.C_Str()) == 0) {
+            if (std::strcmp(texturesLoaded[j]->GetPaths().front().data(), str.C_Str()) == 0) {
                 textures->push_back(texturesLoaded[j]);
                 skip = true;
                 break;
