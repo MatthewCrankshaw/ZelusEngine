@@ -10,6 +10,7 @@ Camera::Camera() : InputHandler() {
 	mMovingLeft = false;
 	mMovingRight = false;
 	mTrackMouse = false;
+	mCursorPosition = glm::vec3(1.0);
 
 	mMoveSpeed = glm::vec2(10.0f, 10.0f);
 	mRotateSpeed = glm::vec2(0.2f, 0.2f);

@@ -40,7 +40,23 @@ public:
 		return mLightingBuffer;
 	}
 
-	void AddRegularEntity(Ref<Renderable> renderable);
+	inline bool HasTexture(entt::entity entity) {
+		return mRegistry.has<Ref<Texture>>(entity);
+	}
+
+	inline Ref<Texture> GetTexture(entt::entity entity) {
+		return mRegistry.get<Ref<Texture>>(entity);
+	}
+
+	inline bool HasTransforms(entt::entity entity) {
+		return mRegistry.has<Ref<Transform>>(entity);
+	}
+
+	inline Ref<Transform> GetTransform(entt::entity entity) {
+		return mRegistry.get<Ref<Transform>>(entity);
+	}
+
+	void AddRegularEntity(Ref<Renderable> renderable, Ref<Texture> texture);
 	void AddDeferredEntity(Ref<Renderable> renderable, Ref<Texture> texture = nullptr);
 	void AddSkyboxEntity(Ref<Renderable> renderable);
 	void AddAxisEntity(Ref<Renderable> renderable);

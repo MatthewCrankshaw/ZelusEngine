@@ -25,7 +25,9 @@ public:
 	}
 
 	inline static void DrawIndexed(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader, Ref<Camera> camera) {
+		shader->Use();
 		sAPI->DrawIndexed(renderable, transform, shader, camera);
+		shader->UnUse();
 	}
 
 	inline static void SetTexture(Ref<Shader> shader, Ref<Texture> texture) {

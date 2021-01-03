@@ -8,7 +8,7 @@ void EntityComponentManager::ShutDown()
 {
 }
 
-void EntityComponentManager::AddRegularEntity(Ref<Renderable> renderable)
+void EntityComponentManager::AddRegularEntity(Ref<Renderable> renderable, Ref<Texture> texture)
 {
 	Ref<Transform> transform(new Transform());
 	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::BASIC);
@@ -18,6 +18,10 @@ void EntityComponentManager::AddRegularEntity(Ref<Renderable> renderable)
 	mRegistry.emplace<Ref<Renderable>>(entity, renderable);
 	mRegistry.emplace<Ref<Transform>>(entity, transform);
 	mRegistry.emplace<Ref<Shader>>(entity, shader);
+
+	if (texture != nullptr) {
+		mRegistry.emplace<Ref<Texture>>(entity, texture);
+	}
 }
 
 void EntityComponentManager::AddDeferredEntity(Ref<Renderable> renderable, Ref<Texture> texture)

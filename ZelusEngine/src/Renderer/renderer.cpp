@@ -27,10 +27,61 @@ void Renderer::RenderDeferredGeometryBuffer()
 	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
 
 	for (auto entity : sDeferredEntityQueue) {
+		EntityType type = view.get<EntityType>(entity);
 		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
 		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
-		RenderDeferredScene(renderable, transform, shader);
+
+		if (type == EntityType::DEFERRED_GEOMETRY) {
+			glm::mat4 model = transform->GetModelTransform();
+			glm::mat4 view = sCamera->GetViewMatrix();
+			glm::mat4 projection = sCamera->GetProjectionMatrix();
+
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", view);
+			shader->SetMat4("projection", projection);
+			shader->SetBool("textured", 0);
+			if (gECM->HasTexture(entity)) {
+				RenderCommands::SetTexture(shader, gECM->GetTexture(entity));
+				shader->SetBool("textured", 1);
+			}
+			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+		}
+		else if (type == EntityType::SKYBOX) {
+			glm::vec3 position;
+			position = sCamera->GetPosition();
+			transform->SetPosition(position);
+
+			glm::mat4 model = transform->GetModelTransform();
+			glm::mat4 view = sCamera->GetViewMatrix();
+			glm::mat4 projection = sCamera->GetProjectionMatrix();
+
+
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", view);
+			shader->SetMat4("projection", projection);
+
+			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+		}
+		else if (type == EntityType::AXIS) {
+			glm::vec3 pos, forward;
+			glm::mat4 projectionMat, viewMat, modelMat;
+
+			pos = sCamera->GetPosition();
+			forward = sCamera->GetForward();
+			projectionMat = sCamera->GetOrthoProjectionMatrix();
+			viewMat = sCamera->GetViewMatrix();
+
+			transform->SetPosition(pos + (forward * glm::vec3(2.0)));
+			transform->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+			modelMat = transform->GetModelTransform();
+
+			shader->SetMat4("view", viewMat);
+			shader->SetMat4("model", modelMat);
+			shader->SetMat4("projection", projectionMat);
+
+			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+		}
 	}
 }
 
@@ -42,7 +93,16 @@ void Renderer::RenderDeferredLightingBuffer()
 	Ref<Renderable> renderable = view.get<Ref<Renderable>>(gECM->GetLightingBuffer());
 	Ref<Shader> shader = view.get<Ref<Shader>>(gECM->GetLightingBuffer());
 
-	RenderLightingPass(renderable, shader);
+	glm::mat4 viewMat, projectionMat, modelMat;
+	viewMat = sCamera->GetViewMatrix();
+	projectionMat = sCamera->GetProjectionMatrix();
+	modelMat = glm::mat4(1.0);
+
+	shader->SetMat4("view", viewMat);
+	shader->SetMat4("projection", projectionMat);
+	shader->SetMat4("model", modelMat);
+
+	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
 }
 
 void Renderer::RenderHDRBuffer()
@@ -55,7 +115,11 @@ void Renderer::RenderHDRBuffer()
 	Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 	Ref<Texture> texture = view.get<Ref<Texture>>(entity);
 
-	RenderHDRPass(renderable, shader, texture);
+	shader->SetInt("hdrBuffer", 0);
+	shader->SetFloat("exposure", gUserInterface->GetExposure());
+	shader->SetFloat("gamma", gUserInterface->GetGamma());
+	RenderCommands::SetTexture(shader, texture);
+	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
 }
 
 void Renderer::RenderRegularBuffer()
@@ -69,28 +133,6 @@ void Renderer::RenderRegularBuffer()
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 
 		if (type == EntityType::REGULAR) {
-			RenderRegularScene(renderable, transform, shader);
-		}
-	}
-}
-
-void Renderer::EndScene() {
-	sDeferredEntityQueue.clear();
-	sRegularEntityQueue.clear();
-}
-
-void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
-
-	for (entt::entity entity : sDeferredEntityQueue) {
-		EntityType type = view.get<EntityType>(entity);
-		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
-		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
-		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
-
-		if (type == EntityType::DEFERRED_GEOMETRY) {
-			shader->Use();
-
 			glm::mat4 model = transform->GetModelTransform();
 			glm::mat4 view = sCamera->GetViewMatrix();
 			glm::mat4 projection = sCamera->GetProjectionMatrix();
@@ -98,111 +140,19 @@ void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> tr
 			shader->SetMat4("model", model);
 			shader->SetMat4("view", view);
 			shader->SetMat4("projection", projection);
-
-			if (gECM->GetRegistry().has<Ref<Texture>>(entity)) {
-				Ref<Texture> texture = gECM->GetRegistry().get<Ref<Texture>>(entity);
-				RenderCommands::SetTexture(shader, texture);
-				shader->SetBool("textureProvided", 1);
+			shader->SetBool("textured", 0);
+			if (gECM->HasTexture(entity)) {
+				RenderCommands::SetTexture(shader, gECM->GetTexture(entity));
+				shader->SetBool("textured", 1);
 			}
+
 			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-			shader->UnUse();
-		}
-		else if (type == EntityType::SKYBOX) {
-			RenderSkybox(renderable, transform, shader);
-		}
-		else if (type == EntityType::AXIS) {
-			RenderAxis(renderable, transform, shader);
 		}
 	}
 }
 
-void Renderer::RenderRegularScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	shader->Use();
-
-	glm::mat4 model = transform->GetModelTransform();
-	glm::mat4 view = sCamera->GetViewMatrix();
-	glm::mat4 projection = sCamera->GetProjectionMatrix();
-
-	shader->SetMat4("model", model);
-	shader->SetMat4("view", view);
-	shader->SetMat4("projection", projection);
-
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-
-	shader->UnUse();
-}
-
-void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	shader->Use();
-
-	glm::vec3 position;
-	position = sCamera->GetPosition();
-	transform->SetPosition(position);
-
-	glm::mat4 model = transform->GetModelTransform();
-	glm::mat4 view = sCamera->GetViewMatrix();
-	glm::mat4 projection = sCamera->GetProjectionMatrix();
-	
-
-	shader->SetMat4("model", model);
-	shader->SetMat4("view", view);
-	shader->SetMat4("projection", projection);
-
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-
-	shader->UnUse();
-}
-
-void Renderer::RenderAxis(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	shader->Use();
-
-	glm::vec3 pos, forward;
-	glm::mat4 projectionMat, viewMat, modelMat;
-
-	pos = sCamera->GetPosition();
-	forward = sCamera->GetForward();
-	projectionMat = sCamera->GetOrthoProjectionMatrix();
-	viewMat = sCamera->GetViewMatrix();
-
-	transform->SetPosition(pos + (forward * glm::vec3(2.0)));
-	transform->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
-	modelMat = transform->GetModelTransform();
-
-	shader->SetMat4("view", viewMat);
-	shader->SetMat4("model", modelMat);
-	shader->SetMat4("projection", projectionMat);
-
-	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-
-	shader->UnUse();
-}
-
-void Renderer::RenderLightingPass(Ref<Renderable> renderable, Ref<Shader> shader) {
-	shader->Use();
-
-	glm::mat4 viewMat, projectionMat, modelMat;
-	viewMat = sCamera->GetViewMatrix();
-	projectionMat = sCamera->GetProjectionMatrix();
-	modelMat = glm::mat4(1.0);
-
-	shader->SetMat4("view", viewMat);
-	shader->SetMat4("projection", projectionMat);
-	shader->SetMat4("model", modelMat);
-
-	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
-
-	shader->UnUse();
-}
-
-void Renderer::RenderHDRPass(Ref<Renderable> renderable, Ref<Shader> shader, Ref<Texture> texture) {
-	shader->Use();
-
-	shader->SetInt("hdrBuffer", 0);
-	shader->SetFloat("exposure", gUserInterface->GetExposure());
-	shader->SetFloat("gamma", gUserInterface->GetGamma());
-	RenderCommands::SetTexture(shader, texture);
-	RenderCommands::DrawIndexed(renderable, NULL, shader, sCamera);
-
-	shader->UnUse();
+void Renderer::EndScene() {
+	sDeferredEntityQueue.clear();
+	sRegularEntityQueue.clear();
 }
 

@@ -54,7 +54,7 @@ uniform Material material;
 uniform PointLight light;
 
 uniform vec3 viewPos;
-uniform bool textureProvided;
+uniform bool textured;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
@@ -88,7 +88,7 @@ vec3 calcDirLight(DirLight l, vec3 normal, vec3 viewDir){
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 
     vec3 ambient, diffuse, specular;
-    if(textureProvided){
+    if(textured){
         ambient = l.ambient * texture(texture_diffuse1, TexCoord).rgb;
         diffuse = l.diffuse * diff * texture(texture_diffuse1, TexCoord).rgb;
         specular = l.specular * spec * texture(texture_specular1, TexCoord).rgb;
@@ -119,7 +119,7 @@ vec3 calcPointLight(PointLight l, vec3 normal, vec3 viewDir){
 
     vec3 ambient, diffuse, specular;
 
-    if(textureProvided){
+    if(textured){
         ambient = l.ambient * color;
         diffuse = l.diffuse * color;
         specular = l.specular * spec * texture(texture_specular1, TexCoord).rgb;
@@ -153,7 +153,7 @@ vec3 calcSpotLight(SpotLight l, vec3 normal, vec3 viewDir){
 
      vec3 ambient, diffuse, specular;
 
-    if(textureProvided){
+    if(textured){
         ambient = l.ambient * texture(texture_diffuse1, TexCoord).rgb;
         diffuse = l.diffuse * diff * texture(texture_diffuse1, TexCoord).rgb;
         specular = l.specular * spec * texture(texture_specular1, TexCoord).rgb;

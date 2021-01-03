@@ -109,7 +109,7 @@ void RenderManager::Render() {
 
     Ref<Texture> boxTex = textureFactory->LoadRegularTexture("res/", "box.png", false);
 
-    Ref<Renderable> box(new GLRectangle(glm::vec3(1.0f, 0.0f, 0.0f)));
+    Ref<Renderable> box(new GLRectangle());
     Ref<Renderable> deferredBuffer(new GLRectangle());
     Ref<Renderable> hdrBuffer(new GLRectangle());
     Ref<Renderable> muro = renderableFactory->CreateModel("res/muro/muro.obj");
@@ -132,7 +132,7 @@ void RenderManager::Render() {
     gECM->AddAxisEntity(ax);
     gECM->AddLightingPassEntity(deferredBuffer);
     gECM->AddHdrBufferEntity(hdrBuffer, hdrTex);
-    gECM->AddDeferredEntity(box);
+    gECM->AddRegularEntity(box, boxTex);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
@@ -215,13 +215,9 @@ void RenderManager::Render() {
         //=======================================================================
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         {
-            //Renderer::RenderHDRBuffer();
-
             //Start the regular shading for things that require blending or special lighting effects
             //Enable blending
             glEnable(GL_BLEND);
-
-            Renderer::EndScene();
 
             Ref<Shader> basic = gShaderManager->GetShader(ShaderType::BASIC);
 
@@ -235,7 +231,7 @@ void RenderManager::Render() {
                 basic->SetMat4("model", model);
                 basic->SetBool("textured", false);
                 basic->SetVec3("colour", lightColors[i]);
-                RenderCommands::DrawIndexed(cube, NULL, NULL, camera);
+                RenderCommands::DrawIndexed(cube, NULL, gShaderManager->GetShader(ShaderType::BASIC), camera);
             }
             basic->UnUse();
 
@@ -260,7 +256,6 @@ void RenderManager::Render() {
         Renderer::EndScene();
 
         gUserInterface->Update(finalTex->GetHandle(), hdrTex->GetHandle(), mGeometricAlbedoSpecular->GetHandle(), mGeometricNormal->GetHandle(), mGeometricPosition->GetHandle());
-
         gUserInterface->Render();
 
         /* Swap front and back buffers */

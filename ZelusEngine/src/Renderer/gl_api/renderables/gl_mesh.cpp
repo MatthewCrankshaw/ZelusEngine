@@ -24,10 +24,10 @@ void GLMesh::Draw(const Ref<Camera> camera) {
 	Ref<Shader> shader = gShaderManager->GetShader(ShaderType::GEOMETRY_PASS);
 
 	if (textures->size() >= 1) {
-		shader->SetBool("textureProvided", true);
+		shader->SetBool("textured", true);
 	}
 	else {
-		shader->SetBool("textureProvided", false);
+		shader->SetBool("textured", false);
 	}
 
 	for (unsigned int i = 0; i < textures->size(); i++) {
