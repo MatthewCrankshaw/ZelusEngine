@@ -89,10 +89,23 @@ void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> tr
 		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
 
 		if (type == EntityType::DEFERRED_GEOMETRY) {
+			shader->Use();
+
+			glm::mat4 model = transform->GetModelTransform();
+			glm::mat4 view = sCamera->GetViewMatrix();
+			glm::mat4 projection = sCamera->GetProjectionMatrix();
+
+			shader->SetMat4("model", model);
+			shader->SetMat4("view", view);
+			shader->SetMat4("projection", projection);
+
 			if (gECM->GetRegistry().has<Ref<Texture>>(entity)) {
-				RenderCommands::SetTexture(shader, gECM->GetRegistry().get<Ref<Texture>>(entity));
+				Ref<Texture> texture = gECM->GetRegistry().get<Ref<Texture>>(entity);
+				RenderCommands::SetTexture(shader, texture);
+				shader->SetBool("textureProvided", 1);
 			}
 			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+			shader->UnUse();
 		}
 		else if (type == EntityType::SKYBOX) {
 			RenderSkybox(renderable, transform, shader);
@@ -104,18 +117,19 @@ void Renderer::RenderDeferredScene(Ref<Renderable> renderable, Ref<Transform> tr
 }
 
 void Renderer::RenderRegularScene(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {
-	entt::basic_view view = gECM->GetRegistry().view<EntityType, Ref<Renderable>, Ref<Transform>, Ref<Shader>>();
+	shader->Use();
 
-	for (auto entity : sRegularEntityQueue) {
-		EntityType type = view.get<EntityType>(entity);
-		Ref<Renderable> renderable = view.get<Ref<Renderable>>(entity);
-		Ref<Transform> transform = view.get<Ref<Transform>>(entity);
-		Ref<Shader> shader = view.get<Ref<Shader>>(entity);
+	glm::mat4 model = transform->GetModelTransform();
+	glm::mat4 view = sCamera->GetViewMatrix();
+	glm::mat4 projection = sCamera->GetProjectionMatrix();
 
-		if (type == EntityType::REGULAR) {
-			RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
-		}
-	}
+	shader->SetMat4("model", model);
+	shader->SetMat4("view", view);
+	shader->SetMat4("projection", projection);
+
+	RenderCommands::DrawIndexed(renderable, transform, shader, sCamera);
+
+	shader->UnUse();
 }
 
 void Renderer::RenderSkybox(Ref<Renderable> renderable, Ref<Transform> transform, Ref<Shader> shader) {

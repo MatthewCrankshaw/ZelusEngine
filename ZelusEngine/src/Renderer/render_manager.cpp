@@ -107,12 +107,13 @@ void RenderManager::Render() {
     lightShader->SetInt("gAlbedoSpec", 2);
     lightShader->UnUse();
 
+    Ref<Texture> boxTex = textureFactory->LoadRegularTexture("res/", "box.png", false);
+
+    Ref<Renderable> box(new GLRectangle(glm::vec3(1.0f, 0.0f, 0.0f)));
     Ref<Renderable> deferredBuffer(new GLRectangle());
     Ref<Renderable> hdrBuffer(new GLRectangle());
-
     Ref<Renderable> muro = renderableFactory->CreateModel("res/muro/muro.obj");
     Ref<Renderable> cube = renderableFactory->CreateCube();
-
     Ref<Renderable> ax(new GLAxisModel());
 
     std::string skyboxFiles[] = {
@@ -131,6 +132,7 @@ void RenderManager::Render() {
     gECM->AddAxisEntity(ax);
     gECM->AddLightingPassEntity(deferredBuffer);
     gECM->AddHdrBufferEntity(hdrBuffer, hdrTex);
+    gECM->AddDeferredEntity(box);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(gUserInterface->GetWindow()))
